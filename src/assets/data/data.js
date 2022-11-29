@@ -1,3 +1,7 @@
+export var currentCategory = {
+  category: "",
+}
+
 export const nav = [
   {
     id: 1,
@@ -28,19 +32,19 @@ export const nav = [
 export const category = [
   {
     id: 1,
-    category: "Life",
+    category: "Technology",
     title: "Stay Calm And Surf",
     cover: "../images/category/ca1.png",
   },
   {
     id: 2,
-    category: "Fashion",
+    category: "News",
     title: "Becoming a Dragonfly",
     cover: "../images/category/ca2.png",
   },
   {
     id: 3,
-    category: "Travel",
+    category: "World",
     title: "There's always light at the end of the tunnel",
     cover: "../images/category/ca3.png",
   },
@@ -52,7 +56,7 @@ export const category = [
   },
   {
     id: 5,
-    category: "Fun",
+    category: "History",
     title: "There's always light at the end of the tunnel",
     cover: "../images/category/ca5.png",
   },
@@ -64,15 +68,9 @@ export const category = [
   },
   {
     id: 7,
-    category: "Business",
+    category: "Culture",
     title: "Stay Calm And Surf",
     cover: "../images/category/ca7.png",
-  },
-  {
-    id: 8,
-    category: "Technology",
-    title: "There's always light at the end of the tunnel",
-    cover: "../images/category/ca8.png",
   },
 ]
 export const blog = [

@@ -1,4 +1,5 @@
-import React from "react"
+import React, {useCallback} from "react"
+import {useHistory} from "react-router-dom"
 import "./category.css"
 import { category } from "../../assets/data/data"
 import "slick-carousel/slick/slick.css"
@@ -6,6 +7,9 @@ import "slick-carousel/slick/slick-theme.css"
 import Slider from "react-slick"
 import { GrFormPrevious } from "react-icons/gr"
 import { MdNavigateNext } from "react-icons/md"
+import { Card } from "../blog/Card"
+import { currentCategory } from "../../assets/data/data"
+import { RiWindyFill } from "react-icons/ri"
 
 const SampleNextArrow = (props) => {
   const { onClick } = props
@@ -27,7 +31,9 @@ const SamplePrevArrow = (props) => {
     </div>
   )
 }
-export const Category = () => {
+
+
+export const Category = (props) => {
   const settings = {
     dots: false,
     infinite: true,
@@ -46,6 +52,14 @@ export const Category = () => {
       },
     ],
   }
+  
+  const navigate = useHistory();
+
+  function routeCategory(category){
+    //navigate.push(`/categories`);
+    props.setChanged(category);
+  }
+
 
   return (
     <>
@@ -54,12 +68,12 @@ export const Category = () => {
           <Slider {...settings}>
             {category.map((item) => (
               <div className='boxs'>
-                <div className='box' key={item.id}>
-                  <img src={item.cover} alt='cover' />
-                  <div className='overlay'>
-                    <h4>{item.category}</h4>
-                    <p>{item.title}</p>
-                  </div>
+                <div className='box' onClick={() => props.setChanged(item.category)} key={item.id} >
+                    <img src={item.cover} alt='cover' />
+                    <div className='overlay'>
+                      <h4>{item.category}</h4>
+                      <p>{item.title}</p>
+                    </div>
                 </div>
               </div>
             ))}
