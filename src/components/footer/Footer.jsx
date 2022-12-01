@@ -1,5 +1,6 @@
 import React from "react"
-import { AiFillTwitterCircle, AiFillLinkedin } from "react-icons/ai"
+import { Link } from "react-router-dom"
+import { AiFillTwitterCircle, AiFillLinkedin, AiFillYoutube } from "react-icons/ai"
 import { BsFacebook } from "react-icons/bs"
 import { RiInstagramFill } from "react-icons/ri"
 
@@ -8,12 +9,17 @@ export const Footer = () => {
     <>
       <footer className='boxItems'>
         <div className='container flex'>
-          <p>Cartsy Medicine - All right reserved - Design & Developed by RedQ, Inc</p>
+          <div/>
           <div className='social'>
-            <BsFacebook className='icon' />
-            <RiInstagramFill className='icon' />
-            <AiFillTwitterCircle className='icon' />
-            <AiFillLinkedin className='icon' />
+            <a href="https://www.instagram.com/pioneergenerations/">
+              <RiInstagramFill className='icon' color="#000000" />
+            </a>
+            <a href="https://twitter.com/PioneerGenerat1">
+              <AiFillTwitterCircle className='icon' color="#000000" />
+            </a>
+            <a href="https://www.youtube.com/channel/UCH4cKVes_phoCxAc6WH-zUA">
+              <AiFillYoutube className='icon' color="#000000" />
+            </a>
           </div>
         </div>
       </footer>
