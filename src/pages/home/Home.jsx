@@ -13,13 +13,13 @@ export class Home extends Component{
       category: "",
       posts: []
     }
-    this.setChanged = this.setChanged.bind(this);
+    this.setCategory = this.setCategory.bind(this);
     this.fetchposts = this.fetchposts.bind(this);
     this.fetchPostsByCategory = this.fetchPostsByCategory.bind(this);
   }
 
-  setChanged(_category) {
-    this.setState({ category: _category });
+  setCategory = async(_category) => {
+    await this.setState({ category: _category });
     console.log(this.state.category);
     if(this.state.category){
       this.fetchPostsByCategory();
@@ -28,8 +28,8 @@ export class Home extends Component{
     }
   }
 
-  fetchposts() {
-    axios.get(`https://pioneerblog-api.onrender.com/blogposts`).then(response => {
+  fetchposts = async() => {
+    await axios.get(`https://pioneerblog-api.onrender.com/blogposts`).then(response => {
       console.log(response)
       this.setState({ posts: response.data.doc })
     }).catch(error => {
@@ -37,9 +37,9 @@ export class Home extends Component{
     })
   }
 
-  fetchPostsByCategory() {
+  fetchPostsByCategory = async() => {
     console.log(this.state.category);
-    axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${this.state.category}`).then(response => {
+    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${this.state.category}`).then(response => {
       console.log(response)
       this.setState({ posts: response.data.doc })
     }).catch(error => {
@@ -54,7 +54,7 @@ export class Home extends Component{
   render(){
     return(
       <>
-      <Category setChanged={this.setChanged}/>
+      <Category setChanged={this.setCategory}/>
       <Card category={this.state.category} posts={this.state.posts} />
       </>
     )

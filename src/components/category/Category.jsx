@@ -1,5 +1,4 @@
 import React, {useCallback} from "react"
-import {useHistory} from "react-router-dom"
 import "./category.css"
 import { category } from "../../assets/data/data"
 import "slick-carousel/slick/slick.css"
@@ -51,13 +50,6 @@ export const Category = (props) => {
         },
       },
     ],
-  }
-  
-  const navigate = useHistory();
-
-  function routeCategory(category){
-    //navigate.push(`/categories`);
-    props.setChanged(category);
   }
 
 
