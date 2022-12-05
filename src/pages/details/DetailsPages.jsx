@@ -4,8 +4,9 @@ import "../../components/header/header.css"
 import img from "../../assets/images/b5.jpg"
 import { BsPencilSquare } from "react-icons/bs"
 import { AiOutlineDelete } from "react-icons/ai"
-import { blog } from "../../assets/data/data"
+import { blogs } from "../../assets/data/data"
 import { Header } from "../../components/header/Header"
+import { AiOutlineTags, AiOutlineClockCircle, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai"
 import axios from "axios"
 
 export class DetailsPages extends Component {
@@ -13,9 +14,11 @@ export class DetailsPages extends Component {
     super(props)
 
     this.state = {
-      blog: []
+      blog: [],
+      popularPosts:[]
     }
     this.setBlog = this.setBlog.bind(this);
+    this.setPopularPosts = this.setPopularPosts.bind(this);
   }
 
   setBlog = async() => {
@@ -30,29 +33,55 @@ export class DetailsPages extends Component {
     })
   }
 
+  setPopularPosts = async() => {
+    await axios.get(`https://pioneerblog-api.onrender.com/blogposts?limit=5`).then(response => {
+      console.log(response)
+      this.setState({ popularPosts: response.data.doc })
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+
   componentDidMount(){
     this.setBlog();
+    this.setPopularPosts();
   }
 
   render(){
-    const {blog} = this.state
   return (
     <>
-      {blog ? (
-        <section className='singlePage'>
-          <div className='container'>
-            <div className='left'>
-              <img style={{ width: 1280, height: 720}} src={`https://pioneerblog-api.onrender.com/blogposts/image/` + blog.imageCover} alt='' />
+      <section className='singlePage'>
+        <div className="container">
+          <div className='left'>
+            <div >
+              <h1>{this.state.blog.title}</h1>
+              <img src={`https://pioneerblog-api.onrender.com/blogposts/image/` + this.state.blog.imageCover} alt='' />
             </div>
-            <div className='right'>
-              <h1>{blog.title}</h1>
-              <p>{blog.desc}</p>
+            <div className='desc'>
+              <p>{this.state.blog.desc}</p>
               {/* <p>"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?" Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."</p> */}
-              <p>Author: {blog.author}</p>
+              <p>Author: {this.state.blog.author}</p>
             </div>
           </div>
-        </section>
-      ) : null}
+          <div className="cardItems">
+            <div className="card">
+              <h2>Populer Posts</h2>
+              <hr />
+            </div>
+            {this.state.popularPosts.map((item) => (
+              <div className="box boxItems">
+                <img className="boxImage" src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover}/>
+                <div className="postInfo">
+                  <b>{item.title}</b>
+                  <div>
+                    <text style={{fontSize:10}}>{item.desc.slice(0, 90)}</text>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </>
   )
       }

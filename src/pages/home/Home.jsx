@@ -29,7 +29,8 @@ export class Home extends Component{
   }
 
   fetchposts = async() => {
-    await axios.get(`https://pioneerblog-api.onrender.com/blogposts`).then(response => {
+    const sort = "sort=-publishDate";
+    await axios.get(`https://pioneerblog-api.onrender.com/blogposts${"?" + sort}`).then(response => {
       console.log(response)
       this.setState({ posts: response.data.doc })
     }).catch(error => {
@@ -39,7 +40,8 @@ export class Home extends Component{
 
   fetchPostsByCategory = async() => {
     console.log(this.state.category);
-    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${this.state.category}`).then(response => {
+    const sort = "sort=-publishDate";
+    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${this.state.category}?sort=-publishDate`).then(response => {
       console.log(response)
       this.setState({ posts: response.data.doc })
     }).catch(error => {

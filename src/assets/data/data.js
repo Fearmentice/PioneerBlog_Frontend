@@ -9,11 +9,6 @@ export const nav = [
     url: "/",
   },
   {
-    id: 2,
-    text: "about",
-    url: "/about",
-  },
-  {
     id: 3,
     text: "pages",
     url: "/pages",
@@ -22,6 +17,11 @@ export const nav = [
     id: 4,
     text: "blog",
     url: "/blog",
+  },
+  {
+    id: 2,
+    text: "about",
+    url: "/about",
   },
   {
     id: 5,
@@ -73,7 +73,7 @@ export const category = [
     cover: "../images/category/ca7.png",
   },
 ]
-export const blog = [
+export const blogs = [
   {
     id: 1,
     title: "POST NO.1 CONTAINING A YOUTUBE VIDEO",

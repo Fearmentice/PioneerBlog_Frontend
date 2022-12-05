@@ -2,7 +2,6 @@ import React, { Component, useCallback } from "react"
 import "./blog.css"
 import { AiOutlineTags, AiOutlineClockCircle, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai"
 import { Link, useParams } from "react-router-dom"
-import data from "./Card"
 import axios from "axios"
 import { Category } from "../category/Category"
 import { category, currentCategory } from "../../assets/data/data"
@@ -18,7 +17,6 @@ export class Card extends Component {
 
     return (
       <section className='blog' >
-        <data></data>
         <div className='container grid3'>
           {this.props.posts.map((item) => (
             <div className='box boxItems' key={item._id}>
