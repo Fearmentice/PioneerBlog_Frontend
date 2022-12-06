@@ -41,7 +41,7 @@ export class Home extends Component{
   fetchPostsByCategory = async() => {
     console.log(this.state.category);
     const sort = "sort=-publishDate";
-    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${this.state.category}?sort=-publishDate`).then(response => {
+    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${this.state.category + "?" + sort}`).then(response => {
       console.log(response)
       this.setState({ posts: response.data.doc })
     }).catch(error => {

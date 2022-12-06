@@ -12,13 +12,13 @@ export const Footer = () => {
           <div/>
           <div className='social'>
             <a href="https://www.instagram.com/pioneergenerations/">
-              <RiInstagramFill className='icon' color="#000000" />
+              <RiInstagramFill className='icon' style={{width: 30, height: 30}} color="#000000" />
             </a>
             <a href="https://twitter.com/PioneerGenerat1">
-              <AiFillTwitterCircle className='icon' color="#000000" />
+              <AiFillTwitterCircle className='icon' style={{width: 30, height: 30}} color="#000000" />
             </a>
             <a href="https://www.youtube.com/channel/UCH4cKVes_phoCxAc6WH-zUA">
-              <AiFillYoutube className='icon' color="#000000" />
+              <AiFillYoutube className='icon' style={{width: 30, height: 30}} color="#000000" />
             </a>
           </div>
         </div>

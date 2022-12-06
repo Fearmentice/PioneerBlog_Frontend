@@ -6,8 +6,18 @@
 .singlePage .container {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   padding-left: 10%;
+  width: max-content;
+}
+
+.singlePage .rightContainer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  width: 40%;
+  padding: 5%;
+  
 }
 
 .singlePage .boxItems {
@@ -32,18 +42,19 @@
 }
 
 .singlePage .cardItems {
-  margin: 5%;
+  margin-top: 3%;
   background-color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 10px;
-  width: 25%;
+  padding: 10px;
+  width: max-content;
   height: max-content;
   flex-wrap: nowrap; 
 }
 
 
 .singlePage .left {
-  width: 50%;
+  width: 60%;
 }
 
 .singlePage .card{
@@ -53,7 +64,34 @@
 }
 
 .singlePage .postInfo{
-  margin-top: 2%;
+  margin-top: 1%;
+}
+
+.singlePage .categoriesButtons{
+  background-color: rgb(230, 230, 230);
+  margin: 5%;
+  margin-left: 0%;
+  width: 80px;
+  height: 40px;
+  margin-top: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  transition: 0.5s;
+}
+
+.singlePage .shareButtons{
+  margin: 10;
+  transition: 0.5s;
+}
+.singlePage .shareButtons:hover{
+  cursor: pointer;
+  transform: translateY(-5px);
+}
+
+.singlePage .categoriesButtons:hover {
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  cursor: pointer;
+  transform: translateY(-5px);
 }
 
 .singlePage img {
@@ -76,8 +114,8 @@
   background-color: white;
   height: 1px;
   width: 60%;
-  margin-top: 4%;
-  margin-left: 10px;
+  margin-top: 3%;
+  margin-left: 5%;
 }
 .singlePage p {
   font-size: 20px;

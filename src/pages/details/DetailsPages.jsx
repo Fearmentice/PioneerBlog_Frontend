@@ -7,6 +7,9 @@ import { AiOutlineDelete } from "react-icons/ai"
 import { blogs } from "../../assets/data/data"
 import { Header } from "../../components/header/Header"
 import { AiOutlineTags, AiOutlineClockCircle, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai"
+import { AiFillTwitterCircle, AiFillLinkedin, AiFillYoutube } from "react-icons/ai"
+import { BsFacebook } from "react-icons/bs"
+import { RiInstagramFill } from "react-icons/ri"
 import axios from "axios"
 
 export class DetailsPages extends Component {
@@ -63,22 +66,58 @@ export class DetailsPages extends Component {
               <p>Author: {this.state.blog.author}</p>
             </div>
           </div>
-          <div className="cardItems">
-            <div className="card">
-              <h2>Populer Posts</h2>
-              <hr />
+          <div className="rightContainer">
+            <div className="cardItems">
+              <div className="card">
+                <h2 style={{width: 200}}>Share This Post</h2>
+                <hr style={{marginTop:15,marginLeft:5 ,width: 300, marginLeft:10}} />
+              </div>
+              <div className="card">
+                <button className="shareButtons">
+                  <RiInstagramFill className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
+                </button>
+                <button className="shareButtons">
+                  <AiFillTwitterCircle className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
+                </button>
+                <button className="shareButtons">
+                  <AiFillYoutube className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
+                </button>
+                <button className="shareButtons">
+                  <AiFillLinkedin className='icon' style={{ borderRadius:100,margin:10, width: 50, height: 50}} color="#000000"/>
+                </button>
+              </div>
             </div>
-            {this.state.popularPosts.map((item) => (
-              <div className="box boxItems">
-                <img className="boxImage" src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover}/>
-                <div className="postInfo">
-                  <b>{item.title}</b>
-                  <div>
-                    <text style={{fontSize:10}}>{item.desc.slice(0, 90)}</text>
+            <div className="cardItems">
+              <div className="card">
+                <h2 style={{width:200}}>Latest Releases</h2>
+                <hr style={{width: 300}}/>
+              </div>
+              {this.state.popularPosts.map((item) => (
+                <div className="box boxItems">
+                  <img className="boxImage" src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover}/>
+                  <div className="postInfo">
+                    <b>{item.title}</b>
+                    <div>
+                      <p style={{fontSize:15}}>{item.desc.slice(0, 40)}</p>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+            <div className="cardItems">
+              <div className="card">
+                <h2 style={{width:200}}>Categories</h2>
+                <hr style={{marginTop:15,marginLeft:5 ,width: 300}} />
               </div>
-            ))}
+              <div >
+                <button style={{marginLeft: 20, }} className="categoriesButtons">Technology</button>
+                <button className="categoriesButtons">History</button>
+                <button className="categoriesButtons">Culture</button>
+                <button className="categoriesButtons">World</button>
+                <button style={{marginLeft: 20, }} className="categoriesButtons">Sport</button>
+                <button className="categoriesButtons">News</button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
