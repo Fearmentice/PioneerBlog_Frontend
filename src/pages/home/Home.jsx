@@ -52,6 +52,7 @@ export class Home extends Component{
 
   componentDidMount(){
     const category = this.props.match.params.category;
+    console.log(category);
     if(!category){
       this.setCategory("");
       this.fetchposts();

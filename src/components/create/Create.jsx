@@ -1,8 +1,41 @@
-import React from "react"
+import React, { useState } from "react"
 import "./create.css"
 import { IoIosAddCircleOutline } from "react-icons/io"
+import axios from "axios"
 
 export const Create = () => {
+  const [title, setTitle] = useState('');
+  const [category, setCategory] = useState('');
+  const [author, setAuthor] = useState('');
+  const [content, setContent] = useState('');
+  const [response, setResponse] = useState('');
+
+  const post = {
+    title: title,
+    category: category,
+    author: author,
+    desc: content,
+  }
+
+  const createPost = async() => {
+
+    console.log(post);
+
+     await axios.post('https://pioneerblog-api.onrender.com/blogposts', {title: title, category:category, author:author, desc:content}).then(response =>{
+     console.log(response)
+     setResponse(response.data.doc)})
+    .catch(error => {
+      console.log(error)
+    });
+
+    await axios.patchForm('https://pioneerblog-api.onrender.com/blogposts', {title: title, category:category, author:author, desc:content}).then(response =>{
+      console.log(response)
+      setResponse(response.data.doc)})
+     .catch(error => {
+       console.log(error)
+     });
+  }
+
   return (
     <>
       <section className='newPost'>
@@ -14,12 +47,16 @@ export const Create = () => {
             <div className='inputfile flexCenter'>
               <input type='file' accept='image/*' alt='img' />
             </div>
-            <input type='text' placeholder='Title' />
+            <input type='text' onChange={(event) => setTitle(event.target.value)} value={title} placeholder='Title' />
 
-            <textarea name='' id='' cols='30' rows='10'></textarea>
+            <input type='text' onChange={(event) => setCategory(event.target.value)} value={category} placeholder='Category' />
 
-            <button className='button'>Create Post</button>
+            <textarea name='' id='' cols='30' rows='10' onChange={(event) => setContent(event.target.value)} value={content}  placeholder='Content'></textarea>
+
+            <input type='text' onChange={(event) => setAuthor(event.target.value)} value={author} placeholder='Author' />
+
           </form>
+            <button className='button' onClick={() => createPost()}>Create Post</button>
         </div>
       </section>
     </>

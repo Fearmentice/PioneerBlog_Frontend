@@ -14,11 +14,6 @@ export const nav = [
     url: "/pages",
   },
   {
-    id: 4,
-    text: "blog",
-    url: "/blog",
-  },
-  {
     id: 2,
     text: "about",
     url: "/about",

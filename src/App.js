@@ -16,12 +16,12 @@ const App = () => {
         <Header />
         <Switch>
           <Route exact path='/' component={Home} />
-          <Route exact path='/:category' component={Home} />
+          <Route exact path='/create' component={Create} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/register' component={Regsiter} />
           <Route exact path='/details/:id' component={DetailsPages} />
           <Route exact path='/account' component={Account} />
-          <Route exact path='/create' component={Create} />
+          <Route exact path='/:category' component={Home} />
         </Switch>
         <Footer />
       </Router>
