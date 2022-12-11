@@ -1,9 +1,11 @@
 import React from "react"
-import {useHistory} from "react-router-dom"
+import {useHistory, useParams} from "react-router-dom"
 import { Component } from "react"
 import { Card } from "../../components/blog/Card"
 import axios from "axios"
 import { Category } from "../../components/category/Category"
+import { withRouter } from "react-router";
+
 
 export class Home extends Component{
   constructor(props) {
@@ -39,7 +41,6 @@ export class Home extends Component{
   }
 
   fetchPostsByCategory = async() => {
-    console.log(this.state.category);
     const sort = "sort=-publishDate";
     await axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${this.state.category + "?" + sort}`).then(response => {
       console.log(response)
@@ -50,7 +51,14 @@ export class Home extends Component{
   }
 
   componentDidMount(){
-    this.fetchposts();
+    const category = this.props.match.params.category;
+    if(!category){
+      this.setCategory("");
+      this.fetchposts();
+    }else{
+      this.setCategory(category);
+      this.fetchPostsByCategory();
+    }
   }
 
   render(){

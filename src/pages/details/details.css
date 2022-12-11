@@ -122,6 +122,9 @@
   line-height: 2;
   text-transform: capitalize;
 }
+.singlePage .link {
+  color: black;
+}
 .singlePage .buttons {
   display: flex;
   justify-content: flex-end;

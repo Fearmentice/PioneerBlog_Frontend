@@ -9,6 +9,7 @@ import { MdNavigateNext } from "react-icons/md"
 import { Card } from "../blog/Card"
 import { currentCategory } from "../../assets/data/data"
 import { RiWindyFill } from "react-icons/ri"
+import { Link, useHistory } from "react-router-dom"
 
 const SampleNextArrow = (props) => {
   const { onClick } = props
@@ -52,6 +53,10 @@ export const Category = (props) => {
     ],
   }
 
+  const navigateToCategory = (_category) => {
+    useHistory().push(`/${_category}`);
+  }
+
 
   return (
     <>
@@ -60,13 +65,15 @@ export const Category = (props) => {
           <Slider {...settings}>
             {category.map((item) => (
               <div className='boxs'>
-                <div className='box' onClick={() => props.setChanged(item.category)} key={item.id} >
-                    <img src={item.cover} alt='cover' />
-                    <div className='overlay'>
-                      <h4>{item.category}</h4>
-                      <p>{item.title}</p>
-                    </div>
-                </div>
+                <Link to={`/${item.category}`}>
+                  <div className='box' onClick={() => props.setChanged(item.category)} key={item.id} >
+                      <img src={item.cover} alt='cover' />
+                      <div className='overlay'>
+                        <h4>{item.category}</h4>
+                        <p>{item.title}</p>
+                      </div>
+                  </div>
+                </Link>
               </div>
             ))}
           </Slider>

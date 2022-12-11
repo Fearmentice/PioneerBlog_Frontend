@@ -4,19 +4,22 @@ import "../../components/header/header.css"
 import img from "../../assets/images/b5.jpg"
 import { BsPencilSquare } from "react-icons/bs"
 import { AiOutlineDelete } from "react-icons/ai"
+import {MdEmail} from "react-icons/md"
 import { blogs } from "../../assets/data/data"
 import { Header } from "../../components/header/Header"
 import { AiOutlineTags, AiOutlineClockCircle, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai"
 import { AiFillTwitterCircle, AiFillLinkedin, AiFillYoutube } from "react-icons/ai"
 import { BsFacebook } from "react-icons/bs"
-import { RiInstagramFill } from "react-icons/ri"
 import axios from "axios"
+import { BiWindowOpen } from "react-icons/bi"
+import { Link, useParams } from "react-router-dom"
 
 export class DetailsPages extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      id:"",
       blog: [],
       popularPosts:[]
     }
@@ -24,11 +27,17 @@ export class DetailsPages extends Component {
     this.setPopularPosts = this.setPopularPosts.bind(this);
   }
 
+  setId = async(_id) => {
+    await this.setState({ id: _id });
+    console.log(this.state.id);
+    if(this.state.id){
+      this.setBlog();
+    }
+  }
+
   setBlog = async() => {
     const url = window.location.href;
-    const id = url.replace("http://localhost:3006/details/", "");
-    console.log(id);
-    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/${id}`).then(response => {
+    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/${this.state.id}`).then(response => {
       console.log(response)
       this.setState({ blog: response.data })
     }).catch(error => {
@@ -37,7 +46,9 @@ export class DetailsPages extends Component {
   }
 
   setPopularPosts = async() => {
-    await axios.get(`https://pioneerblog-api.onrender.com/blogposts?limit=5`).then(response => {
+    const sort = "sort=-publishDate";
+    const limit = "limit=5";
+    await axios.get(`https://pioneerblog-api.onrender.com/blogposts?${limit}&${sort}`).then(response => {
       console.log(response)
       this.setState({ popularPosts: response.data.doc })
     }).catch(error => {
@@ -46,11 +57,13 @@ export class DetailsPages extends Component {
   }
 
   componentDidMount(){
-    this.setBlog();
+    const id = this.props.match.params.id;
+    this.setId(id);
     this.setPopularPosts();
   }
 
   render(){
+    const url = window.location.toString();
   return (
     <>
       <section className='singlePage'>
@@ -73,17 +86,25 @@ export class DetailsPages extends Component {
                 <hr style={{marginTop:15,marginLeft:5 ,width: 300, marginLeft:10}} />
               </div>
               <div className="card">
-                <button className="shareButtons">
-                  <RiInstagramFill className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
+                <button className="shareButtons" >
+                  <a href={`https://www.facebook.com/sharer/sharer.php?u=${window.location}`} target="_blank" rel="noopener noreferrer">
+                    <BsFacebook className='icon' style={{margin:10, width: 42, height: 42}} color="#000000" />
+                  </a>
                 </button>
                 <button className="shareButtons">
-                  <AiFillTwitterCircle className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
+                  <a href={`https://twitter.com/intent/tweet?url=${window.location}`} target="_blank" rel="noopener noreferrer">
+                    <AiFillTwitterCircle className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
+                  </a>
                 </button>
                 <button className="shareButtons">
-                  <AiFillYoutube className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
+                  <a href={`mailto:info@example.com?&subject=You have to See this!&cc=&bcc=&body=Check out this site:${window.location}`} target="_blank" rel="noopener noreferrer">
+                    <MdEmail className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
+                  </a>
                 </button>
                 <button className="shareButtons">
-                  <AiFillLinkedin className='icon' style={{ borderRadius:100,margin:10, width: 50, height: 50}} color="#000000"/>
+                  <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${window.location}`} target="_blank" rel="noopener noreferrer">
+                    <AiFillLinkedin className='icon' style={{ borderRadius:100,margin:10, width: 50, height: 50}} color="#000000"/>
+                  </a>
                 </button>
               </div>
             </div>
@@ -93,15 +114,19 @@ export class DetailsPages extends Component {
                 <hr style={{width: 300}}/>
               </div>
               {this.state.popularPosts.map((item) => (
-                <div className="box boxItems">
-                  <img className="boxImage" src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover}/>
-                  <div className="postInfo">
-                    <b>{item.title}</b>
-                    <div>
-                      <p style={{fontSize:15}}>{item.desc.slice(0, 40)}</p>
+                <Link to={`/details/${item._id}`} className="link">
+                  <div className="box boxItems" onClick={() => this.setId(item._id)} >
+                    <img className="boxImage" src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover}/>
+                    <div className="postInfo">
+                      <div style={{width: 275}}>
+                        <b>{item.title}</b>
+                      </div>
+                      <div style={{width: 275}}>
+                        <p style={{fontSize:15}}>{item.desc.slice(0, 70)}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
             <div className="cardItems">
@@ -110,12 +135,24 @@ export class DetailsPages extends Component {
                 <hr style={{marginTop:15,marginLeft:5 ,width: 300}} />
               </div>
               <div >
-                <button style={{marginLeft: 20, }} className="categoriesButtons">Technology</button>
-                <button className="categoriesButtons">History</button>
-                <button className="categoriesButtons">Culture</button>
-                <button className="categoriesButtons">World</button>
-                <button style={{marginLeft: 20, }} className="categoriesButtons">Sport</button>
-                <button className="categoriesButtons">News</button>
+                <a href={`${url.split('details/')[0]}Technology`}>
+                  <button style={{marginLeft: 20, }} className="categoriesButtons">Technology</button>
+                </a>
+                <a href={`${url.split('details/')[0]}History`}>
+                  <button className="categoriesButtons">History</button>
+                </a>
+                <a href={`${url.split('details/')[0]}Culture`}>
+                  <button className="categoriesButtons">Culture</button>
+                </a>
+                <a href={`${url.split('details/')[0]}World`}>
+                  <button className="categoriesButtons">World</button>
+                </a>
+                <a href={`${url.split('details/')[0]}Sport`}>
+                  <button style={{marginLeft: 20, }} className="categoriesButtons">Sport</button>
+                </a>
+                <a href={`${url.split('details/')[0]}News`}>
+                  <button className="categoriesButtons">News</button>
+                </a>
               </div>
             </div>
           </div>
