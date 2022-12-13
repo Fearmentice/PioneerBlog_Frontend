@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import "./create.css"
 import { IoIosAddCircleOutline } from "react-icons/io"
 import axios from "axios"
@@ -8,27 +8,49 @@ export const Create = () => {
   const [category, setCategory] = useState('');
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
+
+  const [image, setImage] = useState('');
+  const [preview, setPreview] = useState()
+  
   const [response, setResponse] = useState('');
 
-  const post = {
-    title: title,
-    category: category,
-    author: author,
-    desc: content,
+  const onImageChange = (event) => {
+    setImage(event.target.files[0]);
+    console.log(image);
   }
 
+      // create a preview as a side effect, whenever selected file is changed
+      useEffect(() => {
+        if (!image) {
+            setPreview(undefined)
+            return
+        }
+
+        const objectUrl = URL.createObjectURL(image)
+        setPreview(objectUrl)
+
+        // free memory when ever this component is unmounted
+        return () => URL.revokeObjectURL(objectUrl)
+    }, [image])
+
   const createPost = async() => {
-
-    console.log(post);
-
-     await axios.post('https://pioneerblog-api.onrender.com/blogposts', {title: title, category:category, author:author, desc:content}).then(response =>{
-     console.log(response)
-     setResponse(response.data.doc)})
+    let _Response;
+     await axios.post('https://pioneerblog-api.onrender.com/blogposts', {title: title, category:category, author:author, desc:content}).then(_response =>{
+     console.log(_response)
+     _Response = _response.data.doc; })
     .catch(error => {
       console.log(error)
     });
 
-    await axios.patchForm('https://pioneerblog-api.onrender.com/blogposts', {title: title, category:category, author:author, desc:content}).then(response =>{
+    const formData = new FormData();
+    
+    formData.append("coverPhoto", image);
+
+
+  await axios.patch(`https://pioneerblog-api.onrender.com/blogposts/${_Response._id}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }}).then(response =>{
       console.log(response)
       setResponse(response.data.doc)})
      .catch(error => {
@@ -41,11 +63,11 @@ export const Create = () => {
       <section className='newPost'>
         <div className='container boxItems'>
           <div className='img '>
-            <img src='https://images.pexels.com/photos/6424244/pexels-photo-6424244.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' alt='image' class='image-preview' />
+            <img src={preview} alt='image' class='image-preview' />
           </div>
           <form>
             <div className='inputfile flexCenter'>
-              <input type='file' accept='image/*' alt='img' />
+              <input type='file' onChange={(event) => setImage(event.target.files[0])} accept='image/*' alt='img' />
             </div>
             <input type='text' onChange={(event) => setTitle(event.target.value)} value={title} placeholder='Title' />
 
@@ -56,7 +78,7 @@ export const Create = () => {
             <input type='text' onChange={(event) => setAuthor(event.target.value)} value={author} placeholder='Author' />
 
           </form>
-            <button className='button' onClick={() => createPost()}>Create Post</button>
+            <button className='button' onClick={() => {createPost()}}>Create Post</button>
         </div>
       </section>
     </>
