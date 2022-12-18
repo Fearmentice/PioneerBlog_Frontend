@@ -9,11 +9,6 @@ export const nav = [
     url: "/",
   },
   {
-    id: 3,
-    text: "pages",
-    url: "/pages",
-  },
-  {
     id: 2,
     text: "about",
     url: "/about",

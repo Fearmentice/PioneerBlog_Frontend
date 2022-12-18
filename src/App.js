@@ -7,7 +7,9 @@ import { Regsiter } from "./pages/login/Regsiter"
 import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom"
 import { DetailsPages } from "./pages/details/DetailsPages"
 import { Account } from "./pages/account/Account"
-import { Create } from "./components/create/Create"
+import { Contact } from "./components/contact/contact"
+import { Admin } from "./pages/login/admin"
+import { About } from "./pages/about/about"
 
 const App = () => {
   return (
@@ -16,11 +18,11 @@ const App = () => {
         <Header />
         <Switch>
           <Route exact path='/' component={Home} />
-          <Route exact path='/create' component={Create} />
-          <Route exact path='/login' component={Login} />
-          <Route exact path='/register' component={Regsiter} />
+          <Route exact path='/about' component={About} />
+          <Route exact path='/admin' component={Admin} />} />
           <Route exact path='/details/:id' component={DetailsPages} />
           <Route exact path='/account' component={Account} />
+          <Route exact path='/contact' component={Contact} />
           <Route exact path='/:category' component={Home} />
         </Switch>
         <Footer />

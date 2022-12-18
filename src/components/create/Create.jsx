@@ -63,7 +63,7 @@ export const Create = () => {
       <section className='newPost'>
         <div className='container boxItems'>
           <div className='img '>
-            <img src={preview} alt='image' class='image-preview' />
+            <img src={preview} alt='image' className='image-preview' />
           </div>
           <form>
             <div className='inputfile flexCenter'>

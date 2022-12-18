@@ -97,7 +97,7 @@ export class DetailsPages extends Component {
                   </a>
                 </button>
                 <button className="shareButtons">
-                  <a href={`mailto:info@example.com?&subject=You have to See this!&cc=&bcc=&body=Check out this site:${window.location}`} target="_blank" rel="noopener noreferrer">
+                  <a href={`mailto:pioneersgenerations@gmail.com?&subject=You have to See this!&cc=&bcc=&body=Check out this site:${window.location}`} target="_blank" rel="noopener noreferrer">
                     <MdEmail className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
                   </a>
                 </button>

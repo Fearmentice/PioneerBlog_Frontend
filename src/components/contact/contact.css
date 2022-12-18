@@ -1,0 +1,9 @@
+.contact {
+    margin: 60px;
+  }
+
+.contact p {
+    font-size: 20px;
+    line-height: 2;
+    text-transform: capitalize;
+  }
