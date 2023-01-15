@@ -1,5 +1,7 @@
 .category {
-  margin-top: 50px;
+  margin: 50px;
+  margin-top: 20px;
+  margin-bottom: 10px;
   position: relative;
 }
 .category .box {
@@ -10,6 +12,7 @@
   text-transform: capitalize;
   font-size: 14px;
   font-weight: 600;
+  color: black;
 }
 .category img {
   width: 100%;
@@ -23,18 +26,20 @@
   left: 0;
   width: 100%;
   height: 250px;
-  background: rgba(0, 0, 0, 0.5);
+  background:linear-gradient(rgba(0, 0, 0, 0.15),rgba(0, 0, 0, 1));
+  background-color:rgba(0, 0, 0,0) /*this your primary color*/
 }
 .category .box {
   cursor: pointer;
   position: relative;
 }
 .category .overlay {
+  display: flex;
+  flex-direction: column;
   position: absolute;
-  top: 80px;
-  padding: 20px;
-  text-align: center;
-  width: 100%;
+  top: 110px;
+  padding: 15px;
+  width: max-content;
   z-index: 2;
   color: #fff;
 }
@@ -42,10 +47,34 @@
   font-weight: 500;
   color: rgb(253, 246, 126);
 }
+
 .category .overlay p {
   color: #fff;
-  font-weight: 300;
-  padding: 15px;
+  font-weight: 500;
+  padding: 5px;
+}
+.category .overlay .descBox {
+  text-align: left;
+  width: 500px;
+}.category .overlay .titleBox {
+  display: flex;
+  flex-direction: row;
+  margin-left: 5px;
+}
+.category .overlay .categoryButton {
+  margin-left: 10px;
+  background-color: rgba(180, 180, 180, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  width: min-content;
+  height: min-content;
+  border-radius: 10px;
+  transition: 0.5s;
+}
+.category .overlay .categoryButton:hover {
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  background-color: rgba(255, 255, 255, 0.603);
+  cursor: pointer;
+  transform: translateY(-3px);
 }
 /*---------------control-btn-------------*/
 .control-btn button {
@@ -64,13 +93,13 @@
 
 .control-btn .next {
   position: absolute;
-  top: 40%;
+  top: 30%;
   right: 20px;
 }
 
 .control-btn .prev {
   position: absolute;
-  top: 40%;
+  top: 30%;
   left: 20px;
   z-index: 99;
 }

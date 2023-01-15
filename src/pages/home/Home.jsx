@@ -5,6 +5,7 @@ import { Card } from "../../components/blog/Card"
 import axios from "axios"
 import { Category } from "../../components/category/Category"
 import { withRouter } from "react-router";
+import { category } from "../../assets/data/data"
 
 
 export class Home extends Component{
@@ -22,7 +23,7 @@ export class Home extends Component{
 
   setCategory = async(_category) => {
     await this.setState({ category: _category });
-    console.log(this.state.category);
+    //console.log(this.state.category);
     if(this.state.category){
       this.fetchPostsByCategory();
     }else{
@@ -52,21 +53,47 @@ export class Home extends Component{
 
   componentDidMount(){
     const category = this.props.match.params.category;
-    console.log(category);
-    if(!category){
-      this.setCategory("");
-      this.fetchposts();
-    }else{
-      this.setCategory(category);
-      this.fetchPostsByCategory();
+    switch(category) {
+      case "Culture":
+        this.setCategory("Culture");
+        break;
+      case "Technology":
+        this.setCategory("Technology");
+        break;
+      case "World":
+        this.setCategory("World");
+        break;
+      case "Sport":
+        this.setCategory("Sport");
+        break;
+      case "History":
+        this.setCategory("History");
+        break;
+      case "News":
+        this.setCategory("News");
+        break;
+      case "Health":
+        this.setCategory("Health");
+        break;
+      default:
+        this.setCategory("");
     }
+  }
+
+  returnCategory = () => {
+    if(category == "")
+    {
+      return "Home";
+    }
+    return this.state.category;
   }
 
   render(){
     return(
       <>
-      <Category setChanged={this.setCategory}/>
-      <Card category={this.state.category} posts={this.state.posts} />
+        <Category setChanged={this.setCategory}/>
+        <h1 style={{position:"inherit", marginLeft:50}}>{this.state.category == "" ? "Home" : this.state.category}</h1>
+        <Card category={this.state.category} posts={this.state.posts} />
       </>
     )
   }

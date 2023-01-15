@@ -1,4 +1,4 @@
-import React, {useCallback} from "react"
+import React, {useCallback, useEffect, useState} from "react"
 import "./category.css"
 import { category } from "../../assets/data/data"
 import "slick-carousel/slick/slick.css"
@@ -10,6 +10,9 @@ import { Card } from "../blog/Card"
 import { currentCategory } from "../../assets/data/data"
 import { RiWindyFill } from "react-icons/ri"
 import { Link, useHistory } from "react-router-dom"
+import axios from "axios"
+import { popperUnstyledClasses } from "@mui/base"
+import { flexbox } from "@mui/system"
 
 const SampleNextArrow = (props) => {
   const { onClick } = props
@@ -34,6 +37,37 @@ const SamplePrevArrow = (props) => {
 
 
 export const Category = (props) => {
+
+  const [popularWritings, setPopularWritings] = useState([]);
+
+  useEffect(() => {
+    getCategory("Culture");
+    getCategory("Technology");
+    getCategory("World");
+    getCategory("Sport");
+    getCategory("History");
+    getCategory("News");
+    getCategory("Health");
+    // console.log(popularWritings.length);
+    //setPopularWritings([...popularWritings, {name:"Talha", surname:"Şahin"}])
+    console.log(popularWritings);
+  }, [popularWritings]);
+
+  const getCategory = async(_Category) => {
+    const query = "limit=1&sort=-views";
+    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${_Category}?${query}`).then(_response =>{
+    console.log(_response)
+    const _Response = _response.data.doc[0];
+    if(_Response){
+      popularWritings.push(_Response);
+    }
+  })
+   .catch(error => {
+     console.log(error)
+   });
+   //setPopularWritings([...popularWritings, _Response]);
+  }
+
   const settings = {
     dots: false,
     infinite: true,
@@ -62,15 +96,25 @@ export const Category = (props) => {
     <>
       <section className='category'>
         <div className='content'>
+          <h1 style={{marginBottom:20}}>Popular Writings</h1>
           <Slider {...settings}>
-            {category.map((item) => (
+            {popularWritings.map((item) => (
               <div className='boxs'>
-                <Link to={`/${item.category}`}>
+                <Link to={`/details/${item._id}`}>
                   <div className='box' onClick={() => props.setChanged(item.category)} key={item.id} >
-                      <img src={item.cover} alt='cover' />
+                      <img src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover} alt='' />
                       <div className='overlay'>
-                        <h4>{item.category}</h4>
-                        <p>{item.title}</p>
+                        <div className="titleBox" >
+                          <h4>{item.title}</h4>
+                        </div>
+                        <div className="descBox">
+                          <p>{item.desc.slice(0,100)}</p>
+                        </div>
+                        <Link to={`/${item.category}`}>
+                          <div className="categoryButton">
+                            <p style={{ justifySelf: "flex-end", color:"black"}}>{item.category}</p>
+                          </div>
+                        </Link>
                       </div>
                   </div>
                 </Link>

@@ -1,5 +1,6 @@
 .blog {
   margin: 50px 0;
+  margin-top: 10px;
 }
 .blog .boxItems {
   transition: 0.5s;

@@ -1,16 +1,21 @@
 import React, { Component, useCallback } from "react"
 import "./blog.css"
 import { AiOutlineTags, AiOutlineClockCircle, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai"
+import { FaRegUser } from "react-icons/fa"
+import { GrView } from "react-icons/gr"
 import { Link, useParams } from "react-router-dom"
 import axios from "axios"
 import { Category } from "../category/Category"
 import { category, currentCategory } from "../../assets/data/data"
+
 
 export class Card extends Component {
 
   constructor(props) {
     super(props)
   }
+
+
 
 
   render() {
@@ -29,10 +34,11 @@ export class Card extends Component {
                     <a href='/'>#{item.category}</a>
                   </div>
                   <h3>{item.title}</h3>
-                  <p>{item.desc.slice(0, 150)}...</p>
+                  <p>{item.desc.slice(0, 120)}...</p>
                   <div className='date'>
-                    <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.publishDate.replace(/#.*#/, "")}</label>
-                    <AiOutlineShareAlt className='icon' /> <label htmlFor=''>{item.author}</label>
+                    <FaRegUser style={{ marginBottom: 5 }} className='icon' /> <label htmlFor=''>{item.author}</label>
+                    <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.dateString}</label>
+                    <GrView className='icon' /> <label htmlFor=''>{item.views}</label>
                   </div>
                 </div>
               </div>
