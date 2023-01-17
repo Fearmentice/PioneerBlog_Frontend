@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react"
 import "./create.css"
 import { IoIosAddCircleOutline } from "react-icons/io"
+import { Editor } from 'react-draft-wysiwyg';
 import axios from "axios"
 
 export const Create = () => {
@@ -72,7 +73,7 @@ export const Create = () => {
             <input type='text' onChange={(event) => setTitle(event.target.value)} value={title} placeholder='Title' />
 
             <input type='text' onChange={(event) => setCategory(event.target.value)} value={category} placeholder='Category' />
-
+            
             <textarea name='' id='' cols='30' rows='10' onChange={(event) => setContent(event.target.value)} value={content}  placeholder='Content'></textarea>
 
             <input type='text' onChange={(event) => setAuthor(event.target.value)} value={author} placeholder='Author' />

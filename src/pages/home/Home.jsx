@@ -1,5 +1,5 @@
 import React from "react"
-import {useHistory, useParams} from "react-router-dom"
+import {useNavigate ,useHistory, useParams} from "react-router-dom"
 import { Component } from "react"
 import { Card } from "../../components/blog/Card"
 import axios from "axios"
@@ -77,22 +77,17 @@ export class Home extends Component{
         break;
       default:
         this.setCategory("");
+        this.props.history.push('/Home')
     }
-  }
-
-  returnCategory = () => {
-    if(category == "")
-    {
-      return "Home";
-    }
-    return this.state.category;
   }
 
   render(){
     return(
       <>
         <Category setChanged={this.setCategory}/>
-        <h1 style={{position:"inherit", marginLeft:50}}>{this.state.category == "" ? "Home" : this.state.category}</h1>
+        <h1 style={{position:"inherit", marginLeft:50}}>
+          {this.state.category == "" ? "Home" : this.state.category}
+        </h1>
         <Card category={this.state.category} posts={this.state.posts} />
       </>
     )
