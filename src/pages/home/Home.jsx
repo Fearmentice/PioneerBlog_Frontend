@@ -6,19 +6,34 @@ import axios from "axios"
 import { Category } from "../../components/category/Category"
 import { withRouter } from "react-router";
 import { category } from "../../assets/data/data"
+import { connect } from "react-redux";
+import jwtDecode from 'jwt-decode';
+import { IoConstructOutline } from "react-icons/io5"
 
 
-export class Home extends Component{
+
+const userInfo = state => {
+  const token = localStorage.getItem("jwtToken");
+  if(token) {
+      return jwtDecode(token);
+  }
+  else 
+      return state.auth.user;
+}
+
+class Home extends Component{
   constructor(props) {
     super(props)
 
     this.state = {
       category: "",
-      posts: []
+      posts: [],
+      user: {}
     }
     this.setCategory = this.setCategory.bind(this);
     this.fetchposts = this.fetchposts.bind(this);
     this.fetchPostsByCategory = this.fetchPostsByCategory.bind(this);
+    this.fetchUser = this.fetchUser.bind(this);
   }
 
   setCategory = async(_category) => {
@@ -51,7 +66,17 @@ export class Home extends Component{
     })
   }
 
+  fetchUser = async() => {
+    await axios.get(`http://localhost:8000/users/me`).then(response => {
+      console.log(response)
+      this.setState({ user: response.data })
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+
   componentDidMount(){
+    this.fetchUser();
     const category = this.props.match.params.category;
     switch(category) {
       case "Culture":
@@ -79,6 +104,7 @@ export class Home extends Component{
         this.setCategory("");
         this.props.history.push('/Home')
     }
+
   }
 
   render(){
@@ -86,10 +112,18 @@ export class Home extends Component{
       <>
         <Category setChanged={this.setCategory}/>
         <h1 style={{position:"inherit", marginLeft:50}}>
-          {this.state.category == "" ? "Home" : this.state.category}
+          {this.state.category == "" ? "Home": this.state.category}
         </h1>
         <Card category={this.state.category} posts={this.state.posts} />
       </>
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+      user: userInfo(state)
+  };
+};
+
+export default connect(mapStateToProps)(Home);

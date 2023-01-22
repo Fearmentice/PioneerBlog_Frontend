@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { setAuthorizationToken } from '../helpers/setAuthorizationToken';
 
-const login = (email, password) => {
-    return axios.post("https://pioneerblog-api.onrender.com/blogposts/users/login", { email, password })
+const login = async (email, password) => {
+    return await axios.post("http://localhost:8000/users/login", { email, password })
         .then(user => {
             //eğer kullanıcı bulunursa (user.data.status = true) 
             if (user.data.status) {

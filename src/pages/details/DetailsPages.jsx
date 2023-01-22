@@ -7,12 +7,14 @@ import { AiOutlineDelete } from "react-icons/ai"
 import {MdEmail} from "react-icons/md"
 import { blogs } from "../../assets/data/data"
 import { Header } from "../../components/header/Header"
-import { AiOutlineTags, AiOutlineClockCircle, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai"
+import { AiOutlineTags, AiFillEdit, AiOutlineClockCircle, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai"
 import { AiFillTwitterCircle, AiFillLinkedin, AiFillYoutube } from "react-icons/ai"
 import { BsFacebook } from "react-icons/bs"
 import axios from "axios"
 import { BiWindowOpen } from "react-icons/bi"
-import { Link, useParams } from "react-router-dom"
+import { Link, useHistory, useParams } from "react-router-dom"
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import { height } from "@mui/system"
 
 export class DetailsPages extends Component {
   constructor(props) {
@@ -25,6 +27,7 @@ export class DetailsPages extends Component {
     }
     this.setBlog = this.setBlog.bind(this);
     this.setPopularPosts = this.setPopularPosts.bind(this);
+    this.deletePost = this.deletePost.bind(this);
   }
 
   setId = async(_id) => {
@@ -56,6 +59,18 @@ export class DetailsPages extends Component {
     })
   }
 
+  deletePost = async() => {
+    await axios.delete(`https://pioneerblog-api.onrender.com/blogposts/${this.state.id}`).then(response => {
+      console.log(response)
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+
+  update = async() => {
+
+  }
+
   componentDidMount(){
     const id = this.props.match.params.id;
     this.setId(id);
@@ -74,6 +89,14 @@ export class DetailsPages extends Component {
               <img src={`https://pioneerblog-api.onrender.com/blogposts/image/` + this.state.blog.imageCover} alt='' />
             </div>
             <div className='desc'>
+              <Link to={"/Home"}>
+                <button onClick={() => this.deletePost()} className="adminDeleteButton">
+                  <RiDeleteBin6Line style={{color:"white", width:20, height:20}}/>
+                </button>
+              </Link>
+              <button className="adminEditButton">
+                <AiFillEdit style={{color:"white", width:20, height:20}}/>
+              </button>
               <p>{this.state.blog.desc}</p>
               {/* <p>"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?" Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."</p> */}
               <p>Author: {this.state.blog.author}</p>
@@ -82,8 +105,8 @@ export class DetailsPages extends Component {
           <div className="rightContainer">
             <div className="cardItems">
               <div className="card">
-                <h2 style={{width: 200}}>Share This Post</h2>
-                <hr style={{marginTop:15,marginLeft:5 ,width: 300, marginLeft:10}} />
+                <h2 style={{width: 210}}>Share This Post</h2>
+                <hr style={{marginTop:15,marginLeft:5 ,width: 300,}} />
               </div>
               <div className="card">
                 <button className="shareButtons" >
@@ -110,8 +133,8 @@ export class DetailsPages extends Component {
             </div>
             <div className="cardItems">
               <div className="card">
-                <h2 style={{width:200}}>Latest Releases</h2>
-                <hr style={{width: 300}}/>
+                <h2 style={{width:210}}>Latest Releases</h2>
+                <hr style={{marginTop:15,marginLeft:5 ,width: 300,}}/>
               </div>
               {this.state.popularPosts.map((item) => (
                 <Link to={`/details/${item._id}`} className="link">
@@ -131,7 +154,7 @@ export class DetailsPages extends Component {
             </div>
             <div className="cardItems">
               <div className="card">
-                <h2 style={{width:200}}>Categories</h2>
+                <h2 style={{width:210}}>Categories</h2>
                 <hr style={{marginTop:15,marginLeft:5 ,width: 300}} />
               </div>
               <div >

@@ -1,15 +1,33 @@
-import React from "react"
+import React,{useState} from "react"
 import logo from "../../assets/images/logo.svg"
 import "./header.css"
 import { User } from "./User"
 import { nav } from "../../assets/data/data"
 import { Link } from "react-router-dom"
+import axios from "axios"
+import { useEffect } from "react"
 
 export const Header = () => {
+  const [user, setUser ] = useState({});
+
    window.addEventListener("scroll", function () {
     const header = this.document.querySelector(".header")
     header.classList.toggle("active", this.window.scrollY > 100)
   }) 
+
+  useEffect(() => {
+    isAdmin();
+  }, [user])
+
+  const isAdmin = async() => {
+    await axios.get(`http://localhost:8000/users/me`).then(response => {
+      console.log(response)
+      setUser(response.data)
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+
   return (
     <>
       <header className='header'>
@@ -28,6 +46,7 @@ export const Header = () => {
           </nav>
           <div className='account flexCenter'>
             {/* <User /> */}
+            <h1 style={{textTransform:"capitalize"}}>{user.role == "admin" ? "Admin" : ""}</h1>
           </div>
         </div>
       </header>
