@@ -1,14 +1,10 @@
 import React from "react"
-import {useNavigate ,useHistory, useParams} from "react-router-dom"
 import { Component } from "react"
 import { Card } from "../../components/blog/Card"
 import axios from "axios"
 import { Category } from "../../components/category/Category"
-import { withRouter } from "react-router";
-import { category } from "../../assets/data/data"
 import { connect } from "react-redux";
 import jwtDecode from 'jwt-decode';
-import { IoConstructOutline } from "react-icons/io5"
 
 
 
@@ -100,9 +96,12 @@ class Home extends Component{
       case "Health":
         this.setCategory("Health");
         break;
+      case "Home":
+          this.setCategory("");
+          break;
       default:
         this.setCategory("");
-        this.props.history.push('/Home')
+        this.props.history.push('/')
     }
 
   }
@@ -112,7 +111,7 @@ class Home extends Component{
       <>
         <Category setChanged={this.setCategory}/>
         <h1 style={{position:"inherit", marginLeft:50}}>
-          {this.state.category == "" ? "Home": this.state.category}
+          {this.state.category === "" ? "Home": this.state.category}
         </h1>
         <Card category={this.state.category} posts={this.state.posts} />
       </>

@@ -1,18 +1,12 @@
-import React, {useCallback, useEffect, useState} from "react"
+import React, { useEffect, useState} from "react"
 import "./category.css"
-import { category } from "../../assets/data/data"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import Slider from "react-slick"
 import { GrFormPrevious } from "react-icons/gr"
 import { MdNavigateNext } from "react-icons/md"
-import { Card } from "../blog/Card"
-import { currentCategory } from "../../assets/data/data"
-import { RiWindyFill } from "react-icons/ri"
-import { Link, useHistory } from "react-router-dom"
+import { Link } from "react-router-dom"
 import axios from "axios"
-import { popperUnstyledClasses } from "@mui/base"
-import { flexbox } from "@mui/system"
 
 const SampleNextArrow = (props) => {
   const { onClick } = props
@@ -73,7 +67,7 @@ export const Category = (props) => {
     infinite: true,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 2,
+    slidesToScroll: 1,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
     responsive: [
@@ -87,9 +81,6 @@ export const Category = (props) => {
     ],
   }
 
-  const navigateToCategory = (_category) => {
-    useHistory().push(`/${_category}`);
-  }
 
 
   return (

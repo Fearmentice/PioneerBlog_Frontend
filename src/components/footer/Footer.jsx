@@ -1,7 +1,5 @@
 import React from "react"
-import { Link } from "react-router-dom"
-import { AiFillTwitterCircle, AiFillLinkedin, AiFillYoutube } from "react-icons/ai"
-import { BsFacebook } from "react-icons/bs"
+import { AiFillTwitterCircle, AiFillYoutube } from "react-icons/ai"
 import { RiInstagramFill } from "react-icons/ri"
 
 export const Footer = () => {

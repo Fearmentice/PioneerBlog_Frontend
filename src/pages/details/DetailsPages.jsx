@@ -1,20 +1,13 @@
-import React, { Component, useState } from "react"
+import React, { Component } from "react"
 import "./details.css"
 import "../../components/header/header.css"
-import img from "../../assets/images/b5.jpg"
-import { BsPencilSquare } from "react-icons/bs"
-import { AiOutlineDelete } from "react-icons/ai"
 import {MdEmail} from "react-icons/md"
-import { blogs } from "../../assets/data/data"
-import { Header } from "../../components/header/Header"
-import { AiOutlineTags, AiFillEdit, AiOutlineClockCircle, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai"
-import { AiFillTwitterCircle, AiFillLinkedin, AiFillYoutube } from "react-icons/ai"
+import {  AiFillEdit } from "react-icons/ai"
+import { AiFillTwitterCircle, AiFillLinkedin, } from "react-icons/ai"
 import { BsFacebook } from "react-icons/bs"
 import axios from "axios"
-import { BiWindowOpen } from "react-icons/bi"
-import { Link, useHistory, useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { height } from "@mui/system"
 
 export class DetailsPages extends Component {
   constructor(props) {
@@ -39,7 +32,6 @@ export class DetailsPages extends Component {
   }
 
   setBlog = async() => {
-    const url = window.location.href;
     await axios.get(`https://pioneerblog-api.onrender.com/blogposts/${this.state.id}`).then(response => {
       console.log(response)
       this.setState({ blog: response.data })
@@ -71,6 +63,10 @@ export class DetailsPages extends Component {
 
   }
 
+  userInfo = async() => {
+
+  }
+
   componentDidMount(){
     const id = this.props.match.params.id;
     this.setId(id);
@@ -89,11 +85,12 @@ export class DetailsPages extends Component {
               <img src={`https://pioneerblog-api.onrender.com/blogposts/image/` + this.state.blog.imageCover} alt='' />
             </div>
             <div className='desc'>
-              <Link to={"/Home"}>
+              {
+               <Link to={"/Home"}>
                 <button onClick={() => this.deletePost()} className="adminDeleteButton">
                   <RiDeleteBin6Line style={{color:"white", width:20, height:20}}/>
                 </button>
-              </Link>
+              </Link>}
               <button className="adminEditButton">
                 <AiFillEdit style={{color:"white", width:20, height:20}}/>
               </button>
@@ -139,7 +136,7 @@ export class DetailsPages extends Component {
               {this.state.popularPosts.map((item) => (
                 <Link to={`/details/${item._id}`} className="link">
                   <div className="box boxItems" onClick={() => this.setId(item._id)} >
-                    <img className="boxImage" src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover}/>
+                    <img alt="" className="boxImage" src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover}/>
                     <div className="postInfo">
                       <div style={{width: 275}}>
                         <b>{item.title}</b>

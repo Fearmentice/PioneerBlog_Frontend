@@ -1,13 +1,8 @@
-import React, {Component, useState, useEffect, useCallback} from "react"
-import { useHistory } from "react-router-dom";
+import React, {Component} from "react"
 import { connect } from "react-redux";
 import { login, logout } from "../../actions/authAction";
 import "./login.css"
 import back from "../../assets/images/my-account.jpg"
-import axios from "axios"
-import { Alert } from "@mui/material";
-import AlertTitle from '@mui/material/AlertTitle';
-import Form from "antd/es/form/Form";
 
 class Login extends Component {
   constructor(props){

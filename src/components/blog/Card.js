@@ -1,22 +1,12 @@
-import React, { Component, useCallback } from "react"
+import React, { Component } from "react"
 import "./blog.css"
-import { AiOutlineTags, AiOutlineClockCircle, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai"
+import { AiOutlineTags, AiOutlineClockCircle } from "react-icons/ai"
 import { FaRegUser } from "react-icons/fa"
 import { GrView } from "react-icons/gr"
-import { Link, useParams } from "react-router-dom"
-import axios from "axios"
-import { Category } from "../category/Category"
-import { category, currentCategory } from "../../assets/data/data"
+import { Link } from "react-router-dom"
 
 
 export class Card extends Component {
-
-  constructor(props) {
-    super(props)
-  }
-
-
-
 
   render() {
     return (

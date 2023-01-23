@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect } from "react"
 import "./create.css"
-import { IoIosAddCircleOutline } from "react-icons/io"
-import { Editor } from 'react-draft-wysiwyg';
 import axios from "axios"
 
 export const Create = () => {
@@ -11,14 +9,7 @@ export const Create = () => {
   const [content, setContent] = useState('');
 
   const [image, setImage] = useState('');
-  const [preview, setPreview] = useState()
-  
-  const [response, setResponse] = useState('');
-
-  const onImageChange = (event) => {
-    setImage(event.target.files[0]);
-    console.log(image);
-  }
+  const [preview, setPreview] = useState();
 
       // create a preview as a side effect, whenever selected file is changed
       useEffect(() => {
@@ -53,7 +44,7 @@ export const Create = () => {
       'Content-Type': 'multipart/form-data'
     }}).then(response =>{
       console.log(response)
-      setResponse(response.data.doc)})
+      })
      .catch(error => {
        console.log(error)
      });
@@ -64,7 +55,7 @@ export const Create = () => {
       <section className='newPost'>
         <div className='container boxItems'>
           <div className='img '>
-            <img src={preview} alt='image' className='image-preview' />
+            <img src={preview} alt='preview' className='image-preview' />
           </div>
           <form>
             <div className='inputfile flexCenter'>
