@@ -13,10 +13,10 @@ export class Card extends Component {
       <section className='blog' >
         <div className='container grid3'>
           {this.props.posts.map((item) => (
-            <Link to={`/details/${item._id}`} className='link'>
-              <div className='box boxItems' key={item._id}>
+            <Link to={`/details/${item.id}`} className='link'>
+              <div className='box boxItems' key={item.id}>
                 <div className='img'>
-                  <img src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover} alt='' />
+                  <img src={item.imageCover} alt='' />
                 </div>
                 <div className='details'>
                   <div className='tag'>
@@ -24,11 +24,11 @@ export class Card extends Component {
                     <a href='/'>#{item.category}</a>
                   </div>
                   <h3>{item.title}</h3>
-                  <p>{item.desc.slice(0, 120)}...</p>
+                  <p>{item.body.slice(0, 120)}...</p>
                   <div className='date'>
                     <FaRegUser style={{ marginBottom: 5 }} className='icon' /> <label htmlFor=''>{item.author}</label>
-                    <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.dateString}</label>
-                    <GrView className='icon' /> <label htmlFor=''>{item.views}</label>
+                    <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.title}</label>
+                    <GrView className='icon' /> <label htmlFor=''>{item.view}</label>
                   </div>
                 </div>
               </div>

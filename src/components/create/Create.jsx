@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react"
 import "./create.css"
 import axios from "axios"
+import { db } from "../../firebase-config";
+import {collection, setDoc, doc} from "firebase/firestore";
+import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
+import { v4 } from "uuid";
 
 export const Create = () => {
   const [title, setTitle] = useState('');
@@ -10,6 +14,7 @@ export const Create = () => {
 
   const [image, setImage] = useState('');
   const [preview, setPreview] = useState();
+  const storage = getStorage();
 
       // create a preview as a side effect, whenever selected file is changed
       useEffect(() => {
@@ -17,7 +22,7 @@ export const Create = () => {
             setPreview(undefined)
             return
         }
-
+      
         const objectUrl = URL.createObjectURL(image)
         setPreview(objectUrl)
 
@@ -26,28 +31,27 @@ export const Create = () => {
     }, [image])
 
   const createPost = async() => {
-    let _Response;
-     await axios.post('https://pioneerblog-api.onrender.com/blogposts', {title: title, category:category, author:author, desc:content}).then(_response =>{
-     console.log(_response)
-     _Response = _response.data.doc; })
-    .catch(error => {
-      console.log(error)
-    });
+    if(image == null) return;
+    const imageRef = ref(storage,`images/${image.name + v4()}`)
+    await uploadBytes(imageRef, image).then(() => {
+      console.log("Image uploaded.");
+    })
 
-    const formData = new FormData();
-    
-    formData.append("coverPhoto", image);
+    getDownloadURL(imageRef).then((url) => {
+      // Add a new document in collection "blogposts"
+      const newBlogpostRef = doc(collection(db, "blogposts"));
+
+      setDoc(newBlogpostRef, {
+        title: title,
+        author: author,
+        category: category,
+        imageCover: url,
+        body: content,
+        view: 0
+      });
+    })
 
 
-  await axios.patch(`https://pioneerblog-api.onrender.com/blogposts/${_Response._id}`, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }}).then(response =>{
-      console.log(response)
-      })
-     .catch(error => {
-       console.log(error)
-     });
   }
 
   return (

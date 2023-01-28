@@ -7,6 +7,8 @@ import { GrFormPrevious } from "react-icons/gr"
 import { MdNavigateNext } from "react-icons/md"
 import { Link } from "react-router-dom"
 import axios from "axios"
+import { db } from "../../firebase-config";
+import {collection, getDoc, getDocs, doc, query, orderBy, limit, where} from "firebase/firestore";
 
 const SampleNextArrow = (props) => {
   const { onClick } = props
@@ -35,11 +37,11 @@ export const Category = (props) => {
   const [popularWritings, setPopularWritings] = useState([]);
 
   useEffect(() => {
+    getCategory("Sport");
     getCategory("Culture");
     getCategory("Technology");
-    getCategory("World");
-    getCategory("Sport");
     getCategory("History");
+    getCategory("World");
     getCategory("News");
     getCategory("Health");
     // console.log(popularWritings.length);
@@ -48,18 +50,13 @@ export const Category = (props) => {
   }, [popularWritings]);
 
   const getCategory = async(_Category) => {
-    const query = "limit=1&sort=-views";
-    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${_Category}?${query}`).then(_response =>{
-    console.log(_response)
-    const _Response = _response.data.doc[0];
-    if(_Response){
-      popularWritings.push(_Response);
-    }
-  })
-   .catch(error => {
-     console.log(error)
-   });
-   //setPopularWritings([...popularWritings, _Response]);
+    const blogpostsRef = collection(db, 'blogposts');
+    const queryRef = query(blogpostsRef, where("category", "==", `${_Category}`) ,orderBy('view', 'asc') , limit(1));
+    const docSnap = await getDocs(queryRef);
+    docSnap.forEach((doc) => {
+      console.log(doc.data())
+      popularWritings.push(doc.data());
+    })
   }
 
   const settings = {
@@ -91,15 +88,15 @@ export const Category = (props) => {
           <Slider {...settings}>
             {popularWritings.map((item) => (
               <div className='boxs'>
-                <Link to={`/details/${item._id}`}>
+                <Link to={`/details/${item.id}`}>
                   <div className='box' onClick={() => props.setChanged(item.category)} key={item.id} >
-                      <img src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover} alt='' />
+                      <img src={item.imageCover} alt='' />
                       <div className='overlay'>
                         <div className="titleBox" >
                           <h4>{item.title}</h4>
                         </div>
                         <div className="descBox">
-                          <p>{item.desc.slice(0,100)}</p>
+                          <p>{item.body.slice(0,100)}</p>
                         </div>
                         <Link to={`/${item.category}`}>
                           <div className="categoryButton">

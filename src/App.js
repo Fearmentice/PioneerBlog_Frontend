@@ -20,6 +20,7 @@ const App = () => {
           <Route exact path='/Home' component={Home} />
           <Route exact path='/about' component={About} />
           <Route exact path='/admin/login' component={Login} />
+          <Route exact path='/admin/create' component={Create} />
           <PrivateRoute exact path='/admin/create' component={Create} />
           <Route exact path='/details/:id' component={DetailsPages} />
           <Route exact path='/contact' component={Contact} />

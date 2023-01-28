@@ -5,6 +5,8 @@ import axios from "axios"
 import { Category } from "../../components/category/Category"
 import { connect } from "react-redux";
 import jwtDecode from 'jwt-decode';
+import { db } from "../../firebase-config";
+import {collection, getDoc, getDocs, query, where} from "firebase/firestore";
 
 
 
@@ -29,7 +31,6 @@ class Home extends Component{
     this.setCategory = this.setCategory.bind(this);
     this.fetchposts = this.fetchposts.bind(this);
     this.fetchPostsByCategory = this.fetchPostsByCategory.bind(this);
-    this.fetchUser = this.fetchUser.bind(this);
   }
 
   setCategory = async(_category) => {
@@ -43,36 +44,33 @@ class Home extends Component{
   }
 
   fetchposts = async() => {
-    const sort = "sort=-publishDate";
-    await axios.get(`https://pioneerblog-api.onrender.com/blogposts${"?" + sort}`).then(response => {
-      console.log(response)
-      this.setState({ posts: response.data.doc })
-    }).catch(error => {
-      console.log(error)
+    await getDocs(collection(db, "blogposts"))
+    .then((querySnapshot)=>{               
+        const Posts = querySnapshot.docs
+            .map((doc) => ({...doc.data(), id:doc.id }));
+        this.setState({posts: Posts});                
+        console.log(Posts);
     })
   }
 
   fetchPostsByCategory = async() => {
-    const sort = "sort=-publishDate";
-    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${this.state.category + "?" + sort}`).then(response => {
-      console.log(response)
-      this.setState({ posts: response.data.doc })
-    }).catch(error => {
-      console.log(error)
-    })
+    const blogpostsRef = collection(db, "blogposts");
+    try {
+      const q = query(blogpostsRef, where("category", "==", `${this.state.category}`));
+      const docSnap = await getDocs(q);
+      let postArray = [];
+      docSnap.forEach((doc) => {
+        postArray.push(doc.data());
+      })
+      this.setState({posts: postArray});
+    } catch(error) {
+        console.log(error)
+    };
   }
 
-  fetchUser = async() => {
-    await axios.get(`http://localhost:8000/users/me`).then(response => {
-      console.log(response)
-      this.setState({ user: response.data })
-    }).catch(error => {
-      console.log(error)
-    })
-  }
 
   componentDidMount(){
-    this.fetchUser();
+    //this.fetchposts();
     const category = this.props.match.params.category;
     switch(category) {
       case "Culture":
