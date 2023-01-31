@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
 import "./create.css"
-import axios from "axios"
 import { db } from "../../firebase-config";
-import {collection, setDoc, doc} from "firebase/firestore";
+import {collection, addDoc, Timestamp} from "firebase/firestore";
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
 
@@ -37,20 +36,25 @@ export const Create = () => {
       console.log("Image uploaded.");
     })
 
-    getDownloadURL(imageRef).then((url) => {
-      // Add a new document in collection "blogposts"
-      const newBlogpostRef = doc(collection(db, "blogposts"));
-
-      setDoc(newBlogpostRef, {
-        title: title,
-        author: author,
-        category: category,
-        imageCover: url,
-        body: content,
-        view: 0
-      });
+    const imageUrl = await getDownloadURL(imageRef).then(url => {
+      return url;
     })
-
+    // Add a new document in collection "blogposts"
+    const newBlogpostRef = collection(db, "blogposts");
+    const today = new Date();
+    
+    const newDocument = await addDoc(newBlogpostRef, {
+      title: title,
+      author: author,
+      category: category,
+      imageCover: imageUrl,
+      body: content,
+      view: 0,
+      publishDate: Timestamp.now(),
+      date: `${('0' + today.getDate()).slice(-2)}/${('0' + today.getMonth() + 1).slice(-2)}/${today.getFullYear()}`,
+      active: true
+    });
+    console.log("Document created: " + newDocument);
 
   }
 

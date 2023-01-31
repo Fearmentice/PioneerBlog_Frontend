@@ -12,23 +12,22 @@ import { PrivateRoute } from "./pages/login/privateRoute"
 
 const App = () => {
   return (
-    <>
-      <Router>
-        <Header />
-        <Switch>
-          <Route exact path='/' component={Home} />
-          <Route exact path='/Home' component={Home} />
-          <Route exact path='/about' component={About} />
-          <Route exact path='/admin/login' component={Login} />
-          <Route exact path='/admin/create' component={Create} />
-          <PrivateRoute exact path='/admin/create' component={Create} />
-          <Route exact path='/details/:id' component={DetailsPages} />
-          <Route exact path='/contact' component={Contact} />
-          <Route exact path='/:category' component={Home} />
-        </Switch>
-        <Footer />
-      </Router>
-    </>
+    //<React.StrictMode>
+    <Router>
+      <Header />
+      <Switch>
+        <Route exact path='/' component={Home} />
+        <Route exact path='/Home' component={Home} />
+        <Route exact path='/about' component={About} />
+        <Route exact path='/admin/login' component={Login} />
+        <PrivateRoute exact path='/admin/create' component={Create} />
+        <Route exact path='/details/:id' component={DetailsPages} />
+        <Route exact path='/contact' component={Contact} />
+        <Route exact path='/:category' component={Home} />
+      </Switch>
+      <Footer />
+    </Router>
+    //</React.StrictMode>
   )
 }
 export default App

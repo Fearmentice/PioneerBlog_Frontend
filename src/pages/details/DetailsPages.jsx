@@ -5,11 +5,10 @@ import {MdEmail} from "react-icons/md"
 import {  AiFillEdit } from "react-icons/ai"
 import { AiFillTwitterCircle, AiFillLinkedin, } from "react-icons/ai"
 import { BsFacebook } from "react-icons/bs"
-import axios from "axios"
 import { Link } from "react-router-dom"
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { db } from "../../firebase-config";
-import {collection, getDoc, getDocs, doc, query, orderBy, limit} from "firebase/firestore";
+import {collection, getDoc, getDocs, doc, query, orderBy, limit, updateDoc, where} from "firebase/firestore";
 
 export class DetailsPages extends Component {
   constructor(props) {
@@ -18,16 +17,17 @@ export class DetailsPages extends Component {
     this.state = {
       id:"",
       blog: [],
-      popularPosts:[]
+      popularPosts:[],
+      user: {}
     }
     this.setBlog = this.setBlog.bind(this);
     this.setPopularPosts = this.setPopularPosts.bind(this);
     this.deletePost = this.deletePost.bind(this);
+    this.userInfo = this.userInfo.bind(this);
   }
 
   setId = async(_id) => {
     await this.setState({ id: _id });
-    console.log(this.state.id);
     if(this.state.id){
       this.setBlog();
     }
@@ -36,29 +36,45 @@ export class DetailsPages extends Component {
   setBlog = async() => {
     const docRef = doc(db, "blogposts", this.state.id);
     const docSnap = await getDoc(docRef);
-    
+
+    const data = {
+      view: docSnap.data().view + 1
+    }
+    await updateDoc(docRef, data)
+    .then(docRef => {
+        console.log("A New Document Field has been added to an existing document");
+    })
+
+    const updatedDoc = await getDoc(docRef);
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-      this.setState({blog: docSnap.data()})
+      this.setState({blog: updatedDoc.data()});
+      console.log("Blog data has been fethced: " + updateDoc);
     } else {
       // doc.data() will be undefined in this case
-      console.log("No such document!");
     }
   }
 
   setPopularPosts = async() => {
     const blogpostsRef = collection(db, 'blogposts');
-    const queryRef = query(blogpostsRef, orderBy('view', 'asc') , limit(5));
+    const queryRef = query(blogpostsRef,where("active", "==", true), orderBy('view', 'asc') , limit(5));
     const docSnap = await getDocs(queryRef);
     let postArray = [];
     docSnap.forEach((doc) => {
-      postArray.push(doc.data());
+      postArray.push({...doc.data(), id:doc.id });
     })
+    console.log("Populer posts fetched: " + postArray);
     this.setState({popularPosts: postArray});
   }
 
   deletePost = async() => {
-
+    const docRef = doc(db, "blogposts", this.state.id);
+    const data = {
+      active: false
+    }
+    await updateDoc(docRef, data)
+    .then(docRef => {
+        console.log("Document deactivated.");
+    })
   }
 
   update = async() => {
@@ -66,13 +82,19 @@ export class DetailsPages extends Component {
   }
 
   userInfo = async() => {
-
+    if(!localStorage.getItem("jwtToken")) return;
+    const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
+    const docSnap = await getDoc(docRef);
+    const user = docSnap.data();
+    user.role === "admin" ? this.setState({user: user})  : this.setState({user: null}) ; 
+    console.log("User Role has been set: " + user.role)
   }
 
   componentDidMount(){
     const id = this.props.match.params.id;
     this.setId(id);
     this.setPopularPosts();
+    this.userInfo();
   }
 
   render(){
@@ -87,15 +109,18 @@ export class DetailsPages extends Component {
               <img src={this.state.blog.imageCover} alt='' />
             </div>
             <div className='desc'>
-              {/* {
-               <Link to={"/Home"}>
+              {this.state.user.role === "admin" ?
+                <Link to={"/Home"}>
                 <button onClick={() => this.deletePost()} className="adminDeleteButton">
                   <RiDeleteBin6Line style={{color:"white", width:20, height:20}}/>
                 </button>
-              </Link>} */}
-              {/* <button className="adminEditButton">
+              </Link>
+              :null}
+               {this.state.user.role === "admin" ?
+                <button className="adminEditButton">
                 <AiFillEdit style={{color:"white", width:20, height:20}}/>
-              </button> */}
+              </button>
+              :null}
               <p>{this.state.blog.body}</p>
               {/* <p>"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?" Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."</p> */}
               <p>Author: {this.state.blog.author}</p>
@@ -136,8 +161,8 @@ export class DetailsPages extends Component {
                 <hr style={{marginTop:15,marginLeft:5 ,width: 300,}}/>
               </div>
               {this.state.popularPosts.map((item) => (
-                <Link to={`/details/${item._id}`} className="link">
-                  <div className="box boxItems" onClick={() => this.setId(item._id)} >
+                <Link to={`/details/${item.id}`} className="link">
+                  <div className="box boxItems" onClick={() => this.setId(item.id)} >
                     <img alt="" className="boxImage" src={item.imageCover}/>
                     <div className="postInfo">
                       <div style={{width: 275}}>

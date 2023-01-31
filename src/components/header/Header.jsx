@@ -2,8 +2,9 @@ import React,{useState} from "react"
 import "./header.css"
 import { nav } from "../../assets/data/data"
 import { Link } from "react-router-dom"
-import axios from "axios"
 import { useEffect } from "react"
+import { db } from "../../firebase-config";
+import {getDoc, doc, } from "firebase/firestore";
 
 export const Header = () => {
   const [user, setUser ] = useState({});
@@ -15,15 +16,15 @@ export const Header = () => {
 
   useEffect(() => {
     isAdmin();
-  }, [user])
+  }, [])
 
   const isAdmin = async() => {
-    await axios.get(`http://localhost:8000/users/me`).then(response => {
-      console.log(response)
-      setUser(response.data)
-    }).catch(error => {
-      console.log(error)
-    })
+    if(!localStorage.getItem("jwtToken")) return;
+    const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
+    const docSnap = await getDoc(docRef);
+    const user = docSnap.data();
+    user.role === "admin" ? setUser(user) : setUser(null); 
+    console.log("User Role has been set: " + user.role)
   }
 
   return (
@@ -44,7 +45,6 @@ export const Header = () => {
             </ul>
           </nav>
           <div className='account flexCenter'>
-            {/* <User /> */}
             <h1 style={{textTransform:"capitalize"}}>{user.role === "admin" ? "Admin" : ""}</h1>
           </div>
         </div>

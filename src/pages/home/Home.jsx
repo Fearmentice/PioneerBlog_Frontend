@@ -1,23 +1,12 @@
 import React from "react"
 import { Component } from "react"
 import { Card } from "../../components/blog/Card"
-import axios from "axios"
 import { Category } from "../../components/category/Category"
-import { connect } from "react-redux";
-import jwtDecode from 'jwt-decode';
 import { db } from "../../firebase-config";
-import {collection, getDoc, getDocs, query, where} from "firebase/firestore";
+import {collection, getDocs, query, where, orderBy, limit} from "firebase/firestore";
 
 
 
-const userInfo = state => {
-  const token = localStorage.getItem("jwtToken");
-  if(token) {
-      return jwtDecode(token);
-  }
-  else 
-      return state.auth.user;
-}
 
 class Home extends Component{
   constructor(props) {
@@ -44,23 +33,26 @@ class Home extends Component{
   }
 
   fetchposts = async() => {
-    await getDocs(collection(db, "blogposts"))
-    .then((querySnapshot)=>{               
-        const Posts = querySnapshot.docs
-            .map((doc) => ({...doc.data(), id:doc.id }));
-        this.setState({posts: Posts});                
-        console.log(Posts);
+
+    const blogpostsRef = collection(db, 'blogposts');
+    const queryRef = query(blogpostsRef,  where("active", "==", true) , orderBy("publishDate", "desc"), limit(12));
+    const docSnap = await getDocs(queryRef);
+    let _posts = [];
+    docSnap.forEach((doc) => {
+      _posts.push({...doc.data(), id:doc.id });
     })
+    this.setState({posts: _posts});
+    console.log(_posts);
   }
 
   fetchPostsByCategory = async() => {
     const blogpostsRef = collection(db, "blogposts");
     try {
-      const q = query(blogpostsRef, where("category", "==", `${this.state.category}`));
+      const q = query(blogpostsRef,where("active", '==', true), where("category", "==", `${this.state.category}`, limit(12)));
       const docSnap = await getDocs(q);
       let postArray = [];
       docSnap.forEach((doc) => {
-        postArray.push(doc.data());
+        postArray.push({...doc.data(), id:doc.id });
       })
       this.setState({posts: postArray});
     } catch(error) {
@@ -100,6 +92,7 @@ class Home extends Component{
       default:
         this.setCategory("");
         this.props.history.push('/')
+      console.log(localStorage.getItem("jwtToken"))
     }
 
   }
@@ -117,10 +110,5 @@ class Home extends Component{
   }
 }
 
-const mapStateToProps = state => {
-  return {
-      user: userInfo(state)
-  };
-};
 
-export default connect(mapStateToProps)(Home);
+export default Home;

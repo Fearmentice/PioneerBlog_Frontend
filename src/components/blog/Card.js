@@ -27,7 +27,7 @@ export class Card extends Component {
                   <p>{item.body.slice(0, 120)}...</p>
                   <div className='date'>
                     <FaRegUser style={{ marginBottom: 5 }} className='icon' /> <label htmlFor=''>{item.author}</label>
-                    <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.title}</label>
+                    <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.date}</label>
                     <GrView className='icon' /> <label htmlFor=''>{item.view}</label>
                   </div>
                 </div>

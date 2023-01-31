@@ -6,9 +6,8 @@ import Slider from "react-slick"
 import { GrFormPrevious } from "react-icons/gr"
 import { MdNavigateNext } from "react-icons/md"
 import { Link } from "react-router-dom"
-import axios from "axios"
 import { db } from "../../firebase-config";
-import {collection, getDoc, getDocs, doc, query, orderBy, limit, where} from "firebase/firestore";
+import {collection, getDocs, query, orderBy, limit, where} from "firebase/firestore";
 
 const SampleNextArrow = (props) => {
   const { onClick } = props
@@ -44,18 +43,16 @@ export const Category = (props) => {
     getCategory("World");
     getCategory("News");
     getCategory("Health");
-    // console.log(popularWritings.length);
-    //setPopularWritings([...popularWritings, {name:"Talha", surname:"Şahin"}])
-    console.log(popularWritings);
+  console.log(popularWritings);
   }, [popularWritings]);
 
   const getCategory = async(_Category) => {
     const blogpostsRef = collection(db, 'blogposts');
-    const queryRef = query(blogpostsRef, where("category", "==", `${_Category}`) ,orderBy('view', 'asc') , limit(1));
+    const queryRef = query(blogpostsRef, where("active", "==", true), where("category", "==", `${_Category}`) ,orderBy('view', 'asc') , limit(1));
     const docSnap = await getDocs(queryRef);
     docSnap.forEach((doc) => {
       console.log(doc.data())
-      popularWritings.push(doc.data());
+      popularWritings.push({...doc.data(), id:doc.id });
     })
   }
 

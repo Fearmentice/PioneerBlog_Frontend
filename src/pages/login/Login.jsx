@@ -14,25 +14,6 @@ class Login extends Component {
     }
   }
 
-//  loginRequest = async() => {
-//   let _Response;
-//   const self = this;
-//   await axios.post('https://pioneerblog-api.onrender.com/users/login', {email: email, password: password}).then(_response =>{
-//     console.log(_response)
-//     _Response = _response.data; 
-//   })
-//    .catch(error => {
-//      console.log(error);
-//      _Response = "error";
-//    });
-//    if(_Response != "error" && _Response.status == "success"){
-//     props.setIsLoggedIn(true);
-//     alert("Success");
-//    }else{
-//     alert("Email or Password is not correct!");
-//    }
-//  }
-
 handleChange = e => {
   this.setState({
       [e.target.name]: e.target.value
