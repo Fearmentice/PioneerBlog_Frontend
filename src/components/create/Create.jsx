@@ -6,6 +6,9 @@ import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
 import { Link } from "react-router-dom";
 
+import {Editor as ClassicEditor} from 'ckeditor5-custom-build/build/ckeditor';
+import {CKEditor} from '@ckeditor/ckeditor5-react'
+
 export const Create = () => {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
@@ -15,6 +18,8 @@ export const Create = () => {
   const [image, setImage] = useState('');
   const [preview, setPreview] = useState();
   const storage = getStorage();
+
+  const [text, setText] = useState('');
 
       // create a preview as a side effect, whenever selected file is changed
       useEffect(() => {

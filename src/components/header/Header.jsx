@@ -20,7 +20,7 @@ const items = [
   {
     key: '2',
     label:  (
-        <p onClick={() => window.location.replace('/Technology')} target="_blank" rel="noopener noreferrer">
+        <p onClick={() => window.location.replace('/Culture')} target="_blank" rel="noopener noreferrer">
           Culture
         </p>
     ),
@@ -28,7 +28,7 @@ const items = [
   {
     key: '3',
     label:  (
-        <p onClick={() => window.location.replace('/Technology')} target="_blank" rel="noopener noreferrer">
+        <p onClick={() => window.location.replace('/World')} target="_blank" rel="noopener noreferrer">
           World
         </p>
     ),
@@ -36,7 +36,7 @@ const items = [
   {
     key: '4',
     label:  (
-        <p onClick={() => window.location.replace('/Technology')} target="_blank" rel="noopener noreferrer">
+        <p onClick={() => window.location.replace('/History')} target="_blank" rel="noopener noreferrer">
           History
         </p>
     ),
@@ -44,7 +44,7 @@ const items = [
   {
     key: '5',
     label:  (
-        <p onClick={() => window.location.replace('/Technology')} target="_blank" rel="noopener noreferrer">
+        <p onClick={() => window.location.replace('/Sport')} target="_blank" rel="noopener noreferrer">
           Sport
         </p>
     ),
