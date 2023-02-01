@@ -3,8 +3,8 @@ import "./header.css"
 import { nav } from "../../assets/data/data"
 import { Link} from "react-router-dom"
 import { useEffect } from "react"
-import { DownOutlined, SmileOutlined } from '@ant-design/icons';
-import { Dropdown, Space } from "antd"
+import { DownOutlined } from '@ant-design/icons';
+import { Dropdown } from "antd"
 import { db } from "../../firebase-config";
 import {getDoc, doc, } from "firebase/firestore";
 

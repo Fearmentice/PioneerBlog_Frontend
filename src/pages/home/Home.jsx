@@ -4,9 +4,7 @@ import { Card } from "../../components/blog/Card"
 import './Home.css'
 import { Category } from "../../components/category/Category"
 import { db } from "../../firebase-config";
-import {collection, getDocs, startAfter, endBefore, query, where, orderBy, limit, endAt, limitToLast} from "firebase/firestore";
-import { async } from "@firebase/util"
-import { Link } from "react-router-dom"
+import {collection, getDocs, startAfter, endBefore, query, where, orderBy, limit, limitToLast} from "firebase/firestore";
 
 
 
@@ -41,8 +39,6 @@ class Home extends Component{
   fetchposts = async() => {
     //Blogpost ref.
     const blogpostsRef = collection(db, 'blogposts');
-
-    const lastVisible = this.state.lastPost;
 
     //Query.
     const queryRef = query(blogpostsRef,  
@@ -99,7 +95,7 @@ class Home extends Component{
           _posts.push({...doc.data(), id:doc.id });
         });
         //Check if there is next page.
-        if (_posts.length == 0){
+        if (_posts.length === 0){
           return;
         }
         this.setState({posts: _posts});
