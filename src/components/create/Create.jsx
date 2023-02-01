@@ -4,6 +4,7 @@ import { db } from "../../firebase-config";
 import {collection, addDoc, Timestamp} from "firebase/firestore";
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
+import { Link } from "react-router-dom";
 
 export const Create = () => {
   const [title, setTitle] = useState('');
@@ -78,7 +79,9 @@ export const Create = () => {
             <input type='text' onChange={(event) => setAuthor(event.target.value)} value={author} placeholder='Author' />
 
           </form>
-            <button className='button' onClick={() => {createPost()}}>Create Post</button>
+            <Link to={'/'}>
+              <button className='button' onClick={() => {createPost()}}>Create Post</button>
+            </Link>
         </div>
       </section>
     </>

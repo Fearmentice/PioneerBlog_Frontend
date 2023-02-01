@@ -10,17 +10,11 @@ export const nav = [
   },
   {
     id: 2,
-    text: "Categories",
-    url: "/",
-    dropdowns: "asd"
-  },
-  {
-    id: 3,
     text: "about",
     url: "/about",
   },
   {
-    id: 4,
+    id: 3,
     text: "contact",
     url: "/contact",
   },

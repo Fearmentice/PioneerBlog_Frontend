@@ -1,9 +1,12 @@
 import React from "react"
 import { Component } from "react"
 import { Card } from "../../components/blog/Card"
+import './Home.css'
 import { Category } from "../../components/category/Category"
 import { db } from "../../firebase-config";
-import {collection, getDocs, query, where, orderBy, limit} from "firebase/firestore";
+import {collection, getDocs, startAfter, endBefore, query, where, orderBy, limit, endAt, limitToLast} from "firebase/firestore";
+import { async } from "@firebase/util"
+import { Link } from "react-router-dom"
 
 
 
@@ -15,7 +18,10 @@ class Home extends Component{
     this.state = {
       category: "",
       posts: [],
-      user: {}
+      user: {},
+      firstPost: {},
+      lastPost: {},
+      pageSize: 9
     }
     this.setCategory = this.setCategory.bind(this);
     this.fetchposts = this.fetchposts.bind(this);
@@ -33,22 +39,36 @@ class Home extends Component{
   }
 
   fetchposts = async() => {
-
+    //Blogpost ref.
     const blogpostsRef = collection(db, 'blogposts');
-    const queryRef = query(blogpostsRef,  where("active", "==", true) , orderBy("publishDate", "desc"), limit(12));
+
+    const lastVisible = this.state.lastPost;
+
+    //Query.
+    const queryRef = query(blogpostsRef,  
+      where("active", "==", true) , 
+      orderBy("publishDate", "desc"),
+      limit(this.state.pageSize));
     const docSnap = await getDocs(queryRef);
     let _posts = [];
     docSnap.forEach((doc) => {
       _posts.push({...doc.data(), id:doc.id });
     })
     this.setState({posts: _posts});
-    console.log(_posts);
+    this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]});
+    
   }
 
   fetchPostsByCategory = async() => {
+    //Blogpost reference.
     const blogpostsRef = collection(db, "blogposts");
     try {
-      const q = query(blogpostsRef,where("active", '==', true), where("category", "==", `${this.state.category}`, limit(12)));
+       // Query.
+      const q = query(blogpostsRef,
+        where("active", '==', true),
+        where("category", "==", `${this.state.category}`,
+        limit(12)));
+
       const docSnap = await getDocs(q);
       let postArray = [];
       docSnap.forEach((doc) => {
@@ -60,9 +80,62 @@ class Home extends Component{
     };
   }
 
+  onPrevious = async() => {
+        //Blogpost ref.
+        const blogpostsRef = collection(db, 'blogposts');
 
-  componentDidMount(){
-    //this.fetchposts();
+        const lastVisible = this.state.firstPost;
+        console.log(lastVisible);
+
+        //Query.
+        const queryRef = query(blogpostsRef,  
+          where("active", "==", true) , 
+          orderBy("publishDate", "desc"), 
+          endBefore(lastVisible?lastVisible:0),
+          limitToLast(this.state.pageSize));
+        const docSnap = await getDocs(queryRef);
+        let _posts = [];
+        docSnap.forEach((doc) => {
+          _posts.push({...doc.data(), id:doc.id });
+        });
+        //Check if there is next page.
+        if (_posts.length == 0){
+          return;
+        }
+        this.setState({posts: _posts});
+        this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]});
+        this.setState({firstPost: docSnap.docs[0]});
+  }
+
+  onNext = async() => {
+        //Blogpost ref.
+        const blogpostsRef = collection(db, 'blogposts');
+
+        const lastVisible = this.state.lastPost;
+
+        //Query.
+        const queryRef = query(blogpostsRef,  
+          where("active", "==", true) , 
+          orderBy("publishDate", "desc"), 
+          startAfter(lastVisible?lastVisible:0),
+          limit(this.state.pageSize));
+        const docSnap = await getDocs(queryRef);
+        let _posts = [];
+        docSnap.forEach((doc) => {
+          _posts.push({...doc.data(), id:doc.id });
+        })
+        //Check if there is next page.
+        if (_posts.length == 0){
+          return;
+        }
+
+        this.setState({posts: _posts});
+        console.log(_posts);
+        this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]})
+        this.setState({firstPost: docSnap.docs[0]});
+  }
+
+  updateCategory = async() => {
     const category = this.props.match.params.category;
     switch(category) {
       case "Culture":
@@ -93,18 +166,28 @@ class Home extends Component{
         this.setCategory("");
         this.props.history.push('/')
       console.log(localStorage.getItem("jwtToken"))
-    }
-
+     }
   }
+
+  componentDidMount(){
+    //this.fetchposts();
+    this.updateCategory();
+  }
+
 
   render(){
     return(
       <>
         <Category setChanged={this.setCategory}/>
-        <h1 style={{position:"inherit", marginLeft:50}}>
-          {this.state.category === "" ? "Home": this.state.category}
-        </h1>
+          <h1 style={{position:"inherit", marginLeft:50}}>
+            {this.state.category === "" ? "Home": this.state.category}
+          </h1>
         <Card category={this.state.category} posts={this.state.posts} />
+          <div className="Pagination">
+            {/* <Pagination defaultCurrent={1} total={50} />    */}
+              <a onClick={() => this.onPrevious()} class="previous round paginate">{'<'}</a>
+              <a onClick={() => this.onNext()} class="nextButton round paginate">{'>'}</a>
+          </div>
       </>
     )
   }
