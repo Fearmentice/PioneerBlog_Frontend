@@ -87,7 +87,9 @@ export const Category = (props) => {
               <div className='boxs'>
                 <Link to={`/details/${item.id}`}>
                   <div className='box' onClick={() => props.setChanged(item.category)} key={item.id} >
+                    <div className="imgContainer">
                       <img src={item.imageCover} alt='' />
+                      </div>
                       <div className='overlay'>
                         <div className="titleBox" >
                           <h4>{item.title}</h4>
