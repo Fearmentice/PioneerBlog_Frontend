@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react"
 import "./create.css"
+//--DATABASE--
 import { db } from "../../firebase-config";
 import {collection, addDoc, Timestamp} from "firebase/firestore";
+
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
 import { Link } from "react-router-dom";

@@ -1,15 +1,21 @@
 import React, {Component} from "react"
 import { connect } from "react-redux";
 import { login, logout } from "../../actions/authAction";
-import "./login.css"
+import { Link } from "react-router-dom";
+//Background-Image
 import back from "../../assets/images/my-account.jpg"
+//--DATABASE--
+import { db } from "../../firebase-config";
+import {collection, addDoc, Timestamp} from "firebase/firestore";
+import bcrypt from 'bcryptjs'
 
-class Login extends Component {
+export class SignUp extends Component {
   constructor(props){
     super(props)
 
     this.state = {
       email: '',
+      username: '',
       password: ''
     }
   }
@@ -20,16 +26,34 @@ handleChange = e => {
   });
 }
 
- handleSubmit = e => {
+ handleSubmit = async(e) => {
   e.preventDefault();
   const { dispatch } = this.props;
-  const { email, password } = this.state;
-  dispatch(login(email, password));
+  const { username, email, password } = this.state;
+  //Hash password.
+  await bcrypt.genSalt(10, function (err, salt) {
+    bcrypt.hash(password, salt, async function (err, hash) {
+        // Add a new document in collection "users"
+        const newUserRef = collection(db, "users");
+
+        const newDocument = await addDoc(newUserRef, {
+            email: email,
+            username: username,
+            role: 'user',
+            password: hash
+        });
+    });
+    setTimeout(() => {
+        window.location.replace('/login');
+    }, 1000);
+});
+
+
 }
 render(){
   const { isAuthenticated, error, errorMessage } = this.props;
   if (isAuthenticated) 
-      window.location.replace('/');
+      this.props.history.push('/');
   return (
     <>
       <section className='login'>
@@ -37,13 +61,15 @@ render(){
           <div className='backImg'>
             <img src={back} alt='' />
             <div className='text'>
-              <h3>Login</h3>
-              <h1>My account</h1>
+              <h3>Sign Up</h3>
+              <h1>New account</h1>
             </div>
           </div>
 
           <form onSubmit={this.handleSubmit}>
-            <span>Username or email address *</span>
+            <span>Username *</span>
+            <input type='text' onChange={this.handleChange} name={"username"} required />
+            <span>Email address *</span>
             <input type='text' onChange={this.handleChange} name={"email"} required />
             <span>Password *</span>
             <input type='password' onChange={this.handleChange} name={"password"} required />
@@ -56,14 +82,3 @@ render(){
   )
 }
 }
-
-const mapStateToProps = state => {
-  const { isAuthenticated, error, errorMessage, user } = state.auth;
-  return {
-      isAuthenticated,
-      error,
-      errorMessage,
-      user
-  }
-}
-export default connect(mapStateToProps)(Login);

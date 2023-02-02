@@ -68,7 +68,7 @@ export const Header = () => {
     const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
     const docSnap = await getDoc(docRef);
     const user = docSnap.data();
-    user.role === "admin" ? setUser(user) : setUser(null); 
+    setUser(user); 
     console.log("User Role has been set: " + user.role)
   }
 
@@ -104,7 +104,21 @@ export const Header = () => {
             </ul>
           </nav>
           <div className='account flexCenter'>
-            <h1 style={{textTransform:"capitalize"}}>{user.role === "admin" ? "Admin" : ""}</h1>
+            {user.role == null ?
+            <>
+              <li style={{fontSize:20, padding:10, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
+                <Link to={"/login"}>
+                <a style={{color:"black"}}>Login</a>
+                </Link>
+              </li>
+              <li style={{fontSize:20, padding:10, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
+                <Link to={"/signup"}>
+                <a style={{color:"black"}}>Sign Up</a>
+                </Link>
+              </li>
+            </>
+              :null}
+            <h1 style={{textTransform:"capitalize"}}>{user.role}</h1>
           </div>
         </div>
       </header>
