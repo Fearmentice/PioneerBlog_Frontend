@@ -106,13 +106,12 @@ export class userPage extends Component {
             <img className="profilePhoto" src={`${this.state.currnetUser.profilePhoto}`} alt='UserProfilePhoto' />    
           <div className="profile">
             <h1 style={{marginLeft:20}}>{this.state.currnetUser.name}</h1>
-            <p style={{marginLeft:20}}>{this.state.currnetUser.description}</p>
+            <div style={{marginLeft: 20}} dangerouslySetInnerHTML={{__html: this.state.currnetUser.description}}></div>
           </div>
         </div>
     </div>
       <h1 style={{marginLeft:50}}>Author's Blogposts</h1>
       <Card style={{}} category={''} posts={this.state.userPosts}/>
     </>
-  )
-      }
+  )}
 }

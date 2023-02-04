@@ -11,6 +11,11 @@ import bcrypt from 'bcryptjs'
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
 
+import { convertToRaw, EditorState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { stateToHTML } from "draft-js-export-html";
+
 import image from "../../assets/images/defaultUser.jpg"
 
 export class createAuthor extends Component {
@@ -20,6 +25,7 @@ export class createAuthor extends Component {
     this.state = {
       name: '',
       description: '',
+      editorState: EditorState.createEmpty(),
       image: '',
       preview: image,
     }
@@ -50,7 +56,7 @@ handleChange = e => {
   const storage = getStorage();
 
   const { dispatch } = this.props;
-  const { name, description } = this.state;
+  const { name, editorState } = this.state;
 
 
   let imageUrl;
@@ -64,7 +70,6 @@ handleChange = e => {
     imageUrl = await getDownloadURL(imageRef).then(url => {
       return url;
     })
-
   }
   
 
@@ -73,7 +78,7 @@ handleChange = e => {
 
     const newDocument = await addDoc(newUserRef, {
         name: name,
-        description: description,
+        description: stateToHTML(editorState.getCurrentContent()),
         profilePhoto: imageUrl,
     });
     setTimeout(() => {
@@ -82,6 +87,9 @@ handleChange = e => {
 
 
 }
+onEditorStatChange = (editorState) => {
+    this.setState({editorState: editorState});
+  }
 render(){
   const { isAuthenticated, error, errorMessage } = this.props;
   if (isAuthenticated) 
@@ -102,7 +110,7 @@ render(){
               <label htmlFor=''>Author Name</label>
               <input type='text' onChange={this.handleChange} name="name"/>
               <label htmlFor=''>Description</label>
-              <input type='email' onChange={this.handleChange} name="description"/>
+              <Editor editorState={this.state.editorState} onEditorStateChange={this.onEditorStatChange}/>
               <button onClick={() => this.handleSubmit()} className='button'>Create Author</button>
             </div>
           </div>
