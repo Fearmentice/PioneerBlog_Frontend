@@ -8,11 +8,11 @@ const login = async (email, password) => {
     const queryRef = query(usersRef, where("email", "==", `${email}`));
     const docSnap = await getDocs(queryRef);
     const user = { ...docSnap.docs[0].data(), id: docSnap.docs[0].id }
-    console.log("Logged in user: " + user);
 
     await bcrypt.compare(password, user.password, function (err, result) {
         const token = user.id;
         localStorage.setItem("jwtToken", token);
+        localStorage.setItem("role", user.role);
         setAuthorizationToken(token);
     });
     return user;

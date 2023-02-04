@@ -2,6 +2,7 @@ import React,{useState} from "react"
 import "./header.css"
 import { nav } from "../../assets/data/data"
 import { Link} from "react-router-dom"
+import { User } from './User';
 import { useEffect } from "react"
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown } from "antd"
@@ -64,12 +65,12 @@ export const Header = () => {
   }, [])
 
   const isAdmin = async() => {
-    if(!localStorage.getItem("jwtToken")) return;
+    if(!localStorage.getItem("jwtToken")) return setUser(null);
     const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
     const docSnap = await getDoc(docRef);
-    const user = docSnap.data();
-    setUser(user); 
-    console.log("User Role has been set: " + user.role)
+    const _user = docSnap.data();
+    console.log(_user);
+    setUser(_user);
   }
 
   return (
@@ -80,7 +81,7 @@ export const Header = () => {
           </div>
           <nav>
             <ul>
-              <li style={{fontSize:20, padding:10, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[0].id}>
+              <li style={{fontSize:20,  paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[0].id}>
                   <Link to={nav[0].url}>
                     {nav[0].text}
                   </Link>
@@ -91,12 +92,12 @@ export const Header = () => {
                         <DownOutlined style={{marginLeft:5}} />
                     </a>
                 </Dropdown>
-              <li style={{fontSize:20, padding:10, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[1].id}>
+              <li style={{fontSize:20,  paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[1].id}>
                   <Link to={nav[1].url}>
                     {nav[1].text}
                   </Link>
               </li>
-              <li style={{fontSize:20, padding:10, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[2].id}>
+              <li style={{fontSize:20,  paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[2].id}>
                   <Link to={nav[2].url}>
                     {nav[2].text}
                   </Link>
@@ -104,9 +105,9 @@ export const Header = () => {
             </ul>
           </nav>
           <div className='account flexCenter'>
-            {user.role == null ?
-            <>
-              <li style={{fontSize:20, padding:10, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
+            {user == null ?
+              <>
+              <li style={{fontSize:20, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
                 <Link to={"/login"}>
                 <a style={{color:"black"}}>Login</a>
                 </Link>
@@ -117,8 +118,7 @@ export const Header = () => {
                 </Link>
               </li>
             </>
-              :null}
-            <h1 style={{textTransform:"capitalize"}}>{user.role}</h1>
+            :<User/>}
           </div>
         </div>
       </header>

@@ -52,8 +52,12 @@ export class DetailsPages extends Component {
       await commenstIds.forEach(async(commentId) => {
         const commentRef = doc(db, "comments", `${commentId}`);
         const comment = await getDoc(commentRef);
-        commentsArr.push({...comment.data(), id: comment.id});
+        const docRef = doc(db, "users", comment.data().userId.userId);
+        const docSnap = await getDoc(docRef);
+        const _user = {...docSnap.data(),id: docSnap.id};
+        commentsArr.push({...comment.data(), id: comment.id, user: _user });
       });
+      console.log(commentsArr)
       this.setState({comments: commentsArr})
     }
 
@@ -110,10 +114,10 @@ export class DetailsPages extends Component {
               name:  this.state.user.username,
             }
         }
-        const newDocument = await addDoc(newCommentsRef, newCommentData);
+        const {id} = await addDoc(newCommentsRef, newCommentData);
 
         let comments = this.state.comments;
-        comments.push(newCommentData);
+        comments.push({...newCommentData,user: this.state.user});
         this.setComments(comments);
 
         const docRef = doc(db, "blogposts", this.state.id);
@@ -121,7 +125,7 @@ export class DetailsPages extends Component {
 
 
          const data = {
-          commentsId: [...docSnap.data().commentsId, newDocument.id]
+          commentsId: [...docSnap.data().commentsId, id]
          }
          await updateDoc(docRef, data)
          .then(docRef => {
@@ -132,7 +136,7 @@ export class DetailsPages extends Component {
  
  
           const userData = {
-           commentsId: [...userSnap.data().commentsId, newDocument.id]
+           commentsId: [...userSnap.data().commentsId, id]
           }
           await updateDoc(userRef, userData)
           .then(docRef => {
@@ -189,15 +193,16 @@ export class DetailsPages extends Component {
               </Link>
               :null}
                {this.state.user !== null && this.state.user.role ===  "admin" ?
-                <Link to={`/admin/edit/${this.state.id}`}>
+                <Link to={`/admin/blogpost/edit/${this.state.id}`}>
                   <button className="adminEditButton">
                     <AiFillEdit style={{color:"white", width:20, height:20}}/>
                   </button>
                 </Link>
               :null}
-              <p>{this.state.blog.body}</p>
-              {/* <p>"But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?" Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."</p> */}
-              <p>Author: {this.state.blog.author}</p>
+              <div dangerouslySetInnerHTML={{__html: this.state.blog.body}}></div>
+              <Link to={`/authors/${this.state.blog.authorId}`}>
+                <p>Author: {this.state.blog.author}</p>
+              </Link>
               <div className="commentsBox">
               <div className="commentTitleBox">
                 <h1 >Comments</h1>
@@ -207,7 +212,7 @@ export class DetailsPages extends Component {
                 {this.state.comments.map((comment) => (
                   <div className="commentCard">
                     <div className="commentCardHeader">
-                      <img src={defaultUserImage} alt='User Profile Photo'/>
+                      <img src={comment.user.profilePhoto ? `${comment.user.profilePhoto}`: defaultUserImage} alt='User Profile Photo'/>
                       <div className="commentContent">
                         <b>{comment.userId.name}</b>
                         <p >{comment.body}</p>

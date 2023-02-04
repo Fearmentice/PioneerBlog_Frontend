@@ -177,6 +177,7 @@
   border-color: aliceblue;
   width: 75px;
   height: 75px;
+  margin: 10px;
 }
 .singlePage .commentTitleBox hr{
   width: 400px;

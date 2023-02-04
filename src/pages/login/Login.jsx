@@ -30,6 +30,7 @@ render(){
   const { isAuthenticated, error, errorMessage } = this.props;
   if (isAuthenticated) 
       window.location.replace('/');
+  if(localStorage.getItem('jwtToken')) return window.location.replace('/');
   return (
     <>
       <section className='login'>
@@ -43,7 +44,7 @@ render(){
           </div>
 
           <form onSubmit={this.handleSubmit}>
-            <span>Username or email address *</span>
+            <span>Email address *</span>
             <input type='text' onChange={this.handleChange} name={"email"} required />
             <span>Password *</span>
             <input type='password' onChange={this.handleChange} name={"password"} required />

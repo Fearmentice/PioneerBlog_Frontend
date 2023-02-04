@@ -1,0 +1,136 @@
+.page {
+    margin: 30px;
+    margin-left: 50px;
+  }
+  .page .desc .profilePhoto {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    align-self: flex-start;
+  }
+  .page .desc .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-left: 10px;
+  }
+  
+  .page .left {
+    width: 60%;
+    margin-left: 50px;
+    
+  }
+  .page .desc {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .page .BlogpostsBox {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+  }
+
+
+  .page .commentsBox{
+    width: max-content;
+  }
+  .page .commentTitleBox{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: max-content;
+  }
+  .page .commentCardBox{
+    padding: 20; 
+  }
+  .page .commentCard{
+    padding: 5px;
+    margin: 10px;
+    border-style: solid;
+    border-radius: 20px;
+    border-width: 1px;
+    border-color: lightgrey;
+  }
+  .page .commentCardHeader{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .page .commentContent{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 10px;
+  }
+  .page .commentContent input{
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgrey;
+    border-radius: 10px;
+    width: 500px;
+    height: 50px;
+    padding: 10px;
+    font-size: 20px;
+  }
+  .page .commentContent button{
+    align-self: flex-end;
+    margin: 10px;
+    font-size: 20px;
+  }
+  .page .commentCardHeader img{
+    border-style: solid;
+    border-radius: 50%;
+    border-width: 0.5px;
+    border-color: aliceblue;
+    width: 75px;
+    height: 75px;
+  }
+  .page .commentTitleBox hr{
+    width: 400px;
+    margin-bottom: 10px;
+  }
+  
+   .page .desc img {
+    width: 60%;
+    height: 60%;
+    border-radius: 10px;
+    margin: 0;
+  }
+  .page h1 {
+    font-size: 30px;
+    font-weight: 500;
+  }
+  .page h2 {
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .page hr {
+    color: black;
+    background-color: white;
+    height: 1px;
+    width: 300;
+    margin-top: 3%;
+    margin-left: 5%;
+  }
+  .page p {
+    font-size: 20px;
+    line-height: 2;
+    text-transform: capitalize;
+  }
+  .page .link {
+    color: black;
+  }
+  .page .buttons {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .page .button {
+    margin-left: 20px;
+    border: none;
+  } 
+  
