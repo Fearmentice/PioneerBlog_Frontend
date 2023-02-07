@@ -27,3 +27,16 @@
 .login .text h1 {
   font-size: 40px;
 }
+.login .boxItems {
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+  justify-content: center;
+}
+.login .content input {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+  margin: 10px;
+  height: 40px;
+}

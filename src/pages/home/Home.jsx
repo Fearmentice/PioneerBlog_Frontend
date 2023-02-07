@@ -4,6 +4,7 @@ import { Card } from "../../components/blog/Card"
 import './Home.css'
 import { Category } from "../../components/category/Category"
 import { db } from "../../firebase-config";
+import { DownOutlined } from '@ant-design/icons';
 import {collection, getDocs, startAfter, endBefore, query, where, orderBy, limit, limitToLast} from "firebase/firestore";
 
 
@@ -63,7 +64,7 @@ class Home extends Component{
       const q = query(blogpostsRef,
         where("active", '==', true),
         where("category", "==", `${this.state.category}`,
-        limit(12)));
+        limit(this.state.pageSize)));
 
       const docSnap = await getDocs(q);
       let postArray = [];
@@ -76,39 +77,42 @@ class Home extends Component{
     };
   }
 
-  onPrevious = async() => {
-        //Blogpost ref.
-        const blogpostsRef = collection(db, 'blogposts');
+  // onPrevious = async() => {
+  //       //Blogpost ref.
+  //       const blogpostsRef = collection(db, 'blogposts');
 
-        const lastVisible = this.state.firstPost;
-        console.log(lastVisible);
+  //       const lastVisible = this.state.firstPost;
+  //       console.log(lastVisible);
 
-        //Query.
-        const queryRef = query(blogpostsRef,  
-          where("active", "==", true) , 
-          orderBy("publishDate", "desc"), 
-          endBefore(lastVisible?lastVisible:0),
-          limitToLast(this.state.pageSize));
-        const docSnap = await getDocs(queryRef);
-        let _posts = [];
-        docSnap.forEach((doc) => {
-          _posts.push({...doc.data(), id:doc.id });
-        });
-        //Check if there is next page.
-        if (_posts.length === 0){
-          return;
-        }
-        this.setState({posts: _posts});
-        this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]});
-        this.setState({firstPost: docSnap.docs[0]});
-  }
+  //       //Query.
+  //       const queryRef = query(blogpostsRef,  
+  //         where("active", "==", true) , 
+  //         orderBy("publishDate", "desc"), 
+  //         endBefore(lastVisible?lastVisible:0),
+  //         limitToLast(this.state.pageSize));
+  //       const docSnap = await getDocs(queryRef);
+  //       let _posts = [];
+  //       docSnap.forEach((doc) => {
+  //         _posts.push({...doc.data(), id:doc.id });
+  //       });
+  //       //Check if there is next page.
+  //       if (_posts.length === 0){
+  //         return;
+  //       }
+  //       this.setState({posts: _posts});
+  //       this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]});
+  //       this.setState({firstPost: docSnap.docs[0]});
+  // }
 
-  onNext = async() => {
+  loadMore = async() => {
         //Blogpost ref.
         const blogpostsRef = collection(db, 'blogposts');
 
         const lastVisible = this.state.lastPost;
 
+        if(this.state.category != null){
+          console.log("ASD");
+        }
         //Query.
         const queryRef = query(blogpostsRef,  
           where("active", "==", true) , 
@@ -116,7 +120,7 @@ class Home extends Component{
           startAfter(lastVisible?lastVisible:0),
           limit(this.state.pageSize));
         const docSnap = await getDocs(queryRef);
-        let _posts = [];
+        let _posts = [...this.state.posts];
         docSnap.forEach((doc) => {
           _posts.push({...doc.data(), id:doc.id });
         })
@@ -130,6 +134,40 @@ class Home extends Component{
         this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]})
         this.setState({firstPost: docSnap.docs[0]});
   }
+
+  loadMoreCategoryBased = async() => {
+    //Blogpost ref.
+    const blogpostsRef = collection(db, 'blogposts');
+
+    const lastVisible = this.state.lastPost;
+
+    if(this.state.category != null){
+      console.log("ASD");
+    }
+    //Query.
+    const queryRef = query(blogpostsRef,  
+      where("active", "==", true) , 
+      orderBy("publishDate", "desc"), 
+      where("category","==",`${this.state.category}`),
+      startAfter(lastVisible?lastVisible:0),
+      limit(this.state.pageSize));
+    const docSnap = await getDocs(queryRef);
+    let _posts = [...this.state.posts];
+    docSnap.forEach((doc) => {
+      if(_posts.includes({...doc.data(), id:doc.id } === false)){
+        _posts.push({...doc.data(), id:doc.id });
+      }
+    })
+    //Check if there is next page.
+    if (_posts.length == 0){
+      return;
+    }
+
+    this.setState({posts: _posts});
+    console.log(_posts);
+    this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]})
+    this.setState({firstPost: docSnap.docs[0]});
+}
 
   updateCategory = async() => {
     const category = this.props.match.params.category;
@@ -180,9 +218,10 @@ class Home extends Component{
           </h1>
         <Card category={this.state.category} posts={this.state.posts} />
           <div className="Pagination">
-            {/* <Pagination defaultCurrent={1} total={50} />    */}
-              <a onClick={() => this.onPrevious()} class="previous round paginate">{'<'}</a>
-              <a onClick={() => this.onNext()} class="nextButton round paginate">{'>'}</a>
+              {/* <a onClick={() => this.onPrevious()} class="previous round paginate">{'<'}</a>
+              <a onClick={() => this.loadMore()} class="nextButton round paginate">{'>'}</a> */}
+              <a onClick={() => this.state.category ?this.loadMoreCategoryBased() : this.loadMore()}>Load More</a>
+              <DownOutlined/>
           </div>
       </>
     )

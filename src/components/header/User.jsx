@@ -1,8 +1,6 @@
 import React, { useState } from "react"
 import { IoSettingsOutline } from "react-icons/io5"
-import { BsBagCheck } from "react-icons/bs"
 import { AiOutlineHeart } from "react-icons/ai"
-import { GrHelp } from "react-icons/gr"
 import { BiLogOut } from "react-icons/bi"
 import { RiImageAddLine } from "react-icons/ri"
 import { Link, useHistory } from "react-router-dom"
@@ -15,7 +13,6 @@ export const User = () => {
   const user = true
   const [profileOpen, setProfileOpen] = useState(false)
   const [loggedinUser, setloggedinUser] = useState({});
-  const history = useHistory();
 
   useEffect(() => {
     isAdmin();
@@ -53,7 +50,7 @@ export const User = () => {
                     </div>
                     <div className='text'>
                       <h4>{loggedinUser.username}</h4>
-                      <label>{loggedinUser.role == 'admin'?loggedinUser.role:null}</label>
+                      <label>{loggedinUser.role === 'admin'?loggedinUser.role:null}</label>
                     </div>
                   </div>
                 {loggedinUser.role ==='admin' ? 

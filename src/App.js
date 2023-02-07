@@ -14,8 +14,6 @@ import { About } from "./pages/about/about"
 import { PrivateRoute } from "./pages/login/privateRoute"
 import { Account } from "./pages/account/Account"
 import { createAuthor } from "./pages/author/createAuthor"
-import textEditor from "./components/texEditor/textEditor"
-
 const App = () => {
   return (
     <Router>

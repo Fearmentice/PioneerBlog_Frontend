@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react"
 import "./edit.css"
-import { Link, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 //--DATABASE--
 import { db } from "../../firebase-config";
-import {collection, doc, getDoc, updateDoc, Timestamp} from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
-//--TEXT-Editor--
-import {Editor as ClassicEditor} from 'ckeditor5-custom-build/build/ckeditor';
-import {CKEditor} from '@ckeditor/ckeditor5-react'
+
+import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { stateToHTML } from "draft-js-export-html";
 
 export const Edit = () => {
   const History = useHistory();
@@ -18,13 +20,12 @@ export const Edit = () => {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [author, setAuthor] = useState('');
-  const [content, setContent] = useState('');
+
+  const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
   const [image, setImage] = useState('');
   const [preview, setPreview] = useState();
   const storage = getStorage();
-
-  const [text, setText] = useState('');
 
       // create a preview as a side effect, whenever selected file is changed
       useEffect(() => {
@@ -57,7 +58,7 @@ export const Edit = () => {
       //Set init datas.
       setTitle(`${blogpost.title}`);
       setCategory(`${blogpost.category}`);
-      setContent(`${blogpost.body}`);
+      
       setAuthor(`${blogpost.author}`);
 
       setPreview(`${blogpost.imageCover}`);
@@ -74,7 +75,7 @@ export const Edit = () => {
     const data = {
       title: title,
       category: category,
-      body: content,
+      body: "",
       author: author,
       imageCover: imageUrl
     }
@@ -96,7 +97,7 @@ export const Edit = () => {
     if(image == null) return;
 
     //Check if new image has uploaded. if not upload return url of old one.
-    if(blogpost.imageCover == preview) return preview;
+    if(blogpost.imageCover === preview) return preview;
 
     const imageRef = ref(storage,`images/${image.name + v4()}`)
     await uploadBytes(imageRef, image).then(() => {
@@ -108,6 +109,10 @@ export const Edit = () => {
     })
 
     return imageUrl;
+}
+
+const onEditorStatChange = (editorState) => {
+  setEditorState(editorState);
 }
 
   return (
@@ -125,7 +130,7 @@ export const Edit = () => {
 
             <input type='text' onChange={(event) => setCategory(event.target.value)} value={category} placeholder='Category' />
             
-            <textarea name='' id='' cols='30' rows='10' onChange={(event) => setContent(event.target.value)} value={content}  placeholder='Content'></textarea>
+            <Editor placeholder="Content" editorState={editorState} onEditorStateChange={onEditorStatChange}/>
 
             <input type='text' onChange={(event) => setAuthor(event.target.value)} value={author} placeholder='Author' />
 

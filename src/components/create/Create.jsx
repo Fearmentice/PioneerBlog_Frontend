@@ -2,18 +2,19 @@ import React, { useState, useEffect } from "react"
 import "./create.css"
 //--DATABASE--
 import { db } from "../../firebase-config";
-import {collection, query, where, orderBy, getDocs, addDoc, Timestamp, updateDoc} from "firebase/firestore";
+import {collection, query, where, getDocs, addDoc, Timestamp} from "firebase/firestore";
 
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
 import { Link } from "react-router-dom";
 
-import textEditor from "../texEditor/textEditor";
-
-import { convertToRaw, EditorState } from "draft-js";
+import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { stateToHTML } from "draft-js-export-html";
+
+import {DropDownListComponent} from '@syncfusion/ej2-react-dropdowns';
+import {DataManager, WebApiAdaptor, Query} from '@syncfusion/ej2-data';
 
 
 export const Create = () => {
@@ -21,26 +22,31 @@ export const Create = () => {
   const [category, setCategory] = useState('');
   const [author, setAuthor] = useState('');
 
+  const [allAuthors, setAllAuthors] = useState([]);
+  const [allCategories, setAllCategories] = useState(['Technology', 'Culture', 'History', 'World', 'Health', 'Sport', 'News']);
+
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
   const [image, setImage] = useState('');
   const [preview, setPreview] = useState();
   const storage = getStorage();
 
-  const [text, setText] = useState('');
 
-      // create a preview as a side effect, whenever selected file is changed
-      useEffect(() => {
-        if (!image) {
-            setPreview(undefined)
-            return
-        }
-      
-        const objectUrl = URL.createObjectURL(image)
-        setPreview(objectUrl)
+  useEffect(() => {
+    getAllAuthors();
+  }, [])
 
-        // free memory when ever this component is unmounted
-        return () => URL.revokeObjectURL(objectUrl)
+    // create a preview as a side effect, whenever selected file is changed
+    useEffect(() => {
+      if (!image) {
+          setPreview(undefined)
+          return
+      }
+    
+      const objectUrl = URL.createObjectURL(image)
+      setPreview(objectUrl)
+      // free memory when ever this component is unmounted
+      return () => URL.revokeObjectURL(objectUrl)
     }, [image])
 
   const createPost = async() => {
@@ -63,6 +69,10 @@ export const Create = () => {
     const newBlogpostRef = collection(db, "blogposts");
     const today = new Date();
 
+    const contentState = editorState.getCurrentContent();
+    const rawContentState = convertToRaw(contentState);
+    console.log(rawContentState);
+
     const newDocument = await addDoc(newBlogpostRef, {
       title: title,
       author: author,
@@ -72,6 +82,7 @@ export const Create = () => {
       body: stateToHTML(editorState.getCurrentContent()),
       view: 0,
       favCount: 0,
+      desc: rawContentState.blocks[0].text.slice(0,100),
       commentsId: [],
       publishDate: Timestamp.now(),
       date: `${('0' + today.getDate()).slice(-2)}/${('0' + today.getMonth() + 1).slice(-2)}/${today.getFullYear()}`,
@@ -100,7 +111,27 @@ export const Create = () => {
   });
   const onEditorStatChange = (editorState) => {
     setEditorState(editorState);
-    console.log(stateToHTML(editorState.getCurrentContent()))
+  }
+
+  const remoteData: DataManager = new DataManager({
+    url: "https://ej2services.syncfusion.com/production/web-services/api/Employees",
+    adaptor: new WebApiAdaptor,
+    crossDomain: true
+  })
+  const dataQuery: Query = new Query().select(['FirstName', 'EmployeeID']).take(10).requiresCount();
+  const getAllAuthors = async() => {
+        //Authors ref.
+        const authorsRef = collection(db, 'authors');
+
+        //Query.
+        const queryRef = query(authorsRef);
+        const docSnap = await getDocs(queryRef);
+        let _authors = [];
+        docSnap.forEach((doc) => {
+          _authors.push(doc.data().name);
+        })
+        setAllAuthors(_authors);
+        console.log(_authors)
   }
 
   return (
@@ -108,18 +139,28 @@ export const Create = () => {
         <div className='container boxItems'>
           <form>
           <div className='img '>
-            <img style={{width:400, height:250, objectFit: "cover"}} src={preview} alt='preview' className='image-preview' />
           </div>
-            <div className='inputfile flexCenter'>
+            <div style={{flexDirection:"column"}} className='inputfile flexCenter'>
+              <img style={{width:400, height:250, objectFit: "cover", marginBottom:10}} src={preview} alt='preview' className='image-preview' />
               <input type='file' onChange={(event) => setImage(event.target.files[0])} accept='image/*' alt='img' />
             </div>
             <input type='text' onChange={(event) => setTitle(event.target.value)} value={title} placeholder='Title' />
 
-            <input type='text' onChange={(event) => setCategory(event.target.value)} value={category} placeholder='Category' />
-            
-            <Editor editorState={editorState} onEditorStateChange={onEditorStatChange}/>
-            
-            <input type='text' onChange={(event) => setAuthor(event.target.value)} value={author} placeholder='Author' />
+            <div >
+              <DropDownListComponent 
+              onChange={(event) => setCategory(event.target.value)} 
+              placeholder="Categories"
+              dataSource={allCategories} 
+              fields={{value:"EmployeeID", text:"FirstName"}}></DropDownListComponent>
+            </div>
+            <Editor placeholder="Content" editorState={editorState} onEditorStateChange={onEditorStatChange}/>
+            <div >
+              <DropDownListComponent 
+              onChange={(event) => setAuthor(event.target.value)} 
+              placeholder="Author"
+              dataSource={allAuthors} 
+              fields={{value:"EmployeeID", text:"FirstName"}}></DropDownListComponent>
+            </div>
             <Link to={'/'}>
               <button className='button' onClick={() => {createPost()}}>Create Post</button>
             </Link>

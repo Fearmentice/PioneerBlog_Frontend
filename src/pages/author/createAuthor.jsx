@@ -1,17 +1,11 @@
 import React, {Component} from "react"
-import { connect } from "react-redux";
-import { login, logout } from "../../actions/authAction";
-import { Link } from "react-router-dom";
-//Background-Image
-import back from "../../assets/images/my-account.jpg"
 //--DATABASE--
 import { db } from "../../firebase-config";
-import {collection, addDoc, Timestamp} from "firebase/firestore";
-import bcrypt from 'bcryptjs'
+import {collection, addDoc} from "firebase/firestore";
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
 
-import { convertToRaw, EditorState } from "draft-js";
+import { EditorState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { stateToHTML } from "draft-js-export-html";
@@ -60,7 +54,7 @@ handleChange = e => {
 
 
   let imageUrl;
-  if(this.state.image == '') {
+  if(this.state.image === '') {
     console.log("nullasdasdasd")
     imageUrl = 'https://firebasestorage.googleapis.com/v0/b/vocham-api.appspot.com/o/users%2FdefaultUser.jpg?alt=media&token=8ffd11af-591d-418b-85dc-d87d723ba386';
   }else{
@@ -102,7 +96,7 @@ render(){
           <div className='content'>
             <div className='left'>
               <div className='img flexCenter'>
-                <input type='file' onChange={(event) => this.setImage(event.target.files[0])} accept='image/*' src={image} alt='img' />
+                <input type='file' onChange={(event) => this.setImage(event.target.files[0])} accept='image/*' src={image} />
                 <img style={{objectFit:"cover"}} src={this.state.preview} alt='image' class='image-preview' />
               </div>
             </div>

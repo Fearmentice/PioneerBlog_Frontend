@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import "./details.css"
 import "../../components/header/header.css"
 import defaultUserImage from "../../assets/images/defaultUser.jpg"
-import {MdEmail, MdWbTwighlight} from "react-icons/md"
+import {MdEmail} from "react-icons/md"
 import {  AiFillEdit } from "react-icons/ai"
 import { AiFillTwitterCircle, AiFillLinkedin, } from "react-icons/ai"
 import { BsFacebook } from "react-icons/bs"
@@ -25,7 +25,8 @@ export class DetailsPages extends Component {
       popularPosts:[],
       user: {},
       comments: [],
-      newCommentBody: ''
+      newCommentBody: '',
+      author:{}
     }
     this.setBlog = this.setBlog.bind(this);
     this.setComments = this.setComments.bind(this);
@@ -71,7 +72,12 @@ export class DetailsPages extends Component {
     const updatedDoc = await getDoc(docRef);
     if (docSnap.exists()) {
       this.setState({blog: updatedDoc.data()});
-    } 
+    }
+
+    const authorRef = doc(db, "authors", updatedDoc.data().authorId);
+    const authorSnap = await getDoc(authorRef);
+
+    this.setState({author: authorSnap.data()});
   }
 
   setPopularPosts = async() => {
@@ -93,7 +99,7 @@ export class DetailsPages extends Component {
     }
     await updateDoc(docRef, data)
     .then(docRef => {
-        console.log("Document deactivated.");
+        window.location.replace('/')
     })
   }
 
@@ -173,6 +179,11 @@ export class DetailsPages extends Component {
     this.userInfo();
   }
 
+  getSummaryDesc () {
+    const desc = `${this.state.author.description}`;
+    return desc.slice(0,30);
+  }
+
   render(){
     const url = window.location.toString();
   return (
@@ -186,11 +197,9 @@ export class DetailsPages extends Component {
             </div>
             <div className='desc'>
               {this.state.user !== null && this.state.user.role ===  "admin" ?
-                <Link to={"/Home"}>
                 <button onClick={() => this.deletePost()} className="adminDeleteButton">
                   <RiDeleteBin6Line style={{color:"white", width:20, height:20}}/>
                 </button>
-              </Link>
               :null}
                {this.state.user !== null && this.state.user.role ===  "admin" ?
                 <Link to={`/admin/blogpost/edit/${this.state.id}`}>
@@ -201,7 +210,15 @@ export class DetailsPages extends Component {
               :null}
               <div dangerouslySetInnerHTML={{__html: this.state.blog.body}}></div>
               <Link to={`/authors/${this.state.blog.authorId}`}>
-                <p>Author: {this.state.blog.author}</p>
+                <div className="card">
+                    <div className="authorCard">
+                      <img src={this.state.author.profilePhoto ? this.state.author.profilePhoto : defaultUserImage} alt='User Profile Photo'/>
+                      <div className="commentContent">
+                        <b style={{color:"black"}}>{this.state.author.name}</b>
+                         <p style={{fontSize:12}}>{this.getSummaryDesc()}</p>
+                      </div>
+                    </div>
+                  </div>
               </Link>
               <div className="commentsBox">
               <div className="commentTitleBox">
@@ -276,13 +293,13 @@ export class DetailsPages extends Component {
               {this.state.popularPosts.map((item) => (
                 <Link to={`/details/${item.id}`} className="link">
                   <div className="box boxItems" onClick={() => this.setId(item.id)} >
-                    <img alt="" className="boxImage" src={item.imageCover}/>
+                    <img style={{objectFit:"cover"}} alt="" className="boxImage" src={item.imageCover}/>
                     <div className="postInfo">
                       <div style={{width: 275}}>
                         <b>{item.title}</b>
                       </div>
                       <div style={{width: 275}}>
-                        <p style={{fontSize:15}}>{item.body.slice(0, 70)}</p>
+                        <p style={{fontSize:13}}>{item.body.slice(0, 70)}</p>
                       </div>
                     </div>
                   </div>

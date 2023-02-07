@@ -3,10 +3,11 @@ import "./userPage.css"
 import "../../components/header/header.css"
 import defaultUserImage from "../../assets/images/defaultUser.jpg"
 import {Card} from '../../components/blog/Card'
+import { DownOutlined } from '@ant-design/icons';
 //--DATABASE--
 import { db } from "../../firebase-config";
 import {collection, getDoc, getDocs, doc, query,
-   orderBy, limit, where} from "firebase/firestore";
+   orderBy, limit, startAfter, where} from "firebase/firestore";
 
 export class userPage extends Component {
   constructor(props) {
@@ -18,7 +19,9 @@ export class userPage extends Component {
       userPosts:[],
       user: {},
       comments: [],
-      newCommentBody: ''
+      newCommentBody: '',
+      lastPost:{},
+      pageSize: 3
     }
     this.setBlog = this.setBlog.bind(this);
     this.setComments = this.setComments.bind(this);
@@ -50,7 +53,8 @@ export class userPage extends Component {
           const queryRef = query(blogpostsRef,  
             where("active", "==", true), 
             where("author", "==", `${docSnap.data().name}`),
-            orderBy("publishDate", "desc"));
+            orderBy("publishDate", "desc"),
+            limit(this.state.pageSize));
           const userPostSnap = await getDocs(queryRef);
           let _posts = [];
           userPostSnap.forEach((doc) => {
@@ -58,10 +62,38 @@ export class userPage extends Component {
           })
           console.log(_posts);
           this.setUserPosts(_posts);
+          this.setState({lastPost: userPostSnap.docs[userPostSnap.docs.length - 1]})
         } 
 
         
   }
+
+  loadMore = async() => {
+    //Blogpost ref.
+    const blogpostsRef = collection(db, 'blogposts');
+
+    const lastVisible = this.state.lastPost;
+
+    //Query.
+    const queryRef = query(blogpostsRef,  
+      where("active", "==", true) , 
+      where("author", "==", `${this.state.currnetUser.name}`),
+      orderBy("publishDate", "desc"), 
+      startAfter(lastVisible?lastVisible:0),
+      limit(this.state.pageSize));
+    const docSnap = await getDocs(queryRef);
+    let _posts = [...this.state.userPosts];
+    docSnap.forEach((doc) => {
+      _posts.push({...doc.data(), id:doc.id });
+    })
+    //Check if there is next page.
+    if (_posts.length == 0){
+      return;
+    }
+
+    this.setUserPosts(_posts);
+    this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]})
+}
 
   setComments = async(commentsArr) => {
     this.setState({comments: commentsArr});
@@ -111,7 +143,13 @@ export class userPage extends Component {
         </div>
     </div>
       <h1 style={{marginLeft:50}}>Author's Blogposts</h1>
-      <Card style={{}} category={''} posts={this.state.userPosts}/>
+      <Card category={''} posts={this.state.userPosts}/>
+      <div className="Pagination">
+              {/* <a onClick={() => this.onPrevious()} class="previous round paginate">{'<'}</a>
+              <a onClick={() => this.loadMore()} class="nextButton round paginate">{'>'}</a> */}
+              <a onClick={() => this.loadMore()}>Load More</a>
+              <DownOutlined/>
+      </div>
     </>
   )}
 }
