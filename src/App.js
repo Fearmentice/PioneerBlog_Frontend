@@ -1,4 +1,4 @@
-import React from "react"
+import React, { StrictMode } from "react"
 import { Footer } from "./components/footer/Footer"
 import { Header } from "./components/header/Header"
 import Home from "./pages/home/Home"
@@ -16,6 +16,7 @@ import { Account } from "./pages/account/Account"
 import { createAuthor } from "./pages/author/createAuthor"
 const App = () => {
   return (
+
     <Router>
       <Header />
       <Switch>
@@ -37,6 +38,7 @@ const App = () => {
       </Switch>
       <Footer />
     </Router>
+
   )
 }
 export default App

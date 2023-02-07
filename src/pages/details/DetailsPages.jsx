@@ -181,7 +181,7 @@ export class DetailsPages extends Component {
 
   getSummaryDesc () {
     const desc = `${this.state.author.description}`;
-    return desc.slice(0,30);
+    return desc.slice(3,30);
   }
 
   render(){
@@ -223,7 +223,7 @@ export class DetailsPages extends Component {
               <div className="commentsBox">
               <div className="commentTitleBox">
                 <h1 >Comments</h1>
-                <hr/>
+                {/* <hr/> */}
               </div>
               <div className="commentCardBox">
                 {this.state.comments.map((comment) => (
@@ -299,7 +299,7 @@ export class DetailsPages extends Component {
                         <b>{item.title}</b>
                       </div>
                       <div style={{width: 275}}>
-                        <p style={{fontSize:13}}>{item.body.slice(0, 70)}</p>
+                        <p style={{fontSize:13}}>{item.desc.slice(0, 70).replace('&nbsp;', " ")}</p>
                       </div>
                     </div>
                   </div>

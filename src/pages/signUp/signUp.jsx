@@ -184,6 +184,7 @@ render(){
                 <input type='file' onChange={(event) => this.setImage(event.target.files[0])} accept='image/*' src={image} alt='img' />
                 <img style={{objectFit:"cover"}} src={this.state.preview} alt='image' class='image-preview' />
               </div>
+              <a style={{marginLeft: 15, marginTop:10}}>Upload Image</a>
             </div>
             {this.state.verify == true ?
             <div className='right'>

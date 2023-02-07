@@ -74,7 +74,7 @@ export const Account = () => {
     //Check if new image has uploaded. if not upload return url of old one.
     if(user.profilePhoto === preview) return preview;
 
-    const imageRef = ref(storage,`images/${image.name + v4()}`)
+    const imageRef = ref(storage,`users/${image.name + v4()}`)
     await uploadBytes(imageRef, image).then(() => {
       console.log("Image uploaded.");
     })

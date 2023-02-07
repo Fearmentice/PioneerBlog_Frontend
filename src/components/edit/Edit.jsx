@@ -3,14 +3,16 @@ import "./edit.css"
 import { useParams, useHistory } from "react-router-dom";
 //--DATABASE--
 import { db } from "../../firebase-config";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, getDocs, updateDoc } from "firebase/firestore";
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
 
-import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
+import { ContentState, convertFromHTML, convertFromRaw, convertToRaw, EditorState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { stateToHTML } from "draft-js-export-html";
+
+import {DropDownListComponent} from '@syncfusion/ej2-react-dropdowns';
 
 export const Edit = () => {
   const History = useHistory();
@@ -20,6 +22,9 @@ export const Edit = () => {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [author, setAuthor] = useState('');
+
+  const [allAuthors, setAllAuthors] = useState([]);
+  const [allCategories, setAllCategories] = useState(['Technology', 'Culture', 'History', 'World', 'Health', 'Sport', 'News']);
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
@@ -44,6 +49,7 @@ export const Edit = () => {
 
     useEffect(() => {
       getBlogpost();
+      getAllAuthors();
     }, []);
 
     const getBlogpost = async() => {
@@ -59,6 +65,14 @@ export const Edit = () => {
       setTitle(`${blogpost.title}`);
       setCategory(`${blogpost.category}`);
       
+      const blocksFromHtml = convertFromHTML(blogpost.body);
+      const state = ContentState.createFromBlockArray(
+        blocksFromHtml.contentBlocks,
+        blocksFromHtml.entityMap,
+      );
+      const _editorState = EditorState.createWithContent(state);
+      setEditorState(_editorState);
+
       setAuthor(`${blogpost.author}`);
 
       setPreview(`${blogpost.imageCover}`);
@@ -75,7 +89,7 @@ export const Edit = () => {
     const data = {
       title: title,
       category: category,
-      body: "",
+      body: stateToHTML(editorState.getCurrentContent()),
       author: author,
       imageCover: imageUrl
     }
@@ -90,7 +104,7 @@ export const Edit = () => {
 
     setTimeout(() => {
       History.push('/');
-    }, 2000)
+    }, 1000)
   }
   const uploadImage = async() => {
     //Check if image is uploaded.
@@ -115,29 +129,54 @@ const onEditorStatChange = (editorState) => {
   setEditorState(editorState);
 }
 
+const getAllAuthors = async() => {
+  //Authors ref.
+  const authorsRef = collection(db, 'authors');
+
+  //Query.
+  const queryRef = query(authorsRef);
+  const docSnap = await getDocs(queryRef);
+  let _authors = [];
+  docSnap.forEach((doc) => {
+    _authors.push(doc.data().name);
+  })
+  setAllAuthors(_authors);
+  console.log(_authors)
+}
+
   return (
     <>
-      <section className='newPost'>
         <div className='container boxItems'>
-          <div className='img '>
-            <img src={preview} alt='preview' className='image-preview' />
-          </div>
           <form>
-            <div className='inputfile flexCenter'>
+          <div className='img '>
+          </div>
+            <div style={{flexDirection:"column"}} className='inputfile flexCenter'>
+              <img style={{width:400, height:250, objectFit: "cover", marginBottom:10}} src={preview} alt='preview' className='image-preview' />
               <input type='file' onChange={(event) => setImage(event.target.files[0])} accept='image/*' alt='img' />
             </div>
             <input type='text' onChange={(event) => setTitle(event.target.value)} value={title} placeholder='Title' />
 
-            <input type='text' onChange={(event) => setCategory(event.target.value)} value={category} placeholder='Category' />
-            
+            <div >
+              <DropDownListComponent 
+              value={category}
+              onChange={(event) => setCategory(event.target.value)} 
+              placeholder="Categories"
+              dataSource={allCategories} 
+              fields={{value:"EmployeeID", text:"FirstName"}}></DropDownListComponent>
+            </div>
             <Editor placeholder="Content" editorState={editorState} onEditorStateChange={onEditorStatChange}/>
-
-            <input type='text' onChange={(event) => setAuthor(event.target.value)} value={author} placeholder='Author' />
-
-          </form>
+            <div >
+              <DropDownListComponent 
+              value={author}
+              onChange={(event) => setAuthor(event.target.value)} 
+              placeholder="Author"
+              dataSource={allAuthors} 
+              fields={{value:"EmployeeID", text:"FirstName"}}></DropDownListComponent>
+            </div>
               <button className='button' onClick={() => {updateBlogpost()}}>Update Post</button>
+          </form>
         </div>
-      </section>
+            
     </>
   )
 }

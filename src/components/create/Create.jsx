@@ -88,6 +88,10 @@ export const Create = () => {
       date: `${('0' + today.getDate()).slice(-2)}/${('0' + today.getMonth() + 1).slice(-2)}/${today.getFullYear()}`,
       active: true
     });
+
+    setTimeout(() => {
+      History.push('/');
+    }, 1000)
   }
 
   const html = stateToHTML(editorState.getCurrentContent(), {
@@ -161,9 +165,7 @@ export const Create = () => {
               dataSource={allAuthors} 
               fields={{value:"EmployeeID", text:"FirstName"}}></DropDownListComponent>
             </div>
-            <Link to={'/'}>
               <button className='button' onClick={() => {createPost()}}>Create Post</button>
-            </Link>
           </form>
         </div>
             

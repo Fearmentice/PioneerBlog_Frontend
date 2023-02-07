@@ -95,7 +95,7 @@ export const Category = (props) => {
                           <h4>{item.title}</h4>
                         </div>
                         <div className="descBox">
-                          <p>{item.body.slice(0,100)}</p>
+                          <p>{item.desc.slice(0,100).replace('&nbsp;', ' ')}</p>
                         </div>
                         <Link to={`/${item.category}`}>
                           <div className="categoryButton">

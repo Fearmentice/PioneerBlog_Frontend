@@ -61,7 +61,7 @@
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  justify-content: end;
+  justify-content: start;
 }
 
 .singlePage .postInfo{
@@ -157,8 +157,8 @@
   align-items: center;
   align-self: flex-end;
   width: 30%;
-  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
-  border-radius: 20px; */
+   /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  border-radius: 20px;  */
 }
 .singlePage .authorCard img{
   border-style: solid;
@@ -195,6 +195,7 @@
   border-radius: 50%;
   border-width: 0.5px;
   border-color: aliceblue;
+  align-self: flex-start;
   width: 75px;
   height: 75px;
   margin: 10px;

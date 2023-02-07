@@ -64,7 +64,7 @@ handleChange = e => {
     verify_code: verifyCode,
     to_email: this.state.email
   }
-  emailjs.send('service_4yjjimo', 'template_qdi58fo', templateParams, 'Omls_WJx1Lqdajbcu')
+  //emailjs.send('service_4yjjimo', 'template_qdi58fo', templateParams, 'Omls_WJx1Lqdajbcu')
   console.log(this.state.verifyCode)
     this.setVerifyCode(verifyData.verifyInfo.code);
     this.setUserId(userId);

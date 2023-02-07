@@ -58,7 +58,7 @@ handleChange = e => {
     console.log("nullasdasdasd")
     imageUrl = 'https://firebasestorage.googleapis.com/v0/b/vocham-api.appspot.com/o/users%2FdefaultUser.jpg?alt=media&token=8ffd11af-591d-418b-85dc-d87d723ba386';
   }else{
-    const imageRef = ref(storage,`users/${this.state.image.name + v4()}`)
+    const imageRef = ref(storage,`authors/${this.state.image.name + v4()}`)
     await uploadBytes(imageRef, this.state.image).then(() => {
     })
     imageUrl = await getDownloadURL(imageRef).then(url => {
