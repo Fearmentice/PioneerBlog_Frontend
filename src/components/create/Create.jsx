@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import "./create.css"
+import {categories} from '../../assets/data/data';
 //--DATABASE--
 import { db } from "../../firebase-config";
 import {collection, query, where, getDocs, addDoc, Timestamp} from "firebase/firestore";
@@ -23,7 +24,6 @@ export const Create = () => {
   const [author, setAuthor] = useState('');
 
   const [allAuthors, setAllAuthors] = useState([]);
-  const [allCategories] = useState(['Technology', 'Culture', 'History', 'World', 'Health', 'Sport', 'News']);
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
@@ -128,7 +128,7 @@ export const Create = () => {
               <DropDownListComponent 
               onChange={(event) => setCategory(event.target.value)} 
               placeholder="Categories"
-              dataSource={allCategories} 
+              dataSource={categories} 
               fields={{value:"EmployeeID", text:"FirstName"}}></DropDownListComponent>
             </div>
             <Editor placeholder="Content" editorState={editorState} onEditorStateChange={onEditorStatChange}/>

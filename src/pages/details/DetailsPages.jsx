@@ -1,19 +1,26 @@
 import React, { Component } from "react"
+import { Link } from "react-router-dom"
+
+//--ASSESTS--
 import "./details.css"
+import {categories} from '../../assets/data/data'
 import "../../components/header/header.css"
 import defaultUserImage from "../../assets/images/defaultUser.jpg"
+
+//--ICONS--
 import {MdEmail} from "react-icons/md"
 import {  AiFillEdit } from "react-icons/ai"
 import { AiFillTwitterCircle, AiFillLinkedin, } from "react-icons/ai"
 import { BsFacebook } from "react-icons/bs"
-import { Link } from "react-router-dom"
 import { RiDeleteBin6Line } from 'react-icons/ri';
+
 //--DATABASE--
 import { db } from "../../firebase-config";
 import {collection, getDoc, getDocs, doc, query,
    orderBy, limit, addDoc, Timestamp, updateDoc, where} from "firebase/firestore";
 
 export class DetailsPages extends Component {
+  //Defines all states and callback functions.
   constructor(props) {
     super(props)
 
@@ -33,6 +40,15 @@ export class DetailsPages extends Component {
     this.userInfo = this.userInfo.bind(this);
   }
 
+  //Runs one time in render ands triggers setId, setPopularPosts and userInfo.
+  componentDidMount(){
+      const id = this.props.match.params.id;
+      this.setId(id);
+      this.setPopularPosts();
+      this.userInfo();
+  }
+
+  //Sets the id state and runs setBlog function.
   setId = async(_id) => {
     await this.setState({ id: _id });
     if(this.state.id){
@@ -40,6 +56,7 @@ export class DetailsPages extends Component {
     }
   }
 
+  //Gets the blog from database by id state.
   setBlog = async() => {
     //Get blogpsot.
     const docRef = doc(db, "blogposts", this.state.id);
@@ -78,6 +95,7 @@ export class DetailsPages extends Component {
     this.setState({author: authorSnap.data()});
   }
 
+  //Gets 5 the most viewed posts.
   setPopularPosts = async() => {
     const blogpostsRef = collection(db, 'blogposts');
     const queryRef = query(blogpostsRef,where("active", "==", true), orderBy('view', 'asc') , limit(5));
@@ -90,6 +108,7 @@ export class DetailsPages extends Component {
     this.setState({popularPosts: postArray});
   }
 
+  //Sets the blogs active to false.
   deletePost = async() => {
     const docRef = doc(db, "blogposts", this.state.id);
     const data = {
@@ -101,10 +120,12 @@ export class DetailsPages extends Component {
     })
   }
 
+  //Sets comments state with given variable.
   setComments = async(commentsArr) => {
     this.setState({comments: commentsArr});
   }
 
+  //Creates comment in the name of logged in user.
   createComment = async() => {
         // Add a new document in collection "comments"
         console.log(this.state.user);
@@ -149,13 +170,14 @@ export class DetailsPages extends Component {
 
   }
 
+  //Handles the state changes by input fields.
   handleChange = e => {
     this.setState({
         [e.target.name]: e.target.value
     });
   }
 
-
+  //Gets the logged in user data if there is.
   userInfo = async() => {
     if(!localStorage.getItem("jwtToken")) return this.setState({user: null});
     const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
@@ -164,19 +186,12 @@ export class DetailsPages extends Component {
     this.setState({user: _user}) ; 
   }
 
+  //Redirects to login page.
   loginPage = async() => {
     window.location.replace('/login');
   }
 
-
-
-  componentDidMount(){
-    const id = this.props.match.params.id;
-    this.setId(id);
-    this.setPopularPosts();
-    this.userInfo();
-  }
-
+  //Gets the description of the post and returns slices description.
   getSummaryDesc () {
     const desc = `${this.state.author.description}`;
     return desc.slice(3,30);
@@ -218,10 +233,10 @@ export class DetailsPages extends Component {
                     </div>
                   </div>
               </Link>
+              {/* --COMMENTS-- */}
               <div className="commentsBox">
               <div className="commentTitleBox">
                 <h1 >Comments</h1>
-                {/* <hr/> */}
               </div>
               <div className="commentCardBox">
                 {this.state.comments.map((comment) => (
@@ -257,13 +272,12 @@ export class DetailsPages extends Component {
           <div className="rightContainer">
             <div className="cardItems">
               <div className="card">
-                <h2 style={{width: 210}}>Share This Post</h2>
-                <hr style={{marginTop:15,marginLeft:5 ,width: 300,}} />
+                <h2 >Share This Post</h2>
               </div>
               <div className="card">
                 <button className="shareButtons" >
                   <a href={`https://www.facebook.com/sharer/sharer.php?u=${window.location}`} target="_blank" rel="noopener noreferrer">
-                    <BsFacebook className='icon' style={{margin:10, width: 42, height: 42}} color="#000000" />
+                    <BsFacebook className='icon' style={{margin:10, marginBottom:15, width: 45, height: 45}} color="#000000" />
                   </a>
                 </button>
                 <button className="shareButtons">
@@ -283,20 +297,20 @@ export class DetailsPages extends Component {
                 </button>
               </div>
             </div>
+            {/* --POPULAR-POSTS-- */}
             <div className="cardItems">
               <div className="card">
-                <h2 style={{width:210}}>Latest Releases</h2>
-                <hr style={{marginTop:15,marginLeft:5 ,width: 300,}}/>
+                <h2 >Latest Releases</h2>
               </div>
               {this.state.popularPosts.map((item) => (
                 <Link to={`/details/${item.id}`} className="link">
                   <div className="box boxItems" onClick={() => this.setId(item.id)} >
                     <img style={{objectFit:"cover"}} alt="" className="boxImage" src={item.imageCover}/>
                     <div className="postInfo">
-                      <div style={{width: 275}}>
+                      <div >
                         <b>{item.title}</b>
                       </div>
-                      <div style={{width: 275}}>
+                      <div >
                         <p style={{fontSize:13}}>{item.desc.slice(0, 70).replace('&nbsp;', " ")}</p>
                       </div>
                     </div>
@@ -304,30 +318,17 @@ export class DetailsPages extends Component {
                 </Link>
               ))}
             </div>
+            {/* --Categories-- */}
             <div className="cardItems">
               <div className="card">
-                <h2 style={{width:210}}>Categories</h2>
-                <hr style={{marginTop:15,marginLeft:5 ,width: 300}} />
+                <h2>Categories</h2>
               </div>
               <div >
-                <a href={`${url.split('details/')[0]}Technology`}>
-                  <button style={{marginLeft: 20, }} className="categoriesButtons">Technology</button>
-                </a>
-                <a href={`${url.split('details/')[0]}History`}>
-                  <button className="categoriesButtons">History</button>
-                </a>
-                <a href={`${url.split('details/')[0]}Culture`}>
-                  <button className="categoriesButtons">Culture</button>
-                </a>
-                <a href={`${url.split('details/')[0]}World`}>
-                  <button className="categoriesButtons">World</button>
-                </a>
-                <a href={`${url.split('details/')[0]}Sport`}>
-                  <button style={{marginLeft: 20, }} className="categoriesButtons">Sport</button>
-                </a>
-                <a href={`${url.split('details/')[0]}News`}>
-                  <button className="categoriesButtons">News</button>
-                </a>
+                  {categories.map((category) =>( 
+                    <a href={`${url.split('details/')[0]}${category}`}>
+                      <button className="categoriesButtons">{category}</button>
+                    </a>
+                  ))}
               </div>
             </div>
           </div>

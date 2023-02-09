@@ -19,6 +19,12 @@
     margin-top: 30px;
     margin-bottom: 30px;
 }
+.about .linkCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .about .authorCard img {
     border-radius: 50%;
     border-style: solid;

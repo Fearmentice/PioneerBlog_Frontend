@@ -48,9 +48,9 @@ export const About = () => {
           <div className='container grid3'>
             {allAuthors.map((item) => (
               <div className="authorCard">
-                  <Link to={`authors/${item.id}`}>
+                  <Link className="linkCard" to={`authors/${item.id}`}>
                     <img src={item.profilePhoto ? item.profilePhoto : defaultUserImage} alt='profilePhoto' class='image-preview' />
-                    <a href={`authors/${item.id}`} style={{color: "black"}}>{item.name}</a>
+                    <a href={`authors/${item.id}`} style={{color: "black", alignSelf:"center"}}>{item.name}</a>
                   </Link>
                 </div>
                 ))}

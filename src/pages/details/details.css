@@ -6,24 +6,20 @@
 .singlePage .container {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   padding-left: 10%;
-  width: max-content;
 }
 
 .singlePage .rightContainer {
   display: flex;
   flex-direction: column;
-  flex-wrap: nowrap;
-  width: 40%;
   padding: 5%;
-  
 }
 
 .singlePage .boxItems {
   display: flex;
   flex-direction: row;
   margin: 2%;
+  width: max-content;
   transition: 0.5s;
   background-color: #fff;
 }
@@ -47,14 +43,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 10px;
   padding: 10px;
-  width: max-content;
-  height: max-content;
+
   flex-wrap: nowrap; 
-}
-
-
-.singlePage .left {
-  width: 60%;
 }
 
 .singlePage .card{
@@ -62,6 +52,7 @@
   flex-direction: row;
   align-items: flex-end;
   justify-content: flex-start;
+  margin: 10px;
 }
 
 .singlePage .postInfo{
@@ -70,11 +61,8 @@
 
 .singlePage .categoriesButtons{
   background-color: rgb(230, 230, 230);
-  margin: 5%;
-  margin-left: 0%;
-  width: 80px;
-  height: 40px;
-  margin-top: 0;
+  margin: 10px;
+  padding: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   transition: 0.5s;
