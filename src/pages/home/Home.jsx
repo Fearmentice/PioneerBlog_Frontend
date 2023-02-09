@@ -5,7 +5,7 @@ import './Home.css'
 import { Category } from "../../components/category/Category"
 import { db } from "../../firebase-config";
 import { DownOutlined } from '@ant-design/icons';
-import {collection, getDocs, startAfter, endBefore, query, where, orderBy, limit, limitToLast} from "firebase/firestore";
+import {collection, getDocs, startAfter, query, where, orderBy, limit} from "firebase/firestore";
 
 
 
@@ -20,11 +20,13 @@ class Home extends Component{
       user: {},
       firstPost: {},
       lastPost: {},
-      pageSize: 9
+      pageSize: 9,
+      popularWritings: []
     }
     this.setCategory = this.setCategory.bind(this);
     this.fetchposts = this.fetchposts.bind(this);
     this.fetchPostsByCategory = this.fetchPostsByCategory.bind(this);
+    this.getCategory = this.getCategory.bind(this);
   }
 
   setCategory = async(_category) => {
@@ -125,7 +127,7 @@ class Home extends Component{
           _posts.push({...doc.data(), id:doc.id });
         })
         //Check if there is next page.
-        if (_posts.length == 0){
+        if (_posts.length === 0){
           return;
         }
 
@@ -159,7 +161,7 @@ class Home extends Component{
       }
     })
     //Check if there is next page.
-    if (_posts.length == 0){
+    if (_posts.length === 0){
       return;
     }
 
@@ -169,41 +171,78 @@ class Home extends Component{
     this.setState({firstPost: docSnap.docs[0]});
 }
 
+
+  getCategory = async() => {
+    const blogpostsRef = collection(db, 'blogposts');
+    const categories = ['Technology', 'Culture', 'History', 'World', 'Health', 'Sport', 'News'];
+    let _popularPosts = [...this.state.popularWritings];
+
+    categories.forEach( async(category) => {
+    const queryRef = query(blogpostsRef, where("active", "==", true), where("category", "==", `${category}`) ,orderBy('view', 'asc') , limit(1));
+    const docSnap = await getDocs(queryRef);
+    docSnap.forEach((doc) => {
+      _popularPosts.push({...doc.data(), id:doc.id });
+    })
+  })
+
+
+
+    this.setState({popularWritings: _popularPosts})
+}
+  getCategoryBasedBlogposts = async(_Category) => {
+    const blogpostsRef = collection(db, 'blogposts');
+    const queryRef = query(blogpostsRef, where("active", "==", true), where("category", "==", `${_Category}`) ,orderBy('view', 'asc') , limit(5));
+    const docSnap = await getDocs(queryRef);
+    let _popularPosts = [];
+    docSnap.forEach((doc) => {
+      _popularPosts.push({...doc.data(), id:doc.id });
+    })
+    this.setState({popularWritings: _popularPosts})
+}
+
   updateCategory = async() => {
     const category = this.props.match.params.category;
     switch(category) {
       case "Culture":
         this.setCategory("Culture");
+        this.getCategoryBasedBlogposts(category);
         break;
       case "Technology":
         this.setCategory("Technology");
+        this.getCategoryBasedBlogposts(category);
         break;
       case "World":
         this.setCategory("World");
+        this.getCategoryBasedBlogposts(category);
         break;
       case "Sport":
         this.setCategory("Sport");
+        this.getCategoryBasedBlogposts(category);
         break;
       case "History":
         this.setCategory("History");
+        this.getCategoryBasedBlogposts(category);
         break;
       case "News":
         this.setCategory("News");
+        this.getCategoryBasedBlogposts(category);
         break;
       case "Health":
         this.setCategory("Health");
+        this.getCategoryBasedBlogposts(category);
         break;
       case "Home":
           this.setCategory("");
+          this.getCategory();
           break;
-      default:
-        this.setCategory("");
-        this.props.history.push('/')
-      console.log(localStorage.getItem("jwtToken"))
-     }
+          default:
+            this.setCategory("");
+            this.getCategory();
+            this.props.history.push('/')
+          }
   }
 
-  componentDidMount(){
+  componentDidMount () {
     //this.fetchposts();
     this.updateCategory();
   }
@@ -212,15 +251,16 @@ class Home extends Component{
   render(){
     return(
       <>
-        <Category setChanged={this.setCategory}/>
-          <h1 style={{position:"inherit", marginLeft:50}}>
+      {console.log(this.state.category)}
+        <Category setChanged={this.setCategory} category={this.state.category} popularWritings={this.state.popularWritings}/>
+          <h1 style={{position:"inherit", marginLeft:50, padding:200, paddingBottom:0,paddingTop:0}}>
             {this.state.category === "" ? "Home": this.state.category}
           </h1>
-        <Card category={this.state.category} posts={this.state.posts} />
+        <Card posts={this.state.posts} />
           <div className="Pagination">
               {/* <a onClick={() => this.onPrevious()} class="previous round paginate">{'<'}</a>
               <a onClick={() => this.loadMore()} class="nextButton round paginate">{'>'}</a> */}
-              <a onClick={() => this.state.category ?this.loadMoreCategoryBased() : this.loadMore()}>Load More</a>
+              <button onClick={() => this.state.category ?this.loadMoreCategoryBased() : this.loadMore()}>Load More</button>
               <DownOutlined/>
           </div>
       </>

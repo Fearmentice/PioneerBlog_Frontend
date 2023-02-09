@@ -3,6 +3,7 @@
   margin-top: 20px;
   margin-bottom: 10px;
   position: relative;
+  padding: 0px 200px;
 }
 .category .box {
   border-radius: 0;
@@ -69,6 +70,7 @@
   display: flex;
   flex-direction: column;
   position: absolute;
+  justify-content: flex-end;
   top: 110px;
   padding: 15px;
   width: max-content;
@@ -87,7 +89,7 @@
 }
 .category .overlay .descBox {
   text-align: left;
-  width: 500px;
+  width:450px
 }.category .overlay .titleBox {
   display: flex;
   flex-direction: row;

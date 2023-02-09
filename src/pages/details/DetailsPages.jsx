@@ -13,8 +13,6 @@ import { db } from "../../firebase-config";
 import {collection, getDoc, getDocs, doc, query,
    orderBy, limit, addDoc, Timestamp, updateDoc, where} from "firebase/firestore";
 
-import { configConsumerProps } from "antd/es/config-provider"
-
 export class DetailsPages extends Component {
   constructor(props) {
     super(props)
@@ -212,7 +210,7 @@ export class DetailsPages extends Component {
               <Link to={`/authors/${this.state.blog.authorId}`}>
                 <div className="card">
                     <div className="authorCard">
-                      <img src={this.state.author.profilePhoto ? this.state.author.profilePhoto : defaultUserImage} alt='User Profile Photo'/>
+                      <img src={this.state.author.profilePhoto ? this.state.author.profilePhoto : defaultUserImage} alt='User Profile'/>
                       <div className="commentContent">
                         <b style={{color:"black"}}>{this.state.author.name}</b>
                          <p style={{fontSize:12}}>{this.getSummaryDesc()}</p>
@@ -229,7 +227,7 @@ export class DetailsPages extends Component {
                 {this.state.comments.map((comment) => (
                   <div className="commentCard">
                     <div className="commentCardHeader">
-                      <img src={comment.user.profilePhoto ? `${comment.user.profilePhoto}`: defaultUserImage} alt='User Profile Photo'/>
+                      <img src={comment.user.profilePhoto ? `${comment.user.profilePhoto}`: defaultUserImage} alt='User Profile'/>
                       <div className="commentContent">
                         <b>{comment.userId.name}</b>
                         <p >{comment.body}</p>
@@ -239,7 +237,7 @@ export class DetailsPages extends Component {
                 ))}
                   <div className="commentCard">
                     <div className="commentCardHeader">
-                      <img src={defaultUserImage} alt='User Profile Photo'/>
+                      <img src={defaultUserImage} alt='User Profile'/>
                       <div className="commentContent">
                         <b>Make a Comment</b>
                         <input placeholder="Share us what you think" type='text' onChange={this.handleChange} name={"newCommentBody"} required />

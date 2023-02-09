@@ -1,0 +1,29 @@
+.about{
+    padding: 50px;
+    padding-left: 200px;
+    margin: 50px 0;
+    margin-top: 10px;
+}
+.about .authorCardBox {
+    display: flex;
+    flex-direction: row;
+    width: 1000px;
+}
+.about .authorCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 150px;
+    margin-left: 0px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.about .authorCard img {
+    border-radius: 50%;
+    border-style: solid;
+    border-color: black;
+    width:300px;
+    height:300px;
+    object-fit: cover;
+}

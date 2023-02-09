@@ -12,7 +12,6 @@ export const Account = () => {
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   
   const [image, setImage] = useState('');
   const [preview, setPreview] = useState('');
@@ -95,8 +94,9 @@ export const Account = () => {
             <div className='left'>
               <div className='img flexCenter'>
                 <input type='file' onChange={(event) => setImage(event.target.files[0])} accept='image/*' src={image} alt='img' />
-                <img src={preview} alt='image' class='image-preview' />
+                <img src={preview} alt='preview' class='image-preview' />
               </div>
+              <a href="/" style={{marginLeft: 15, marginTop:10}}>Upload Image</a>
             </div>
             <div className='right'>
               <label htmlFor=''>Username</label>

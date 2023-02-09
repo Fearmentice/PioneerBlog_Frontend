@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import "./userPage.css"
 import "../../components/header/header.css"
-import defaultUserImage from "../../assets/images/defaultUser.jpg"
 import {Card} from '../../components/blog/Card'
 import { DownOutlined } from '@ant-design/icons';
 //--DATABASE--
@@ -87,7 +86,7 @@ export class userPage extends Component {
       _posts.push({...doc.data(), id:doc.id });
     })
     //Check if there is next page.
-    if (_posts.length == 0){
+    if (_posts.length === 0){
       return;
     }
 
@@ -147,7 +146,7 @@ export class userPage extends Component {
       <div className="Pagination">
               {/* <a onClick={() => this.onPrevious()} class="previous round paginate">{'<'}</a>
               <a onClick={() => this.loadMore()} class="nextButton round paginate">{'>'}</a> */}
-              <a onClick={() => this.loadMore()}>Load More</a>
+              <button onClick={() => this.loadMore()}>Load More</button>
               <DownOutlined/>
       </div>
     </>

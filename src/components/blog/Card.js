@@ -23,8 +23,8 @@ export class Card extends Component {
                     <AiOutlineTags className='icon' />
                     <a href='/'>#{item.category}</a>
                   </div>
-                  <h3>{item.title}</h3>
-                  <p>{item.desc.slice(0, 100)}...</p>
+                  <h3>{item.title.length >= 40 ? `${item.title.slice(0, 37)}...` : item.title}</h3>
+                  <p>{item.desc.slice(0, 130)}...</p>
                   <div className='date'>
                     <FaRegUser style={{ marginBottom: 5 }} className='icon' /> <label htmlFor=''>{item.author}</label>
                     <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.date}</label>

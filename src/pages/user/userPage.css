@@ -5,14 +5,13 @@
   .page .desc .profilePhoto {
     width: 200px;
     height: 200px;
-    border-radius: 50%;
     object-fit: cover;
     align-self: flex-start;
   }
   .page .desc .profile {
     display: flex;
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
     margin-left: 10px;
   }
   
@@ -22,8 +21,6 @@
     
   }
   .page .desc {
-    margin: 0;
-    padding: 0;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -31,8 +28,8 @@
   .page .BlogpostsBox {
     display: flex;
     flex-direction: column;
-    align-items: start;
-    justify-content: start;
+    align-items: flex-start;
+    justify-content: flex-start;
   }
 
 
@@ -82,14 +79,6 @@
     margin: 10px;
     font-size: 20px;
   }
-  .page .commentCardHeader img{
-    border-style: solid;
-    border-radius: 50%;
-    border-width: 0.5px;
-    border-color: aliceblue;
-    width: 75px;
-    height: 75px;
-  }
   .page .commentTitleBox hr{
     width: 400px;
     margin-bottom: 10px;
@@ -120,7 +109,6 @@
   .page p {
     font-size: 20px;
     line-height: 2;
-    text-transform: capitalize;
   }
   .page .link {
     color: black;
@@ -133,4 +121,9 @@
     margin-left: 20px;
     border: none;
   } 
+  button{
+    text-transform: capitalize;
+    font-size: large;
+    color: #000;
+  }
   

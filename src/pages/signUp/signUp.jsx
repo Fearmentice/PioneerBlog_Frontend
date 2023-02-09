@@ -1,9 +1,6 @@
 import React, {Component} from "react"
 import { connect } from "react-redux";
-import { login, logout } from "../../actions/authAction";
-import { Link } from "react-router-dom";
-//Background-Image
-import back from "../../assets/images/my-account.jpg"
+import { login } from "../../actions/authAction";
 //--DATABASE--
 import { db } from "../../firebase-config";
 import {collection, query, getDocs, addDoc, doc, Timestamp, where, updateDoc} from "firebase/firestore";
@@ -15,7 +12,7 @@ import emailjs from '@emailjs/browser';
 
 import image from "../../assets/images/defaultUser.jpg"
 
-export class SignUp extends Component {
+class SignUp extends Component {
   constructor(props){
     super(props)
 
@@ -58,7 +55,6 @@ handleChange = e => {
 
   const storage = getStorage();
 
-  const { dispatch } = this.props;
   const { username, email, password } = this.state;
 
   //Blogpost ref.
@@ -82,7 +78,7 @@ handleChange = e => {
   }
 
   let imageUrl;
-  if(this.state.image == '') {
+  if(this.state.image === '') {
     console.log("nullasdasdasd")
     imageUrl = 'https://firebasestorage.googleapis.com/v0/b/vocham-api.appspot.com/o/users%2FdefaultUser.jpg?alt=media&token=8ffd11af-591d-418b-85dc-d87d723ba386';
   }else{
@@ -96,8 +92,6 @@ handleChange = e => {
   }
 
   const verifyCode = await this.createVerifyCode();
-
-  const setAccountId = this.setAccountId;
 
   //Hash password.
   await bcrypt.genSalt(10, function (err, salt) {
@@ -137,6 +131,8 @@ setVerifyPage = () => {
 
 
 verifyAccount = async() => {
+  
+  const { dispatch } = this.props;
   if(this.state.verifyCode === this.state.verifyInput){
     //Blogpost ref.
     const usersRef = collection(db, 'users');
@@ -152,7 +148,7 @@ verifyAccount = async() => {
     await updateDoc(updateRef, data);
 
     setTimeout(() => {
-      window.location.replace('/login');
+      dispatch(login(this.state.email, this.state.password));
     }, 1000);
   }
 }
@@ -170,9 +166,9 @@ createVerifyCode = async() => {
 }
 
 render(){
-  const { isAuthenticated, error, errorMessage } = this.props;
+  const { isAuthenticated } = this.props;
   if (isAuthenticated) 
-      this.props.history.push('/');
+      window.location.replace('/');
   return (  
    <>
       <section className='accountInfo'>
@@ -182,11 +178,11 @@ render(){
             <div className='left'>
               <div className='img flexCenter'>
                 <input type='file' onChange={(event) => this.setImage(event.target.files[0])} accept='image/*' src={image} alt='img' />
-                <img style={{objectFit:"cover"}} src={this.state.preview} alt='image' class='image-preview' />
+                <img style={{objectFit:"cover"}} src={this.state.preview} alt='previewImage' class='image-preview' />
               </div>
-              <a style={{marginLeft: 15, marginTop:10}}>Upload Image</a>
+              <b style={{marginLeft: 15, marginTop:10}}>Upload Image</b>
             </div>
-            {this.state.verify == true ?
+            {this.state.verify === true ?
             <div className='right'>
               <label htmlFor=''>Verify Account</label>
               <input value={this.state.verifyInput} type='text' onChange={this.handleChange} name="verifyInput"/>
@@ -210,3 +206,13 @@ render(){
   )
 }
 }
+const mapStateToProps = state => {
+  const { isAuthenticated, error, errorMessage, user } = state.auth;
+  return {
+      isAuthenticated,
+      error,
+      errorMessage,
+      user
+  }
+}
+export default connect(mapStateToProps)(SignUp)

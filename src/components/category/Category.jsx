@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from "react"
+import React from "react"
 import "./category.css"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
@@ -6,8 +6,6 @@ import Slider from "react-slick"
 import { GrFormPrevious } from "react-icons/gr"
 import { MdNavigateNext } from "react-icons/md"
 import { Link } from "react-router-dom"
-import { db } from "../../firebase-config";
-import {collection, getDocs, query, orderBy, limit, where} from "firebase/firestore";
 
 const SampleNextArrow = (props) => {
   const { onClick } = props
@@ -32,29 +30,6 @@ const SamplePrevArrow = (props) => {
 
 
 export const Category = (props) => {
-
-  const [popularWritings, setPopularWritings] = useState([]);
-
-  useEffect(() => {
-    getCategory("Sport");
-    getCategory("Culture");
-    getCategory("Technology");
-    getCategory("History");
-    getCategory("World");
-    getCategory("News");
-    getCategory("Health");
-  console.log(popularWritings);
-  }, [popularWritings]);
-
-  const getCategory = async(_Category) => {
-    const blogpostsRef = collection(db, 'blogposts');
-    const queryRef = query(blogpostsRef, where("active", "==", true), where("category", "==", `${_Category}`) ,orderBy('view', 'asc') , limit(1));
-    const docSnap = await getDocs(queryRef);
-    docSnap.forEach((doc) => {
-      console.log(doc.data())
-      popularWritings.push({...doc.data(), id:doc.id });
-    })
-  }
 
   const settings = {
     dots: false,
@@ -83,7 +58,7 @@ export const Category = (props) => {
         <div className='content'>
           <h1 style={{marginBottom:20}}>Popular Writings</h1>
           <Slider {...settings}>
-            {popularWritings.map((item) => (
+            {props.popularWritings.map((item) => (
               <div className='boxs'>
                 <Link to={`/details/${item.id}`}>
                   <div className='box' onClick={() => props.setChanged(item.category)} key={item.id} >
@@ -92,7 +67,7 @@ export const Category = (props) => {
                       </div>
                       <div className='overlay'>
                         <div className="titleBox" >
-                          <h4>{item.title}</h4>
+                          <h4>{item.title.length >= 40 ? `${item.title.slice(0, 37)}...` : item.title}</h4>
                         </div>
                         <div className="descBox">
                           <p>{item.desc.slice(0,100).replace('&nbsp;', ' ')}</p>

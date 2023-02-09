@@ -1,12 +1,12 @@
 import React, {Component} from "react"
 import { connect } from "react-redux";
-import { login, logout } from "../../actions/authAction";
+import { login } from "../../actions/authAction";
 import "./login.css"
 import back from "../../assets/images/my-account.jpg"
 
 //--DATABASE--
 import { db } from "../../firebase-config";
-import {collection, query, getDocs, addDoc, getDoc, doc, Timestamp, where, updateDoc} from "firebase/firestore";
+import {collection, query, getDocs, doc, Timestamp, where, updateDoc} from "firebase/firestore";
 //--Email--
 import emailjs from '@emailjs/browser';
 
@@ -37,35 +37,37 @@ handleChange = e => {
 
  handleSubmit = async(e) => {
   e.preventDefault();
-  const { dispatch } = this.props;
-  const { email, password } = this.state;
+  const { email } = this.state;
 
   //Blogpost ref.
   const usersRef = collection(db, 'users');
-  const docRef = query(usersRef, where("email", "==", this.state.email));
+  const docRef = query(usersRef, where("email", "==", email));
   const userDocSnap = await getDocs(docRef);
-  const userData = userDocSnap.docs[0].data();
   const userId = userDocSnap.docs[0].id;
 
   const authorRef = doc(db, "users", userId);
 
   const verifyCode = await this.createVerifyCode();
+  const expiresIn = 172800
+  const createdAt = Timestamp.now().toDate()
+  createdAt.setSeconds(createdAt.getSeconds() + expiresIn);
+  const expiresAt = Timestamp.fromDate(createdAt);
   const verifyData = {
     verifyInfo: {
       code: verifyCode,
-      expiresAt: Timestamp.now(),
+      expiresAt: expiresAt,
     },
   }
+
+  if(expiresAt.toMillis() < Timestamp.now().toMillis()) return;
+
   await updateDoc(authorRef, verifyData);
-  const newVerifyInfo = await getDoc(authorRef);
-  
-  console.log(userData)
+
   const templateParams = {
     verify_code: verifyCode,
     to_email: this.state.email
   }
-  //emailjs.send('service_4yjjimo', 'template_qdi58fo', templateParams, 'Omls_WJx1Lqdajbcu')
-  console.log(this.state.verifyCode)
+  emailjs.send('service_4yjjimo', 'template_qdi58fo', templateParams, 'Omls_WJx1Lqdajbcu')
     this.setVerifyCode(verifyData.verifyInfo.code);
     this.setUserId(userId);
     this.setVerifyPage();
@@ -115,7 +117,7 @@ verifyAccount = async(e) => {
 }
 
 render(){
-   const { isAuthenticated, error, errorMessage } = this.props;
+   const { isAuthenticated } = this.props;
    if (isAuthenticated) 
        window.location.replace('/');
   if(localStorage.getItem('jwtToken')) return window.location.replace('/');
@@ -131,7 +133,7 @@ render(){
             </div>
           </div>
 
-          {this.state.verifyPage == false ?
+          {this.state.verifyPage === false ?
             <form onSubmit={this.handleSubmit}>
             <span>Email address *</span>
             <input type='text'  onChange={this.handleChange} name={"email"} required />

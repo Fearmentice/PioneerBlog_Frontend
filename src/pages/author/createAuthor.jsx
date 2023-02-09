@@ -49,7 +49,6 @@ handleChange = e => {
 
   const storage = getStorage();
 
-  const { dispatch } = this.props;
   const { name, editorState } = this.state;
 
 
@@ -70,7 +69,7 @@ handleChange = e => {
     // Add a new document in collection "authors"
     const newUserRef = collection(db, "authors");
 
-    const newDocument = await addDoc(newUserRef, {
+    await addDoc(newUserRef, {
         name: name,
         description: stateToHTML(editorState.getCurrentContent()),
         profilePhoto: imageUrl,
@@ -85,7 +84,7 @@ onEditorStatChange = (editorState) => {
     this.setState({editorState: editorState});
   }
 render(){
-  const { isAuthenticated, error, errorMessage } = this.props;
+  const { isAuthenticated } = this.props;
   if (isAuthenticated) 
       this.props.history.push('/');
   return (
@@ -97,7 +96,7 @@ render(){
             <div className='left'>
               <div className='img flexCenter'>
                 <input type='file' onChange={(event) => this.setImage(event.target.files[0])} accept='image/*' src={image} />
-                <img style={{objectFit:"cover"}} src={this.state.preview} alt='image' class='image-preview' />
+                <img style={{objectFit:"cover"}} src={this.state.preview} alt='previewImage' class='image-preview' />
               </div>
             </div>
             <div className='right'>

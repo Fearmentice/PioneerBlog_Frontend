@@ -45,6 +45,14 @@ const items = [
   {
     key: '5',
     label:  (
+        <p onClick={() => window.location.replace('/Health')} target="_blank" rel="noopener noreferrer">
+          Health
+        </p>
+    ),
+  },
+  {
+    key: '6',
+    label:  (
         <p onClick={() => window.location.replace('/Sport')} target="_blank" rel="noopener noreferrer">
           Sport
         </p>
@@ -87,7 +95,7 @@ export const Header = () => {
                   </Link>
               </li>
                 <Dropdown  menu={{items,}}>
-                    <a style={{marginTop:3}} onClick={(e) => e.preventDefault()}>
+                    <a href="/" style={{marginTop:3}} onClick={(e) => e.preventDefault()}>
                         Categories
                         <DownOutlined style={{marginLeft:5}} />
                     </a>
@@ -109,12 +117,12 @@ export const Header = () => {
               <>
               <li style={{fontSize:20, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
                 <Link to={"/login"}>
-                <a style={{color:"black"}}>Login</a>
+                <a href="/login" style={{color:"black"}}>Login</a>
                 </Link>
               </li>
               <li style={{fontSize:20, padding:10, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
                 <Link to={"/signup"}>
-                <a style={{color:"black"}}>Sign Up</a>
+                <a href="/signup" style={{color:"black"}}>Sign Up</a>
                 </Link>
               </li>
             </>

@@ -1,6 +1,7 @@
 .blog {
   margin: 50px 0;
   margin-top: 10px;
+  padding: 0px 200px;
 }
 .blog .boxItems {
   transition: 0.5s;
@@ -42,7 +43,9 @@
 }
 .blog .date {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  align-self: flex-end;
+  justify-content: flex-start;
 }
 .blog .date label {
   display: block;

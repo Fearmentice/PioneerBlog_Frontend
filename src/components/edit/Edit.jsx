@@ -7,16 +7,19 @@ import { doc, getDoc, collection, query, getDocs, updateDoc } from "firebase/fir
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
 
-import { ContentState, convertFromHTML, convertFromRaw, convertToRaw, EditorState } from "draft-js";
+import { ContentState, convertFromHTML, convertToRaw, EditorState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { stateToHTML } from "draft-js-export-html";
 
 import {DropDownListComponent} from '@syncfusion/ej2-react-dropdowns';
+// Registering Syncfusion license key
+import { registerLicense } from '@syncfusion/ej2-base';
 
 export const Edit = () => {
+  registerLicense('ORg4AjUWIQA/Gnt2VVhkQlFadVdJXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXxQdkdjUX9XdHdWRWdaU0Q=');
   const History = useHistory();
-  const [id, setId] = useState(useParams());
+  const [id] = useState(useParams());
   const [blogpost, setBlogpost] = useState({});
 
   const [title, setTitle] = useState('');
@@ -24,7 +27,7 @@ export const Edit = () => {
   const [author, setAuthor] = useState('');
 
   const [allAuthors, setAllAuthors] = useState([]);
-  const [allCategories, setAllCategories] = useState(['Technology', 'Culture', 'History', 'World', 'Health', 'Sport', 'News']);
+  const [allCategories] = useState(['Technology', 'Culture', 'History', 'World', 'Health', 'Sport', 'News']);
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
@@ -85,10 +88,15 @@ export const Edit = () => {
     // Update a document that already exist in database.
     const docRef = doc(db, "blogposts", `${id.id}`);
 
+    const contentState = editorState.getCurrentContent();
+    const rawContentState = convertToRaw(contentState);
+    console.log(rawContentState.blocks[0].text);
+
     //Update data.
     const data = {
       title: title,
       category: category,
+      desc: rawContentState.blocks[0].text,
       body: stateToHTML(editorState.getCurrentContent()),
       author: author,
       imageCover: imageUrl
@@ -100,7 +108,7 @@ export const Edit = () => {
         console.log("A New Document Field has been added to an existing document");
     })
 
-    const updatedDoc = await getDoc(docRef);
+    await getDoc(docRef);
 
     setTimeout(() => {
       History.push('/');

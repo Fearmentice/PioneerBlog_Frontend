@@ -6,24 +6,24 @@ import {collection, query, where, getDocs, addDoc, Timestamp} from "firebase/fir
 
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
-import { Link } from "react-router-dom";
 
-import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
+import { convertToRaw, EditorState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { stateToHTML } from "draft-js-export-html";
 
 import {DropDownListComponent} from '@syncfusion/ej2-react-dropdowns';
-import {DataManager, WebApiAdaptor, Query} from '@syncfusion/ej2-data';
+import { registerLicense } from '@syncfusion/ej2-base';
 
 
 export const Create = () => {
+  registerLicense('ORg4AjUWIQA/Gnt2VVhkQlFadVdJXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXxQdkdjUX9XdHdWRWdaU0Q=');
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [author, setAuthor] = useState('');
 
   const [allAuthors, setAllAuthors] = useState([]);
-  const [allCategories, setAllCategories] = useState(['Technology', 'Culture', 'History', 'World', 'Health', 'Sport', 'News']);
+  const [allCategories] = useState(['Technology', 'Culture', 'History', 'World', 'Health', 'Sport', 'News']);
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
@@ -49,7 +49,8 @@ export const Create = () => {
       return () => URL.revokeObjectURL(objectUrl)
     }, [image])
 
-  const createPost = async() => {
+  const createPost = async(e) => {
+    
     if(image == null) return;
     const imageRef = ref(storage,`images/${image.name + v4()}`)
     await uploadBytes(imageRef, image).then(() => {
@@ -71,9 +72,8 @@ export const Create = () => {
 
     const contentState = editorState.getCurrentContent();
     const rawContentState = convertToRaw(contentState);
-    console.log(rawContentState);
 
-    const newDocument = await addDoc(newBlogpostRef, {
+    await addDoc(newBlogpostRef, {
       title: title,
       author: author,
       authorId: authorSnap.docs[0].id,
@@ -82,7 +82,7 @@ export const Create = () => {
       body: stateToHTML(editorState.getCurrentContent()),
       view: 0,
       favCount: 0,
-      desc: rawContentState.blocks[0].text.slice(0,100),
+      desc: rawContentState.blocks[0].text,
       commentsId: [],
       publishDate: Timestamp.now(),
       date: `${('0' + today.getDate()).slice(-2)}/${('0' + today.getMonth() + 1).slice(-2)}/${today.getFullYear()}`,
@@ -90,39 +90,13 @@ export const Create = () => {
     });
 
     setTimeout(() => {
-      History.push('/');
+      window.location.replace('/');
     }, 1000)
   }
-
-  const html = stateToHTML(editorState.getCurrentContent(), {
-    inlineStyleFn: styles => {
-      let key = "color-";
-      let color = styles.filter(value => value.startsWith(key)).first();
-      let a = "fontfamily-";
-      let b = styles.filter(value => value.startsWith(a)).first();
-      console.log(b, color);
-
-      if (color) {
-        return {
-          element: "span",
-          style: {
-            color: color.replace(key, ""),
-            fontFamily: b.replace(a, "")
-          }
-        };
-      }
-    }
-  });
   const onEditorStatChange = (editorState) => {
     setEditorState(editorState);
   }
 
-  const remoteData: DataManager = new DataManager({
-    url: "https://ej2services.syncfusion.com/production/web-services/api/Employees",
-    adaptor: new WebApiAdaptor,
-    crossDomain: true
-  })
-  const dataQuery: Query = new Query().select(['FirstName', 'EmployeeID']).take(10).requiresCount();
   const getAllAuthors = async() => {
         //Authors ref.
         const authorsRef = collection(db, 'authors');
@@ -165,7 +139,8 @@ export const Create = () => {
               dataSource={allAuthors} 
               fields={{value:"EmployeeID", text:"FirstName"}}></DropDownListComponent>
             </div>
-              <button className='button' onClick={() => {createPost()}}>Create Post</button>
+              <button className='button' onClick={(event) =>{event.preventDefault() 
+                createPost()}}>Create Post</button>
           </form>
         </div>
             

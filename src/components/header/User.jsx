@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { IoSettingsOutline } from "react-icons/io5"
-import { AiOutlineHeart } from "react-icons/ai"
+// import { AiOutlineHeart } from "react-icons/ai"
 import { BiLogOut } from "react-icons/bi"
 import { RiImageAddLine } from "react-icons/ri"
-import { Link, useHistory } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useEffect } from "react"
 import { db } from "../../firebase-config";
 import {getDoc, doc, } from "firebase/firestore";
