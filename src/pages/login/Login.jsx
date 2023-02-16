@@ -102,7 +102,6 @@ verifyAccount = async(e) => {
 
   if(this.state.verifyCode === this.state.verifyInput){
 
-    console.log(this.state.userID)
     const updateRef = doc(db, "users", `${this.state.userID}`);
     const data = {
       isVerified: true,
@@ -126,26 +125,26 @@ render(){
       <section className='login'>
         <div className='container'>
           <div className='backImg'>
-            <img src={back} alt='' />
+            <img src={back} alt='Login page background.' />
             <div className='text'>
               <h3>Login</h3>
-              <h1>My account</h1>
+              <h1 style={{color:'white'}}>My account</h1>
             </div>
           </div>
 
           {this.state.verifyPage === false ?
             <form onSubmit={this.handleSubmit}>
             <span>Email address *</span>
-            <input type='text'  onChange={this.handleChange} name={"email"} required />
+            <input placeholder="Email" type='text'  onChange={this.handleChange} name={"email"} required />
             <span>Password *</span>
-            <input type='password' onChange={this.handleChange} name={"password"} required />
-            <button className='button' >Log in</button>
+            <input placeholder="Password" type='password' onChange={this.handleChange} name={"password"} required />
+            <button style={{color:"white"}} className='button' >Log in</button>
           </form>
           :
           <form onSubmit={this.verifyAccount}>
             <span>Verify *</span>
             <input type='text' value={this.state.verifyInput}  onChange={this.handleChange} name={"verifyInput"} required />
-            <button className='button' >Verify</button>
+            <button style={{color:"white"}} className='button' >Verify</button>
           </form>
           }
 

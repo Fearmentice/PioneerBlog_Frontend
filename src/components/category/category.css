@@ -3,7 +3,7 @@
   margin-top: 20px;
   margin-bottom: 10px;
   position: relative;
-  padding: 0px 200px;
+  padding: 0 200px;
 }
 .category .box {
   border-radius: 0;
@@ -14,6 +14,10 @@
   font-size: 14px;
   font-weight: 600;
   color: black;
+}
+.category h1 {
+  margin: 0;
+  padding: 0 0px;
 }
 /* [1] The container */
 .imgContainer {
@@ -73,7 +77,6 @@
   justify-content: flex-end;
   top: 110px;
   padding: 15px;
-  width: max-content;
   z-index: 2;
   color: #fff;
 }
@@ -89,11 +92,11 @@
 }
 .category .overlay .descBox {
   text-align: left;
-  width:450px
+  
 }.category .overlay .titleBox {
   display: flex;
   flex-direction: row;
-  margin-left: 5px;
+  margin-left: 3px;
 }
 .category .overlay .categoryButton {
   margin-left: 10px;
@@ -137,7 +140,42 @@
   left: 20px;
   z-index: 99;
 }
-.control-btn .icon {
+.control-btn .next .icon path{
   font-size: 25px;
+  color: #000;
 }
 /*---------------control-btn-------------*/
+
+@media (max-width: 1366px) {
+  .category{
+    margin: 0 75px;
+    padding: 0 50px;
+  }
+  .category .overlay h4{
+    font-size: smaller;
+  }
+  .category .overlay p{
+    font-size: small;
+  }
+  .category h1 {
+    margin: 0;
+    padding: 0 0px;
+  }
+}
+@media (max-width: 768px) {
+  .category{
+    margin: 0px;
+    padding: 0 10px;
+  }
+  .category .overlay h4{
+    font-size: smaller;
+  }
+  .category .overlay p{
+    font-size: small;
+  }
+  .category .content h1 {
+    padding: 0 0px;
+    margin: 20px 0;
+    margin-left: 0;
+  }
+}

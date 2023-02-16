@@ -8,20 +8,45 @@
 }
 
 header {
-  background: #fff;
   padding: 20px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   position: relative;
   z-index: 44;
 }
+#light header {
+  background-color: #121212;
+  color: #fff;
+}
+#dark header{
+  background-color: #fff;
+}
+.darkModeToggleButton{
+  margin-bottom: 5;
+  margin-right: 0;
+  margin-left: 10px;
+}
 /* nav */
 nav ul {
   display: flex;
 }
+.ant-dropdown{
+  z-index: 99999;
+}
+#dark .ant-dropdown li {
+  background-color: #fff;
+}
 nav a {
   text-transform: capitalize;
   margin-right: 30px;
+}
+#light nav a {
+  color: #fff;
+}
+#dark nav a{
   color: #000;
+}
+.categoriesTitle{
+  margin-top: 3px;
 }
 /* User */
 .profile {
@@ -80,13 +105,32 @@ header.active {
   width: 100%;
   box-shadow: 0 0 4px 0 rgb(115 115 115 / 20%);
   z-index: 9999;
+}
+#dark  {
   background: #fff;
 }
+#light {
+  background: #0f0f0f;
+}
 @media screen and (max-width: 768px) {
+  .header{
+    padding: 10px;
+  }
   header .search {
     display: none;
   }
-  nav {
-    display: none;
+  nav a {
+    margin-top: 5px;
+    margin-right: 15px;
+  }
+  .header a {
+    font-size: 15px;
+  }
+  .account {
+    flex-direction: column;
+    margin: 0 10px;
+  }
+   li {
+    padding: 0;
   }
 }

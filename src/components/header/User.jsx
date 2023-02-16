@@ -3,11 +3,12 @@ import { IoSettingsOutline } from "react-icons/io5"
 // import { AiOutlineHeart } from "react-icons/ai"
 import { BiLogOut } from "react-icons/bi"
 import { RiImageAddLine } from "react-icons/ri"
+import {  AiFillEdit } from "react-icons/ai"
 import { Link } from "react-router-dom"
 import { useEffect } from "react"
 import { db } from "../../firebase-config";
 import {getDoc, doc, } from "firebase/firestore";
-import {BsPersonPlus} from "react-icons/bs"
+import {BsPersonPlus, BsBookmark} from "react-icons/bs"
 
 export const User = () => {
   const user = true
@@ -40,13 +41,13 @@ export const User = () => {
         {user ? (
           <>
             <button className='img' onClick={() => setProfileOpen(!profileOpen)}>
-              <img src={`${loggedinUser.profilePhoto}`} alt='' />
+              <img src={`${loggedinUser.profilePhoto}`} alt='Profile of the logged in user.' />
             </button>
             {profileOpen && (
               <div className='openProfile boxItems' onClick={close}>
                   <div className='image'>
                     <div className='img'>
-                      <img src={`${loggedinUser.profilePhoto}`} alt='' />
+                      <img src={`${loggedinUser.profilePhoto}`} alt='Logged in user profile.' />
                     </div>
                     <div className='text'>
                       <h4>{loggedinUser.username}</h4>
@@ -69,6 +70,20 @@ export const User = () => {
                   </button>
                 </Link>
                 :null}
+                {loggedinUser.role ==='admin' ? 
+                <Link to='/admin/author/edit'>
+                  <button className='box'>
+                    <AiFillEdit className='icon' />
+                    <h4>Edit Author</h4>
+                  </button>
+                </Link>
+                :null}
+                <Link to='/MyBookmarks'>
+                  <button className='box'>
+                    <BsBookmark className='icon' />
+                    <h4>My Bookmarks</h4>
+                  </button>
+                </Link>
                 <Link to='/myAccount'>
                   <button className='box'>
                     <IoSettingsOutline className='icon' />

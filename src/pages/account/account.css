@@ -33,8 +33,10 @@
   left: 0;
   width: 150px;
   height: 150px;
-  z-index: 1;
   border-radius: 50%;
+}
+.accountInfo .left b{
+  margin-left: 20px;
 }
 
 .accountInfo .right label {
@@ -42,4 +44,52 @@
   color: #000;
   margin-bottom: 10px;
   display: block;
+}
+@media (max-width: 1366px) {
+  .accountInfo .container h1 {
+    margin: 0;
+    padding: 0;
+  }
+}
+@media (max-width: 960px) {
+  .accountInfo {
+    margin: 0px 0;
+  }
+  .accountInfo .img img {
+    left: 40px;
+  }
+  .accountInfo .content {
+    flex-direction: column;
+    margin: 20px 0;
+  }
+  .accountInfo .left {
+    width: 100%;
+    margin-left: 25px;
+  }
+  .accountInfo .right {
+    margin-top: 20px;
+    margin-left: 2%;
+    width: 250px;
+  }
+  .accountInfo .container{
+      margin: 20px 110px;
+      padding: 0 10px;
+      width: 300px;
+      max-width: 100%;
+  }
+  .accountInfo .container h1 {
+    margin: 0;
+    padding: 0;
+  }
+  .accountInfo .left b{
+    margin-left: 60px;
+  }
+}
+@media (max-width: 960px) {
+  .accountInfo .container{
+    margin: 20px 50px;
+    padding: 0 10px;
+    width: 300px;
+    max-width: 100%;
+}
 }

@@ -13,10 +13,10 @@ export const nav = [
     text: "about",
     url: "/about",
   },
-  {
-    id: 3,
-    text: "contact",
-    url: "/contact",
-  },
 ]
-export const categories = ['Technology', 'Culture', 'History', 'World', 'Health', 'Sport', 'News']
+export const categories = ['Technology', 'History', 'World', 'Health', 'Sport', 'News']
+
+// export const color = {
+//   primary: #f9f9f9,
+//   secondary:
+// }

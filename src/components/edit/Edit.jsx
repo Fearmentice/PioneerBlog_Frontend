@@ -90,7 +90,6 @@ export const Edit = () => {
 
     const contentState = editorState.getCurrentContent();
     const rawContentState = convertToRaw(contentState);
-    console.log(rawContentState.blocks[0].text);
 
     //Update data.
     const data = {
@@ -103,10 +102,7 @@ export const Edit = () => {
     }
 
     //Update query.
-    await updateDoc(docRef, data)
-    .then(docRef => {
-        console.log("A New Document Field has been added to an existing document");
-    })
+    await updateDoc(docRef, data);
 
     await getDoc(docRef);
 
@@ -122,9 +118,7 @@ export const Edit = () => {
     if(blogpost.imageCover === preview) return preview;
 
     const imageRef = ref(storage,`images/${image.name + v4()}`)
-    await uploadBytes(imageRef, image).then(() => {
-      console.log("Image uploaded.");
-    })
+    await uploadBytes(imageRef, image);
 
     const imageUrl = await getDownloadURL(imageRef).then(url => {
       return url;
@@ -149,7 +143,6 @@ const getAllAuthors = async() => {
     _authors.push(doc.data().name);
   })
   setAllAuthors(_authors);
-  console.log(_authors)
 }
 
   return (
@@ -159,7 +152,7 @@ const getAllAuthors = async() => {
           <div className='img '>
           </div>
             <div style={{flexDirection:"column"}} className='inputfile flexCenter'>
-              <img style={{width:400, height:250, objectFit: "cover", marginBottom:10}} src={preview} alt='preview' className='image-preview' />
+              <img style={{width:400, height:250, objectFit: "cover", marginBottom:10}} src={preview} alt='Previews the article.' className='image-preview' />
               <input type='file' onChange={(event) => setImage(event.target.files[0])} accept='image/*' alt='img' />
             </div>
             <input type='text' onChange={(event) => setTitle(event.target.value)} value={title} placeholder='Title' />

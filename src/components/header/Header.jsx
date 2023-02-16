@@ -9,20 +9,20 @@ import { Dropdown } from "antd"
 import { db } from "../../firebase-config";
 import {getDoc, doc, } from "firebase/firestore";
 
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
+
+import lightLogo from '../../assets/images/lightLogo.svg'
+import darkLogo from '../../assets/images/darkLogo.svg'
+
+import { useContext } from "react";
+import { ThemeContext } from "../../App";
+
 const items = [
   {
     key: '1',
     label: (
         <p onClick={() => window.location.replace('/Technology')} target="_blank" rel="noopener noreferrer">
           Technology
-        </p>
-    ),
-  },
-  {
-    key: '2',
-    label:  (
-        <p onClick={() => window.location.replace('/Culture')} target="_blank" rel="noopener noreferrer">
-          Culture
         </p>
     ),
   },
@@ -62,6 +62,7 @@ const items = [
 
 export const Header = () => {
   const [user, setUser ] = useState({});
+  const themeContext = useContext(ThemeContext);
 
    window.addEventListener("scroll", function () {
     const header = this.document.querySelector(".header")
@@ -77,15 +78,19 @@ export const Header = () => {
     const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
     const docSnap = await getDoc(docRef);
     const _user = docSnap.data();
-    console.log(_user);
     setUser(_user);
   }
+
+  
 
   return (
     <>
       <header className='header'>
         <div className='scontainer flex'>
           <div className='logo'>
+            <Link to="/">
+              <img src={localStorage.getItem("theme") === "true" ? darkLogo : lightLogo} alt={'Logo of the website.'} width='175px' />
+            </Link>
           </div>
           <nav>
             <ul>
@@ -94,8 +99,8 @@ export const Header = () => {
                     {nav[0].text}
                   </Link>
               </li>
-                <Dropdown  menu={{items,}}>
-                    <a href="/" style={{marginTop:3}} onClick={(e) => e.preventDefault()}>
+                <Dropdown className="dropdown" menu={{items,}}>
+                    <a href="/" className="categoriesTitle" onClick={(e) => e.preventDefault()}>
                         Categories
                         <DownOutlined style={{marginLeft:5}} />
                     </a>
@@ -105,28 +110,40 @@ export const Header = () => {
                     {nav[1].text}
                   </Link>
               </li>
-              <li style={{fontSize:20,  paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[2].id}>
-                  <Link to={nav[2].url}>
-                    {nav[2].text}
-                  </Link>
-              </li>
             </ul>
           </nav>
           <div className='account flexCenter'>
+
             {user == null ?
               <>
               <li style={{fontSize:20, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
                 <Link to={"/login"}>
-                <a href="/login" style={{color:"black"}}>Login</a>
+                <a href="/login">Login</a>
                 </Link>
               </li>
               <li style={{fontSize:20, padding:10, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
                 <Link to={"/signup"}>
-                <a href="/signup" style={{color:"black"}}>Sign Up</a>
+                <a href="/signup">Sign Up</a>
                 </Link>
               </li>
+              <DarkModeSwitch
+              className="darkModeToggleButton"
+              checked={themeContext.theme}
+              onChange={() => themeContext.toggleTheme()}
+              size={40}
+            />
             </>
-            :<User/>}
+            :<>
+
+            <User/>
+            <DarkModeSwitch
+              className="darkModeToggleButton"
+              style={{marginBottom: 7, marginLeft: 15}}
+              checked={themeContext.theme}
+              onChange={() => themeContext.toggleTheme()}
+              size={40}
+            />
+            </>}
           </div>
         </div>
       </header>

@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 //--DATABASE--
-import { db } from "../../firebase-config";
+import { db } from "../../../firebase-config";
 import {collection, addDoc} from "firebase/firestore";
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
@@ -10,7 +10,7 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { stateToHTML } from "draft-js-export-html";
 
-import image from "../../assets/images/defaultUser.jpg"
+import image from "../../../assets/images/defaultUser.jpg"
 
 export class createAuthor extends Component {
   constructor(props){
@@ -21,7 +21,9 @@ export class createAuthor extends Component {
       description: '',
       editorState: EditorState.createEmpty(),
       image: '',
+      posts: [],
       preview: image,
+      selectedUser: {}
     }
 
   }
@@ -54,7 +56,6 @@ handleChange = e => {
 
   let imageUrl;
   if(this.state.image === '') {
-    console.log("nullasdasdasd")
     imageUrl = 'https://firebasestorage.googleapis.com/v0/b/vocham-api.appspot.com/o/users%2FdefaultUser.jpg?alt=media&token=8ffd11af-591d-418b-85dc-d87d723ba386';
   }else{
     const imageRef = ref(storage,`authors/${this.state.image.name + v4()}`)
@@ -96,7 +97,7 @@ render(){
             <div className='left'>
               <div className='img flexCenter'>
                 <input type='file' onChange={(event) => this.setImage(event.target.files[0])} accept='image/*' src={image} />
-                <img style={{objectFit:"cover"}} src={this.state.preview} alt='previewImage' class='image-preview' />
+                <img style={{objectFit:"cover"}} src={this.state.preview} alt='Previews the author profile.' class='image-preview' />
               </div>
             </div>
             <div className='right'>

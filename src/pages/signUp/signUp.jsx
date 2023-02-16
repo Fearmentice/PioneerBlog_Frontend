@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import "./signUp.css"
 import { connect } from "react-redux";
 import { login } from "../../actions/authAction";
 //--DATABASE--
@@ -26,6 +27,7 @@ class SignUp extends Component {
       verifyCode: '',
       verifyInput: '',
       accountId: '',
+      bookmarkedPosts: [],
       givenSet: 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789',
     }
     this.setVerifyPage = this.setVerifyPage.bind(this);
@@ -79,7 +81,6 @@ handleChange = e => {
 
   let imageUrl;
   if(this.state.image === '') {
-    console.log("nullasdasdasd")
     imageUrl = 'https://firebasestorage.googleapis.com/v0/b/vocham-api.appspot.com/o/users%2FdefaultUser.jpg?alt=media&token=8ffd11af-591d-418b-85dc-d87d723ba386';
   }else{
     const imageRef = ref(storage,`users/${this.state.image.name + v4()}`)
@@ -171,32 +172,33 @@ render(){
       window.location.replace('/');
   return (  
    <>
+   <meta name="description" content="You can sign up pur page from here!!! Through sign up you can share us what you think."/>
       <section className='accountInfo'>
         <div className='container boxItems'>
-          <h1>Account Information</h1>
+          <h1>Sign Up</h1>
           <div className='content'>
             <div className='left'>
               <div className='img flexCenter'>
                 <input type='file' onChange={(event) => this.setImage(event.target.files[0])} accept='image/*' src={image} alt='img' />
-                <img style={{objectFit:"cover"}} src={this.state.preview} alt='previewImage' class='image-preview' />
+                <img style={{objectFit:"cover"}} src={this.state.preview} alt='Previews the sign up porfile.' class='image-preview' />
               </div>
-              <b style={{marginLeft: 15, marginTop:10}}>Upload Image</b>
+              <b >Upload Image</b>
             </div>
             {this.state.verify === true ?
             <div className='right'>
               <label htmlFor=''>Verify Account</label>
               <input value={this.state.verifyInput} type='text' onChange={this.handleChange} name="verifyInput"/>
-              <button onClick={() => this.verifyAccount()} className='button'>Verify</button>
+              <button style={{color:"white"}} onClick={() => this.verifyAccount()} className='button'>Verify</button>
             </div>
             :
             <div className='right'>
               <label htmlFor=''>Username</label>
-              <input type='text' onChange={this.handleChange} name="username"/>
+              <input placeholder="Username" type='text' onChange={this.handleChange} name="username"/>
               <label htmlFor=''>Email</label>
-              <input type='email' onChange={this.handleChange} name="email"/>
+              <input placeholder="Email" type='email' onChange={this.handleChange} name="email"/>
               <label htmlFor=''>Password</label>
-              <input type='password' onChange={this.handleChange} name="password" />
-              <button onClick={() => this.handleSubmit()} className='button'>Sign Up</button>
+              <input placeholder="Password" type='password' onChange={this.handleChange} name="password" />
+              <button style={{color:"white"}} onClick={() => this.handleSubmit()} className='button'>Sign Up</button>
             </div>
             }
           </div>

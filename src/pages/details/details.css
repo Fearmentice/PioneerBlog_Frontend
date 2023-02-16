@@ -1,12 +1,22 @@
 .singlePage {
   padding: 50px 0;
-  background: #fff;
 }
-
+#dark .singlePage{
+  color: #000;
+}
+#light .singlePage{
+  color: #fff;
+}
 .singlePage .container {
   display: flex;
   flex-direction: row;
   padding-left: 10%;
+}
+.singlePage .postInfo p {
+  font-size: 14px;
+}
+.singlePage .body p {
+  font-size: 18px;
 }
 
 .singlePage .rightContainer {
@@ -18,11 +28,13 @@
 .singlePage .boxItems {
   display: flex;
   flex-direction: row;
-  margin: 2%;
-  width: max-content;
+  padding-left: 0;
+  margin: 2% 0;
+  width: 450px;
   transition: 0.5s;
-  background-color: #fff;
 }
+
+
 
 .singlePage .boxItems:hover {
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
@@ -39,12 +51,16 @@
 
 .singlePage .cardItems {
   margin-top: 3%;
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-  padding: 10px;
-
+  padding: 0px 10px;
   flex-wrap: nowrap; 
+}
+#dark .singlePage .cardItems{
+  background-color: #fff;
+}
+#light .singlePage .cardItems{
+  background-color: #0f0f0f;
 }
 
 .singlePage .card{
@@ -60,13 +76,19 @@
 }
 
 .singlePage .categoriesButtons{
-  background-color: rgb(230, 230, 230);
   margin: 10px;
   padding: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   transition: 0.5s;
 }
+#light .singlePage .categoriesButtons{
+  background-color: #272727;
+}
+#dark .singlePage .categoriesButtons{
+  background-color: rgb(230, 230, 230);
+}
+
 
 .singlePage .adminDeleteButton{
   background-color: rgb(189, 18, 18);
@@ -113,6 +135,7 @@
   cursor: pointer;
   transform: translateY(-5px);
 }
+
 .singlePage .commentsBox{
   width: max-content;
   margin-top: 20px;
@@ -124,7 +147,7 @@
   width: max-content;
 }
 .singlePage .commentCardBox{
-  padding: 20; 
+  padding: 20 0; 
 }
 .singlePage .commentCard{
   padding: 5px;
@@ -132,6 +155,16 @@
   border-style: solid;
   border-radius: 20px;
   border-width: 1px;
+  
+}
+#light .singlePage .commentCard{
+  background-color: #0f0f0f;
+  color: #fff;
+  border-color: #3e3e3e;
+}
+#dark .singlePage .commentCard{
+  background-color: #fff;
+  color: #000;
   border-color: lightgrey;
 }
 .singlePage .commentCardHeader{
@@ -142,9 +175,8 @@
 .singlePage .authorCard{
   display: flex;
   flex-direction: row;
-  align-items: center;
-  align-self: flex-end;
-  width: 30%;
+  align-items: flex-start;
+  width: 100%;
    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
   border-radius: 20px;  */
 }
@@ -154,9 +186,9 @@
   border-width: 0.5px;
   border-color: aliceblue;
   width: 75px;
-  height: 75px;
-  margin: 10px;
+  height: 75px; 
 }
+
 .singlePage .commentContent{
   display: flex;
   flex-direction: column;
@@ -166,17 +198,28 @@
 .singlePage .commentContent input{
   border-style: solid;
   border-width: 1px;
-  border-color: lightgrey;
   border-radius: 10px;
-  width: 500px;
+  width: 750px;
   height: 50px;
   padding: 10px;
   font-size: 20px;
+}
+#light .singlePage .commentContent input{
+  border-color: #3e3e3e;
+}
+#dark .singlePage .commentContent input{
+  border-color: lightgrey;
 }
 .singlePage .commentContent button{
   align-self: flex-end;
   margin: 10px;
   font-size: 20px;
+}
+#light .singlePage .commentContent button{
+  color: #fff;
+}
+#dark .singlePage .commentContent button{
+  color: #fff;
 }
 .singlePage .commentCardHeader img{
   border-style: solid;
@@ -188,10 +231,7 @@
   height: 75px;
   margin: 10px;
 }
-.singlePage .commentTitleBox hr{
-  width: 400px;
-  margin-bottom: 10px;
-}
+
 
 .singlePage img {
   width: 100%;
@@ -202,18 +242,18 @@
 .singlePage h1 {
   font-size: 30px;
   font-weight: 500;
+  padding: 0px;
+  margin: 0;
 }
 .singlePage h2 {
   font-size: 20px;
   font-weight: 500;
 }
-.singlePage hr {
-  color: black;
-  background-color: white;
-  height: 1px;
-  width: 300;
-  margin-top: 3%;
-  margin-left: 5%;
+#dark h2{
+  color: #000;
+}
+#light h2{
+  color: #fff;
 }
 .singlePage p {
   font-size: 20px;
@@ -236,4 +276,116 @@
 } */
 .singlePage .button:nth-child(2) {
   background: #ee5253;
+}
+
+@media (max-width: 1366px) {
+  .singlePage .left {
+    width: 700px;
+  }
+  .singlePage .boxItems{
+    width: 375px;
+  }
+  .singlePage .rightContainer {
+    width: 510px;
+  }
+  .singlePage .container {
+    display: flex;
+    flex-direction: row;
+    padding: 0 5%;
+  }
+  .singlePage .commentContent input {
+    width: 500px;
+    font-size: medium;
+  }
+  .singlePage h1 {
+    padding: 0;
+    width: fit-content;
+  }
+  .singlePage h2 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .singlePage p {
+    font-size: small;
+  }
+  .singlePage b {
+    font-size: smaller;
+  }
+  #dark .singlePage b{
+    color: #000;
+  }
+  #light .singlePage b{
+    color: #fff;
+  }
+  .singlePage button {
+    font-size: small;
+  }
+}
+@media (max-width: 960px) {
+  .singlePage{
+    padding: 20px 0;
+  }
+  .singlePage .container {
+    padding: 0 0px;
+  }
+  .singlePage .rightContainer {
+    margin: 0 100px;
+    width: 600px;
+    padding: 0 0;
+  }
+  .singlePage .container {
+    flex-direction: column;
+  }
+  .singlePage .boxItems{
+    width: 570px;
+  }
+  .singlePage .commentsBox{
+    width: max-content;
+    margin: 0 90px;
+    padding: 0;
+  }
+  .singlePage .commentTitleBox{
+    margin: 0 0;
+    padding: 0 -50px;
+  }
+  .singlePage .commentCardHeader{
+    flex-direction: column;
+  }
+  .singlePage .commentContent input {
+    width: 570px;
+    font-size: medium;
+  }
+}
+@media (max-width: 768px) {
+  .singlePage{
+    padding: 20px 0;
+  }
+  .singlePage .container {
+    padding: 0 0px;
+  }
+  .singlePage .left {
+    width: 340px;
+  }
+  .singlePage .rightContainer {
+    margin: 0 20px;
+    width: 320px;
+    padding: 0 0;
+  }
+  .singlePage .container {
+    flex-direction: column;
+  }
+  .singlePage .boxItems{
+    width: 300px;
+  }
+  .singlePage .commentsBox{
+    margin: 0;
+    padding: 0;
+  }
+  .singlePage .commentCardHeader{
+    flex-direction: column;
+  }
+  .singlePage .commentContent input {
+    width: 300px;
+    font-size: medium;
+  }
 }

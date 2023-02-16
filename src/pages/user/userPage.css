@@ -92,6 +92,8 @@
   }
   .page h1 {
     font-size: 30px;
+    margin: 0 auto;
+    padding: 0 0;
     font-weight: 500;
   }
   .page h2 {
@@ -125,5 +127,18 @@
     text-transform: capitalize;
     font-size: large;
     color: #000;
+  }
+
+  @media (max-width: 768px) {
+    .page .desc {
+      flex-direction: column;
+    }
+    .page .desc img{
+      margin: 0 50px;
+    }
+    .page .desc .profile h1{
+      width: max-content;
+    }
+
   }
   

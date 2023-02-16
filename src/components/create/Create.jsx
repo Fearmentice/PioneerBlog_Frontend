@@ -3,7 +3,7 @@ import "./create.css"
 import {categories} from '../../assets/data/data';
 //--DATABASE--
 import { db } from "../../firebase-config";
-import {collection, query, where, getDocs, addDoc, Timestamp} from "firebase/firestore";
+import {collection, doc, query, where, getDocs, addDoc, Timestamp, updateDoc} from "firebase/firestore";
 
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
@@ -73,7 +73,7 @@ export const Create = () => {
     const contentState = editorState.getCurrentContent();
     const rawContentState = convertToRaw(contentState);
 
-    await addDoc(newBlogpostRef, {
+    const newDoc = await addDoc(newBlogpostRef, {
       title: title,
       author: author,
       authorId: authorSnap.docs[0].id,
@@ -88,6 +88,13 @@ export const Create = () => {
       date: `${('0' + today.getDate()).slice(-2)}/${('0' + today.getMonth() + 1).slice(-2)}/${today.getFullYear()}`,
       active: true
     });
+
+    const data = {
+      posts: [...authorSnap.docs[0].data().posts, newDoc.id]
+    }
+
+    const updateRef = doc(db, "authors", `${authorSnap.docs[0].id}`);
+    await updateDoc(updateRef, data);
 
     setTimeout(() => {
       window.location.replace('/');
@@ -109,7 +116,6 @@ export const Create = () => {
           _authors.push(doc.data().name);
         })
         setAllAuthors(_authors);
-        console.log(_authors)
   }
 
   return (
@@ -119,7 +125,7 @@ export const Create = () => {
           <div className='img '>
           </div>
             <div style={{flexDirection:"column"}} className='inputfile flexCenter'>
-              <img style={{width:400, height:250, objectFit: "cover", marginBottom:10}} src={preview} alt='preview' className='image-preview' />
+              <img style={{width:400, height:250, objectFit: "cover", marginBottom:10}} src={preview} alt='Explains the article.' className='image-preview' />
               <input type='file' onChange={(event) => setImage(event.target.files[0])} accept='image/*' alt='img' />
             </div>
             <input type='text' onChange={(event) => setTitle(event.target.value)} value={title} placeholder='Title' />

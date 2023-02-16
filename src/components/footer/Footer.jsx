@@ -1,4 +1,5 @@
 import React from "react"
+import './footer.css'
 import { AiFillTwitterCircle, AiFillYoutube } from "react-icons/ai"
 import { RiInstagramFill } from "react-icons/ri"
 

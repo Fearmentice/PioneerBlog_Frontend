@@ -12,7 +12,7 @@ const SampleNextArrow = (props) => {
   return (
     <div className='control-btn' onClick={onClick}>
       <button className='next'>
-        <MdNavigateNext className='icon' />
+        <MdNavigateNext color="#000" className="" />
       </button>
     </div>
   )
@@ -22,7 +22,7 @@ const SamplePrevArrow = (props) => {
   return (
     <div className='control-btn' onClick={onClick}>
       <button className='prev'>
-        <GrFormPrevious className='icon' />
+        <GrFormPrevious className="icon"/>
       </button>
     </div>
   )
@@ -41,10 +41,10 @@ export const Category = (props) => {
     prevArrow: <SamplePrevArrow />,
     responsive: [
       {
-        breakpoint: 800,
+        breakpoint: 768,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToShow: 1,
+          slidesToScroll: 1,
         },
       },
     ],
@@ -56,21 +56,21 @@ export const Category = (props) => {
     <>
       <section className='category'>
         <div className='content'>
-          <h1 style={{marginBottom:20}}>Popular Writings</h1>
+          <h2 >Popular Writings</h2>
           <Slider {...settings}>
             {props.popularWritings.map((item) => (
               <div className='boxs'>
                 <Link to={`/details/${item.id}`}>
                   <div className='box' onClick={() => props.setChanged(item.category)} key={item.id} >
                     <div className="imgContainer">
-                      <img src={item.imageCover} alt='' />
+                      <img src={item.imageCover} alt={`${item.title}`} />
                       </div>
                       <div className='overlay'>
                         <div className="titleBox" >
-                          <h4>{item.title.length >= 40 ? `${item.title.slice(0, 37)}...` : item.title}</h4>
+                          <h4 style={{ color: '#fdf77e'}}>{item.title.length >= 40 ? `${item.title.slice(0, 37)}...` : item.title}</h4>
                         </div>
                         <div className="descBox">
-                          <p>{item.desc.slice(0,100).replace('&nbsp;', ' ')}</p>
+                          <p style={{color:"white"}}>{item.desc.slice(0,100).replace('&nbsp;', ' ')}</p>
                         </div>
                         <Link to={`/${item.category}`}>
                           <div className="categoryButton">

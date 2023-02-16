@@ -2,11 +2,13 @@ import React, { Component } from "react"
 import "./userPage.css"
 import "../../components/header/header.css"
 import {Card} from '../../components/blog/Card'
-import { DownOutlined } from '@ant-design/icons';
+
+import { MetaTags } from "react-meta-tags"
+//import { DownOutlined } from '@ant-design/icons';
 //--DATABASE--
 import { db } from "../../firebase-config";
 import {collection, getDoc, getDocs, doc, query,
-   orderBy, limit, startAfter, where} from "firebase/firestore";
+   orderBy, limit, startAfter, where, documentId} from "firebase/firestore";
 
 export class userPage extends Component {
   constructor(props) {
@@ -39,7 +41,6 @@ export class userPage extends Component {
         //Get blogpsot.
         const docRef = doc(db, "authors", this.state.id);
         const docSnap = await getDoc(docRef);
-        console.log(docSnap);
 
         if (docSnap.exists()) {
           this.setState({currnetUser: docSnap.data()});
@@ -49,19 +50,15 @@ export class userPage extends Component {
           const blogpostsRef = collection(db, 'blogposts');
 
           //Query.
-          const queryRef = query(blogpostsRef,  
-            where("active", "==", true), 
-            where("author", "==", `${docSnap.data().name}`),
-            orderBy("publishDate", "desc"),
-            limit(this.state.pageSize));
-          const userPostSnap = await getDocs(queryRef);
           let _posts = [];
-          userPostSnap.forEach((doc) => {
+          const queryRef = query(blogpostsRef,  
+            where("active", "==", true),
+            where(documentId() , "in", docSnap.data().posts));
+          const userPostSnap = await getDocs(queryRef);
+          await userPostSnap.forEach((doc) => {
             _posts.push({...doc.data(), id:doc.id });
           })
-          console.log(_posts);
-          this.setUserPosts(_posts);
-          this.setState({lastPost: userPostSnap.docs[userPostSnap.docs.length - 1]})
+          this.setState({userPosts: _posts})
         } 
 
         
@@ -132,22 +129,34 @@ export class userPage extends Component {
   render(){
   return (
     <>
+    <MetaTags>
+      <meta name="description" content="Who we are ? We are a group of students who try to write about right and useful informations to our dear readers. Also we are just students who want to improve himself and try to be good at writing with a excellent English language."/>
+      
+      <meta property="og:title" content={`${this.state.blog.title}`} />
+      <meta property="og:url" content={`https://www.vocham.com/author/${this.state.currnetUser.id}`} />
+      <meta property="og:image" content={`${this.state.currnetUser.profilePhoto}`} />
+
+      <meta name="twitter:card" content="summary"/>
+      <meta name="twitter:title" content={`${this.state.currnetUser.description}`} />
+      <meta name="twitter:description" content={`Learn about ${this.state.currnetUser.name}`} />
+      <meta name="twitter:image" content={`${this.state.currnetUser.profilePhoto}`} />
+    </MetaTags>
     <div className="page">
         <div className="desc">
-            <img className="profilePhoto" src={`${this.state.currnetUser.profilePhoto}`} alt='UserProfilePhoto' />    
+            <img className="profilePhoto" src={`${this.state.currnetUser.profilePhoto}`} alt='Profile' />    
           <div className="profile">
             <h1 style={{marginLeft:20}}>{this.state.currnetUser.name}</h1>
             <div style={{marginLeft: 20}} dangerouslySetInnerHTML={{__html: this.state.currnetUser.description}}></div>
           </div>
         </div>
     </div>
-      <h1 style={{marginLeft:50}}>Author's Blogposts</h1>
+      <h1 >Author's Blogposts</h1>
       <Card category={''} posts={this.state.userPosts}/>
       <div className="Pagination">
               {/* <a onClick={() => this.onPrevious()} class="previous round paginate">{'<'}</a>
               <a onClick={() => this.loadMore()} class="nextButton round paginate">{'>'}</a> */}
-              <button onClick={() => this.loadMore()}>Load More</button>
-              <DownOutlined/>
+              {/* <button onClick={() => this.loadMore()}>Load More</button>
+              <DownOutlined/> */}
       </div>
     </>
   )}

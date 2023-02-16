@@ -1,0 +1,30 @@
+.page {
+    padding: 50px 50px;
+}
+.page p{
+    font-size: 15px;
+    padding: 0 0;
+}
+
+.page .notFound {
+    background-color: #0f0f0f;
+    font-size: 40px;    
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#light .notFound{
+    background-color: #0f0f0f;
+}
+#dark .notFound{
+    background-color: #fff;
+}
+#light {
+    color: #fff;
+}
+#dark {
+    color: #000;
+}
+

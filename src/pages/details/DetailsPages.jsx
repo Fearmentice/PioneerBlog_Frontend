@@ -18,6 +18,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { db } from "../../firebase-config";
 import {collection, getDoc, getDocs, doc, query,
    orderBy, limit, addDoc, Timestamp, updateDoc, where} from "firebase/firestore";
+import { Helmet } from "react-helmet"
 
 export class DetailsPages extends Component {
   //Defines all states and callback functions.
@@ -73,7 +74,6 @@ export class DetailsPages extends Component {
         const _user = {...docSnap.data(),id: docSnap.id};
         commentsArr.push({...comment.data(), id: comment.id, user: _user });
       });
-      console.log(commentsArr)
       this.setState({comments: commentsArr})
     }
 
@@ -104,7 +104,6 @@ export class DetailsPages extends Component {
     docSnap.forEach((doc) => {
       postArray.push({...doc.data(), id:doc.id });
     })
-    console.log("Populer posts fetched: " + postArray);
     this.setState({popularPosts: postArray});
   }
 
@@ -128,7 +127,6 @@ export class DetailsPages extends Component {
   //Creates comment in the name of logged in user.
   createComment = async() => {
         // Add a new document in collection "comments"
-        console.log(this.state.user);
         const newCommentsRef = collection(db, "comments");
         const newCommentData = {
             blogpostId: this.state.id,
@@ -152,10 +150,7 @@ export class DetailsPages extends Component {
          const data = {
           commentsId: [...docSnap.data().commentsId, id]
          }
-         await updateDoc(docRef, data)
-         .then(docRef => {
-             console.log("A New Document Field has been added to an existing document");
-         })
+         await updateDoc(docRef, data);
          const userRef = doc(db, "users", this.state.user.id);
          const userSnap = await getDoc(userRef);
  
@@ -163,10 +158,7 @@ export class DetailsPages extends Component {
           const userData = {
            commentsId: [...userSnap.data().commentsId, id]
           }
-          await updateDoc(userRef, userData)
-          .then(docRef => {
-              console.log("A New Document Field has been added to an existing document");
-          })
+          await updateDoc(userRef, userData);
 
   }
 
@@ -194,19 +186,39 @@ export class DetailsPages extends Component {
   //Gets the description of the post and returns slices description.
   getSummaryDesc () {
     const desc = `${this.state.author.description}`;
-    return desc.slice(3,30);
+    return desc.slice(3,50);
   }
 
   render(){
     const url = window.location.toString();
   return (
     <>
+    <article itemScope itemType="http://scheme.org/Article">
+      <Helmet>
+        <meta name="description" content={`Get more information about ${this.state.blog.title}`}/>
+
+        <link rel="canonical" href={window.location.toString()} />
+
+        <meta itemProp="author" content={`${this.state.blog.author}`} />
+        <meta itemProp="publishDate" content={`${this.state.blog.publishDate}`} />
+        <meta itemProp="publisher" content="vocham.com" />
+
+        <meta property="og:title" content={`${this.state.blog.title}`} />
+        <meta property="og:url" content={`https://www.vocham.com/details/${this.state.id}`} />
+        <meta property="og:image" content={`${this.state.blog.imageCover}`} />
+
+        <meta name="twitter:card" content="summary"/>
+        <meta name="twitter:title" content={`${this.state.blog.title}`} />
+        <meta name="twitter:description" content={`Learn about ${this.state.blog.title}`} />
+        <meta name="twitter:image" content={`${this.state.blog.imageCover}`} />
+      </Helmet>
       <section className='singlePage'>
         <div className="container">
           <div className='left'>
             <div >
               <h1>{this.state.blog.title}</h1>
-              <img src={this.state.blog.imageCover} alt='' />
+              <title>{this.state.blog.title}</title>
+              <img src={this.state.blog.imageCover} alt={`Explains the article that is about ${this.state.blog.title}`} />
             </div>
             <div className='desc'>
               {this.state.user !== null && this.state.user.role ===  "admin" ?
@@ -221,13 +233,13 @@ export class DetailsPages extends Component {
                   </button>
                 </Link>
               :null}
-              <div dangerouslySetInnerHTML={{__html: this.state.blog.body}}></div>
+              <div className="body" dangerouslySetInnerHTML={{__html: this.state.blog.body}}></div>
               <Link to={`/authors/${this.state.blog.authorId}`}>
                 <div className="card">
                     <div className="authorCard">
-                      <img src={this.state.author.profilePhoto ? this.state.author.profilePhoto : defaultUserImage} alt='User Profile'/>
+                      <img src={this.state.author.profilePhoto ? this.state.author.profilePhoto : defaultUserImage} alt='Profile.'/>
                       <div className="commentContent">
-                        <b style={{color:"black"}}>{this.state.author.name}</b>
+                        <b >{this.state.author.name}</b>
                          <p style={{fontSize:12}}>{this.getSummaryDesc()}</p>
                       </div>
                     </div>
@@ -236,13 +248,13 @@ export class DetailsPages extends Component {
               {/* --COMMENTS-- */}
               <div className="commentsBox">
               <div className="commentTitleBox">
-                <h1 >Comments</h1>
+                <h2 >Comments</h2>
               </div>
               <div className="commentCardBox">
                 {this.state.comments.map((comment) => (
                   <div className="commentCard">
                     <div className="commentCardHeader">
-                      <img src={comment.user.profilePhoto ? `${comment.user.profilePhoto}`: defaultUserImage} alt='User Profile'/>
+                      <img src={comment.user.profilePhoto ? `${comment.user.profilePhoto}`: defaultUserImage} alt='Profile of the writer of the comment.'/>
                       <div className="commentContent">
                         <b>{comment.userId.name}</b>
                         <p >{comment.body}</p>
@@ -252,7 +264,7 @@ export class DetailsPages extends Component {
                 ))}
                   <div className="commentCard">
                     <div className="commentCardHeader">
-                      <img src={defaultUserImage} alt='User Profile'/>
+                      <img src={this.state.user != null ? this.state.user.profilePhoto : defaultUserImage} alt='Comment profile.'/>
                       <div className="commentContent">
                         <b>Make a Comment</b>
                         <input placeholder="Share us what you think" type='text' onChange={this.handleChange} name={"newCommentBody"} required />
@@ -305,13 +317,13 @@ export class DetailsPages extends Component {
               {this.state.popularPosts.map((item) => (
                 <Link to={`/details/${item.id}`} className="link">
                   <div className="box boxItems" onClick={() => this.setId(item.id)} >
-                    <img style={{objectFit:"cover"}} alt="" className="boxImage" src={item.imageCover}/>
+                    <img style={{objectFit:"cover"}} alt="Thumbnails of the writings." className="boxImage" src={item.imageCover}/>
                     <div className="postInfo">
                       <div >
                         <b>{item.title}</b>
                       </div>
                       <div >
-                        <p style={{fontSize:13}}>{item.desc.slice(0, 70).replace('&nbsp;', " ")}</p>
+                        <p >{item.desc.slice(0, 70).replace('&nbsp;', " ")}</p>
                       </div>
                     </div>
                   </div>
@@ -334,6 +346,7 @@ export class DetailsPages extends Component {
           </div>
         </div>
       </section>
+      </article>
     </>
   )
       }

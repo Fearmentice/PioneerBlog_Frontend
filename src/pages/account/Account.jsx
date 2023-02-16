@@ -43,7 +43,6 @@ export const Account = () => {
     const docRef = doc(db, "users", accountID);
     const docSnap = await getDoc(docRef);
     const _user = {...docSnap.data(), id: docSnap.id};
-    console.log(_user);
     setUser(_user);
     setPreview(_user.profilePhoto);
     setUsername(_user.username)
@@ -74,9 +73,7 @@ export const Account = () => {
     if(user.profilePhoto === preview) return preview;
 
     const imageRef = ref(storage,`users/${image.name + v4()}`)
-    await uploadBytes(imageRef, image).then(() => {
-      console.log("Image uploaded.");
-    })
+    await uploadBytes(imageRef, image);
 
     const imageUrl = await getDownloadURL(imageRef).then(url => {
       return url;
@@ -94,7 +91,7 @@ export const Account = () => {
             <div className='left'>
               <div className='img flexCenter'>
                 <input type='file' onChange={(event) => setImage(event.target.files[0])} accept='image/*' src={image} alt='img' />
-                <img src={preview} alt='preview' class='image-preview' />
+                <img src={preview} alt='Previews the profile.' class='image-preview' />
               </div>
               <a href="/" style={{marginLeft: 15, marginTop:10}}>Upload Image</a>
             </div>

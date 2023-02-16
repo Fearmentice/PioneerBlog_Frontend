@@ -3,9 +3,10 @@ import { Component } from "react"
 import { Card } from "../../components/blog/Card"
 import './Home.css'
 import { Category } from "../../components/category/Category"
-import { db } from "../../firebase-config";
 import { DownOutlined } from '@ant-design/icons';
+import { db } from "../../firebase-config";
 import {collection, getDocs, startAfter, query, where, orderBy, limit} from "firebase/firestore";
+import { MetaTags } from "react-meta-tags"
 
 
 
@@ -17,7 +18,6 @@ class Home extends Component{
     this.state = {
       category: "",
       posts: [],
-      user: {},
       firstPost: {},
       lastPost: {},
       pageSize: 9,
@@ -31,7 +31,6 @@ class Home extends Component{
 
   setCategory = async(_category) => {
     await this.setState({ category: _category });
-    //console.log(this.state.category);
     if(this.state.category){
       this.fetchPostsByCategory();
     }else{
@@ -43,15 +42,18 @@ class Home extends Component{
     //Blogpost ref.
     const blogpostsRef = collection(db, 'blogposts');
 
+    let _posts = [];
     //Query.
     const queryRef = query(blogpostsRef,  
       where("active", "==", true) , 
       orderBy("publishDate", "desc"),
       limit(this.state.pageSize));
     const docSnap = await getDocs(queryRef);
-    let _posts = [];
-    docSnap.forEach((doc) => {
-      _posts.push({...doc.data(), id:doc.id });
+
+    
+
+    docSnap.forEach(async(blogDoc) => {
+      _posts.push({...blogDoc.data(), id: blogDoc.id});
     })
     this.setState({posts: _posts});
     this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]});
@@ -113,7 +115,6 @@ class Home extends Component{
         const lastVisible = this.state.lastPost;
 
         if(this.state.category != null){
-          console.log("ASD");
         }
         //Query.
         const queryRef = query(blogpostsRef,  
@@ -132,7 +133,6 @@ class Home extends Component{
         }
 
         this.setState({posts: _posts});
-        console.log(_posts);
         this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]})
         this.setState({firstPost: docSnap.docs[0]});
   }
@@ -144,7 +144,6 @@ class Home extends Component{
     const lastVisible = this.state.lastPost;
 
     if(this.state.category != null){
-      console.log("ASD");
     }
     //Query.
     const queryRef = query(blogpostsRef,  
@@ -166,7 +165,6 @@ class Home extends Component{
     }
 
     this.setState({posts: _posts});
-    console.log(_posts);
     this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]})
     this.setState({firstPost: docSnap.docs[0]});
 }
@@ -203,10 +201,6 @@ class Home extends Component{
   updateCategory = async() => {
     const category = this.props.match.params.category;
     switch(category) {
-      case "Culture":
-        this.setCategory("Culture");
-        this.getCategoryBasedBlogposts(category);
-        break;
       case "Technology":
         this.setCategory("Technology");
         this.getCategoryBasedBlogposts(category);
@@ -251,9 +245,11 @@ class Home extends Component{
   render(){
     return(
       <>
-      {console.log(this.state.category)}
+      <MetaTags>
+        <meta name="description" content="We are a group of students who try to write about right and useful informations to our dear readers. Also we are just students who want to improve himself and try to be good at writing with a excellent English language." />
+      </MetaTags>
         <Category setChanged={this.setCategory} category={this.state.category} popularWritings={this.state.popularWritings}/>
-          <h1 style={{position:"inherit", marginLeft:50, padding:200, paddingBottom:0,paddingTop:0}}>
+          <h1 className="categoryTitle">
             {this.state.category === "" ? "Home": this.state.category}
           </h1>
         <Card posts={this.state.posts} />
@@ -261,7 +257,7 @@ class Home extends Component{
               {/* <a onClick={() => this.onPrevious()} class="previous round paginate">{'<'}</a>
               <a onClick={() => this.loadMore()} class="nextButton round paginate">{'>'}</a> */}
               <button onClick={() => this.state.category ?this.loadMoreCategoryBased() : this.loadMore()}>Load More</button>
-              <DownOutlined/>
+              <DownOutlined className="icon"/>
           </div>
       </>
     )
