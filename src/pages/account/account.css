@@ -45,6 +45,9 @@
   margin-bottom: 10px;
   display: block;
 }
+#light .accountInfo .right button {
+  color: #fff;
+}
 @media (max-width: 1366px) {
   .accountInfo .container h1 {
     margin: 0;

@@ -10,26 +10,27 @@ import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"
 import { db } from "../../firebase-config";
 import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
 
+//--HELPERS--
+import { getAuth } from '../../helpers/getAuthorizationToken'
+
 
 export const Card = (props) => {
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState(props.posts);
 
   useEffect(() => {
+    //Gets the logged in user data if there is.
+    const userInfo = async () => {
+      const _user = await getAuth();
+      setUser(_user);
+    }
     userInfo();
   }, [])
 
   useEffect(() => {
     setPosts(props.posts)
   }, [props.posts])
-  //Gets the logged in user data if there is.
-  const userInfo = async () => {
-    if (!localStorage.getItem("jwtToken")) return setUser(null);
-    const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
-    const docSnap = await getDoc(docRef);
-    const _user = { ...docSnap.data(), id: docSnap.id };
-    setUser(_user);
-  }
+
 
   const bookmarkPost = async (_id) => {
     if (user == null) window.location.replace('/login')
@@ -71,6 +72,8 @@ export const Card = (props) => {
     //Get blogpsot.
     const userRef = doc(db, "users", user.id);
     const userSnap = await getDoc(userRef);
+    const oldBookmarkedPosts = [...userSnap.data().bookmarkedPosts]
+    if (!oldBookmarkedPosts.includes(_id)) return;
 
     const userUpdateData = {
       bookmarkedPosts: arrayRemove(_id)
@@ -104,7 +107,7 @@ export const Card = (props) => {
           <div className='box boxItems' key={item.id}>
             <div className="bookmark">
               <div className="bookmarkContent">
-                {user != null && user.bookmarkedPosts != undefined && user.bookmarkedPosts.includes(item.id) ?
+                {user !== null && user.bookmarkedPosts !== undefined && user.bookmarkedPosts.includes(item.id) ?
                   <BsFillBookmarkFill onClick={() => removeBookmarkPost(item.id)} className="icon" />
                   :
                   <BsBookmark onClick={() => bookmarkPost(item.id)} className="icon" />
@@ -124,7 +127,7 @@ export const Card = (props) => {
                 <h3>{item.title.length >= 37 ? `${item.title.slice(0, 35)}...` : item.title}</h3>
                 <div style={{ margin: 0 }}>
                   <p style={{ marginBottom: 0 }}>{item.desc.slice(0, 130)}...</p>
-                  <p style={{ margin: 0, color: 'grey', fontSize: "smaller" }}> Continue Reading</p>
+                  <p style={{ margin: 0, marginTop: 5, color: 'grey', fontSize: "smaller" }}> Continue Reading</p>
                 </div>
               </div>
               <div className="postInfo">

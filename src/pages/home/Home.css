@@ -17,7 +17,7 @@
     color: #fff;
   }
   #dark button{
-    color: #000;
+    color: #fff;
   }
 
   #dark .icon{
@@ -33,7 +33,7 @@
   }
   h1 {
     padding: 0 200px;
-    margin-left: 50px;
+    margin-left: 20px;
     margin-top: 50px;
     margin-bottom: 0;
   }

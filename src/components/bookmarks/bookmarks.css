@@ -28,3 +28,47 @@
     color: #000;
 }
 
+.title {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.title h1 {
+    margin: 0;
+    margin-bottom: 10px;
+}
+.title .icon{
+    margin: 0 10px;
+    width: 40px;
+    height: 40px;
+}
+@media (max-width: 768px) {
+    .page{
+        padding: 0px 0px;
+        padding-bottom: 20px;
+        font-size: smaller;
+    }
+    .title h1{
+        width: 1000px;
+        align-self: center;
+    }
+    .title .icon{
+        margin: 0 10px;
+        width: 100px;
+    }
+    .title h1 {
+        font-size: medium;
+    }
+    .page .notFound h5 {
+        font-size: 16px;
+        text-align: center;
+    }
+    .page .notFound h6 {
+        font-size: 13px;
+        text-align: center;
+    }
+    .notFound img {
+        width: 260px;
+    }
+}

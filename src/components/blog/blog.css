@@ -1,10 +1,10 @@
 .blog {
   margin-bottom: 50px;
-  padding: 0 200px;
+  padding: 0 175px;
 }
 .blog .boxItems {
   transition: 0.5s;
-  height: 550px;
+  height: 575px;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -57,7 +57,7 @@
 .blog .details {
   display: flex;
   flex-direction: column;
-  height: 210px;
+  height: 240px;
   justify-content: flex-start;
 }
 .blog .postInfo {
@@ -123,6 +123,7 @@
 @media (max-width: 1366px) {
   .blog{
     margin: 25px 0;
+    margin-bottom: 50px;
     padding: 0 100px;
   }
   .blog .boxItems {
@@ -147,6 +148,39 @@
     align-self: center;
   }
 }
+@media (max-width: 1280px) {
+  .blog{
+    margin: 0px 0;
+    margin-bottom: 50px;
+    padding: 0 100px;
+  }
+  .blog .boxItems {
+    transition: 0.5s;
+    height: 500px;
+  }
+  .blog .details {
+    height: 235px;
+  }
+  .blog p {
+    font-size: 12px;
+    max-width: 300px;
+    
+    overflow: hidden;
+    line-height: 15px;
+  }
+  .blog h3 {
+    font-size: 14px;
+  }
+  .blog img {
+    height: 175px;
+  }
+  .blog .date label {
+    display: block;
+    margin-right: 10px;
+    font-size: 8px;
+    align-self: center;
+  }
+}
 @media (max-width: 768px) {
   .blog{
     margin: 0;
@@ -155,9 +189,28 @@
   }
   .blog .boxItems {
     transition: 0.5s;
-    height: 520px;
+    height: 460px;
   }
   .blog .details {
-    height: 260px;
+    height: 200px;
+  }
+  .blog .bookmarkContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 60px;
+}
+  .blog p {
+    font-size: medium;
+    max-width: 300px;
+    height: 75px;
+    overflow: hidden;
+  }
+  .blog .date label {
+    display: block;
+    margin-right: 10px;
+    font-size: 10px;
+    align-self: center;
   }
 }

@@ -11,7 +11,6 @@ const login = async (email, password) => {
 
     await bcrypt.compare(password, user.password, function (err, result) {
         const token = user.id;
-        localStorage.setItem("jwtToken", token);
         localStorage.setItem("role", user.role);
         setAuthorizationToken(token);
     });
@@ -19,7 +18,6 @@ const login = async (email, password) => {
 }
 
 const logout = () => {
-    localStorage.removeItem("jwtToken");
     setAuthorizationToken(false);
 }
 

@@ -6,8 +6,6 @@ import { User } from './User';
 import { useEffect } from "react"
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown } from "antd"
-import { db } from "../../firebase-config";
-import {getDoc, doc, } from "firebase/firestore";
 
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
@@ -16,6 +14,8 @@ import darkLogo from '../../assets/images/darkLogo.svg'
 
 import { useContext } from "react";
 import { ThemeContext } from "../../App";
+
+import { getAuth } from "../../helpers/getAuthorizationToken";
 
 const items = [
   {
@@ -69,16 +69,12 @@ export const Header = () => {
     header.classList.toggle("active", this.window.scrollY > 100)
   }) 
 
+  //Cheks if logged in if it is gets the user information.
   useEffect(() => {
     isAdmin();
   }, [])
-
   const isAdmin = async() => {
-    if(!localStorage.getItem("jwtToken")) return setUser(null);
-    const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
-    const docSnap = await getDoc(docRef);
-    const _user = docSnap.data();
-    setUser(_user);
+    setUser(await getAuth())
   }
 
   
@@ -88,16 +84,16 @@ export const Header = () => {
       <header className='header'>
         <div className='scontainer flex'>
           <div className='logo'>
-            <Link to="/">
+            <button onClick={() => window.location.replace('/')}>
               <img src={localStorage.getItem("theme") === "true" ? darkLogo : lightLogo} alt={'Logo of the website.'} width='175px' />
-            </Link>
+              </button>
           </div>
           <nav>
             <ul>
               <li style={{fontSize:20,  paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[0].id}>
-                  <Link to={nav[0].url}>
+                  <a href={nav[0].url}>
                     {nav[0].text}
-                  </Link>
+                  </a>
               </li>
                 <Dropdown className="dropdown" menu={{items,}}>
                     <a href="/" className="categoriesTitle" onClick={(e) => e.preventDefault()}>
@@ -116,25 +112,29 @@ export const Header = () => {
 
             {user == null ?
               <>
-              <li style={{fontSize:20, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
-                <Link to={"/login"}>
-                <a href="/login">Login</a>
-                </Link>
-              </li>
-              <li style={{fontSize:20, padding:10, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
-                <Link to={"/signup"}>
-                <a href="/signup">Sign Up</a>
-                </Link>
-              </li>
-              <DarkModeSwitch
-              className="darkModeToggleButton"
-              checked={themeContext.theme}
-              onChange={() => themeContext.toggleTheme()}
-              size={40}
-            />
+              <div className="notLoggedIn">
+                <div className="loginSignup">
+                  <li style={{fontSize:20, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
+                    <Link to={"/login"}>
+                    <a href="/login">Login</a>
+                    </Link>
+                  </li>
+                  <li style={{fontSize:20, padding:10, paddingBottom:0, paddingTop:0, textTransform:"capitalize"}}>
+                    <Link to={"/signup"}>
+                    <a href="/signup">Sign Up</a>
+                    </Link>
+                  </li>
+                </div>
+                <DarkModeSwitch
+                className="darkModeToggleButton"
+                checked={themeContext.theme}
+                onChange={() => themeContext.toggleTheme()}
+                size={40}
+                />
+                </div>
             </>
             :<>
-
+            <div className="notLoggedIn">
             <User/>
             <DarkModeSwitch
               className="darkModeToggleButton"
@@ -143,6 +143,7 @@ export const Header = () => {
               onChange={() => themeContext.toggleTheme()}
               size={40}
             />
+            </div>
             </>}
           </div>
         </div>

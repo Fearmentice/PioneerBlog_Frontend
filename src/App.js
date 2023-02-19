@@ -1,4 +1,4 @@
-import React, { StrictMode, useState, createContext } from "react"
+import React, { useState, createContext } from "react"
 import './index.css'
 import { Footer } from "./components/footer/Footer"
 import { Header } from "./components/header/Header"
@@ -17,7 +17,10 @@ import { Account } from "./pages/account/Account"
 import { createAuthor } from "./pages/author/create/createAuthor"
 import { editAuthor } from "./pages/author/edit/editAuthor"
 import { bookmarks } from "./components/bookmarks/bookmarks"
+import PageNotFound from "./pages/pageNotFound/pageNotFound"
 import { useEffect } from "react"
+import { HelmetProvider } from "react-helmet-async"
+
 
 
 export const ThemeContext = createContext(null);
@@ -47,9 +50,9 @@ const App = () => {
     setTheme(newTheme)
     localStorage.setItem("theme", newTheme)
   }
-
+  const helmetContext = {};
   return (
-    <StrictMode>
+    <HelmetProvider context={helmetContext}>
       <ThemeContext.Provider value={{ theme, toggleTheme }}>
         <div className="App" id={theme === true ? 'light' : 'dark'}>
           <Router>
@@ -57,8 +60,6 @@ const App = () => {
             <Switch>
               <Route exact path='/' component={Home} />
               <Route exact path='/Home' component={Home} />
-            </Switch>
-            <Switch>
               <Route exact path='/about' component={About} />
               <Route exact path='/login' component={Login} />
               <Route exact path='/signup' component={SignUp} />
@@ -72,12 +73,13 @@ const App = () => {
               <Route exact path='/details/:id' component={DetailsPages} />
               <Route exact path='/contact' component={Contact} />
               <Route exact path='/:category' component={Home} />
+              <Route exact path='*' component={PageNotFound} />
             </Switch>
             <Footer />
           </Router>
         </div>
       </ThemeContext.Provider >
-    </StrictMode>
+    </HelmetProvider>
   )
 }
 export default App

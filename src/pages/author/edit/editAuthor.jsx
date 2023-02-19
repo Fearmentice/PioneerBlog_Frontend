@@ -1,4 +1,7 @@
 import React, {Component} from "react"
+
+import './editAuthor.css'
+
 //--DATABASE--
 import { db } from "../../../firebase-config";
 import {collection, query, getDocs, where, doc, updateDoc} from "firebase/firestore";
@@ -159,6 +162,7 @@ render(){
         <div className='container boxItems'>
           <h1>Edit Author</h1>
           <DropDownListComponent
+          className="dropdownSelect"
           onChange={(event) => this.setSelectedAuthor(event.target.value)} 
           placeholder="Categories"
           dataSource={this.state.allAuthors} ></DropDownListComponent>

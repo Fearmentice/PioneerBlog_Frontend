@@ -5,8 +5,9 @@ import './Home.css'
 import { Category } from "../../components/category/Category"
 import { DownOutlined } from '@ant-design/icons';
 import { db } from "../../firebase-config";
-import {collection, getDocs, startAfter, query, where, orderBy, limit} from "firebase/firestore";
+import {collection, getDocs, query, where, orderBy, limit} from "firebase/firestore";
 import { MetaTags } from "react-meta-tags"
+import { loadMoreBlogposts } from "../../Api/blogpostController"
 
 
 
@@ -18,7 +19,6 @@ class Home extends Component{
     this.state = {
       category: "",
       posts: [],
-      firstPost: {},
       lastPost: {},
       pageSize: 9,
       popularWritings: []
@@ -63,110 +63,51 @@ class Home extends Component{
   fetchPostsByCategory = async() => {
     //Blogpost reference.
     const blogpostsRef = collection(db, "blogposts");
-    try {
        // Query.
+       console.log(this.state.pageSize)
       const q = query(blogpostsRef,
         where("active", '==', true),
-        where("category", "==", `${this.state.category}`,
-        limit(this.state.pageSize)));
+        orderBy("publishDate", "desc"),
+        where("category", "==", `${this.state.category}`),
+        limit(this.state.pageSize));
 
       const docSnap = await getDocs(q);
       let postArray = [];
       docSnap.forEach((doc) => {
         postArray.push({...doc.data(), id:doc.id });
       })
-      this.setState({posts: postArray});
-    } catch(error) {
-        console.log(error)
-    };
+      this.setState({
+        posts: postArray, 
+        lastPost: docSnap.docs[docSnap.docs.length - 1]});
   }
 
-  // onPrevious = async() => {
-  //       //Blogpost ref.
-  //       const blogpostsRef = collection(db, 'blogposts');
-
-  //       const lastVisible = this.state.firstPost;
-  //       console.log(lastVisible);
-
-  //       //Query.
-  //       const queryRef = query(blogpostsRef,  
-  //         where("active", "==", true) , 
-  //         orderBy("publishDate", "desc"), 
-  //         endBefore(lastVisible?lastVisible:0),
-  //         limitToLast(this.state.pageSize));
-  //       const docSnap = await getDocs(queryRef);
-  //       let _posts = [];
-  //       docSnap.forEach((doc) => {
-  //         _posts.push({...doc.data(), id:doc.id });
-  //       });
-  //       //Check if there is next page.
-  //       if (_posts.length === 0){
-  //         return;
-  //       }
-  //       this.setState({posts: _posts});
-  //       this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]});
-  //       this.setState({firstPost: docSnap.docs[0]});
-  // }
-
+  //Loads more posts by publish order.
   loadMore = async() => {
-        //Blogpost ref.
-        const blogpostsRef = collection(db, 'blogposts');
+        //Loads more  blogpsots.
+        const {posts, lastPost} = await loadMoreBlogposts(
+          [...this.state.posts],
+          this.state.lastPost,
+          null,
+          this.state.pageSize,
+          null);
 
-        const lastVisible = this.state.lastPost;
-
-        if(this.state.category != null){
-        }
-        //Query.
-        const queryRef = query(blogpostsRef,  
-          where("active", "==", true) , 
-          orderBy("publishDate", "desc"), 
-          startAfter(lastVisible?lastVisible:0),
-          limit(this.state.pageSize));
-        const docSnap = await getDocs(queryRef);
-        let _posts = [...this.state.posts];
-        docSnap.forEach((doc) => {
-          _posts.push({...doc.data(), id:doc.id });
-        })
-        //Check if there is next page.
-        if (_posts.length === 0){
-          return;
-        }
-
-        this.setState({posts: _posts});
-        this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]})
-        this.setState({firstPost: docSnap.docs[0]});
+        this.setState({
+          posts: posts, 
+          lastPost: lastPost});
   }
-
+  //Loads more posts based on category.
   loadMoreCategoryBased = async() => {
-    //Blogpost ref.
-    const blogpostsRef = collection(db, 'blogposts');
-
-    const lastVisible = this.state.lastPost;
-
-    if(this.state.category != null){
-    }
-    //Query.
-    const queryRef = query(blogpostsRef,  
-      where("active", "==", true) , 
-      orderBy("publishDate", "desc"), 
-      where("category","==",`${this.state.category}`),
-      startAfter(lastVisible?lastVisible:0),
-      limit(this.state.pageSize));
-    const docSnap = await getDocs(queryRef);
-    let _posts = [...this.state.posts];
-    docSnap.forEach((doc) => {
-      if(_posts.includes({...doc.data(), id:doc.id } === false)){
-        _posts.push({...doc.data(), id:doc.id });
-      }
-    })
-    //Check if there is next page.
-    if (_posts.length === 0){
-      return;
-    }
-
-    this.setState({posts: _posts});
-    this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]})
-    this.setState({firstPost: docSnap.docs[0]});
+    //Loads more  blogpsots.
+    const {posts, lastPost} = await loadMoreBlogposts(
+      [...this.state.posts],
+      this.state.lastPost,
+      null,
+      this.state.pageSize,
+      this.state.category);
+      
+    this.setState({
+      posts: posts, 
+      lastPost: lastPost});
 }
 
 
@@ -182,8 +123,6 @@ class Home extends Component{
       _popularPosts.push({...doc.data(), id:doc.id });
     })
   })
-
-
 
     this.setState({popularWritings: _popularPosts})
 }

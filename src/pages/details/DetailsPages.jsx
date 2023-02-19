@@ -20,6 +20,9 @@ import {collection, getDoc, getDocs, doc, query,
    orderBy, limit, addDoc, Timestamp, updateDoc, where} from "firebase/firestore";
 import { Helmet } from "react-helmet"
 
+//--HELPERS--
+import { getAuth } from '../../helpers/getAuthorizationToken'
+
 export class DetailsPages extends Component {
   //Defines all states and callback functions.
   constructor(props) {
@@ -38,15 +41,15 @@ export class DetailsPages extends Component {
     this.setComments = this.setComments.bind(this);
     this.setPopularPosts = this.setPopularPosts.bind(this);
     this.deletePost = this.deletePost.bind(this);
-    this.userInfo = this.userInfo.bind(this);
+    this.loginPage = this.loginPage.bind(this);
   }
 
   //Runs one time in render ands triggers setId, setPopularPosts and userInfo.
-  componentDidMount(){
+  componentDidMount = async() => {
       const id = this.props.match.params.id;
       this.setId(id);
       this.setPopularPosts();
-      this.userInfo();
+      this.setState({user: await getAuth()})
   }
 
   //Sets the id state and runs setBlog function.
@@ -169,15 +172,6 @@ export class DetailsPages extends Component {
     });
   }
 
-  //Gets the logged in user data if there is.
-  userInfo = async() => {
-    if(!localStorage.getItem("jwtToken")) return this.setState({user: null});
-    const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
-    const docSnap = await getDoc(docRef);
-    const _user = {...docSnap.data(),id: docSnap.id};
-    this.setState({user: _user}) ; 
-  }
-
   //Redirects to login page.
   loginPage = async() => {
     window.location.replace('/login');
@@ -271,7 +265,7 @@ export class DetailsPages extends Component {
                         {this.state.user != null ?
                           <button onClick={() => this.createComment()} className='button' >Share</button>
                           :
-                          <button onClick={() => this.loginPage()} className='button' >Login</button>
+                          <button onClick={() => window.location.replace('/login')} className='button' >Login</button>
                           }
                       </div>
                     </div>
@@ -287,26 +281,18 @@ export class DetailsPages extends Component {
                 <h2 >Share This Post</h2>
               </div>
               <div className="card">
-                <button className="shareButtons" >
-                  <a href={`https://www.facebook.com/sharer/sharer.php?u=${window.location}`} target="_blank" rel="noopener noreferrer">
-                    <BsFacebook className='icon' style={{margin:10, marginBottom:15, width: 45, height: 45}} color="#000000" />
-                  </a>
-                </button>
-                <button className="shareButtons">
-                  <a href={`https://twitter.com/intent/tweet?url=${window.location}`} target="_blank" rel="noopener noreferrer">
-                    <AiFillTwitterCircle className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
-                  </a>
-                </button>
-                <button className="shareButtons">
-                  <a href={`mailto:pioneersgenerations@gmail.com?&subject=You have to See this!&cc=&bcc=&body=Check out this site:${window.location}`} target="_blank" rel="noopener noreferrer">
-                    <MdEmail className='icon' style={{margin:10, width: 50, height: 50}} color="#000000" />
-                  </a>
-                </button>
-                <button className="shareButtons">
-                  <a href={`http://www.linkedin.com/shareArticle?url=${window.location}`} target="_blank" rel="noopener noreferrer">
-                    <AiFillLinkedin className='icon' style={{ borderRadius:100,margin:10, width: 50, height: 50}} color="#000000"/>
-                  </a>
-                </button>
+                <ShareButton 
+                  url={`https://www.facebook.com/sharer/sharer.php?u=${window.location}`} 
+                  iconComponent={BsFacebook} width={45} height={45}/>
+                <ShareButton 
+                  url={`https://twitter.com/intent/tweet?url=${window.location}`} 
+                  iconComponent={AiFillTwitterCircle} width={50} height={50}/>
+                <ShareButton 
+                  url={`mailto:pioneersgenerations@gmail.com?&subject=You have to See this!&cc=&bcc=&body=Check out this site:${window.location}`} 
+                  iconComponent={MdEmail} width={50} height={50}/>
+                <ShareButton 
+                  url={`http://www.linkedin.com/shareArticle?url=${window.location}`} 
+                  iconComponent={AiFillLinkedin} width={50} height={50}/>
               </div>
             </div>
             {/* --POPULAR-POSTS-- */}
@@ -350,4 +336,14 @@ export class DetailsPages extends Component {
     </>
   )
       }
+}
+
+export const ShareButton = (props) => {
+  return(
+    <button className="shareButtons">
+      <a href={props.url} target="_blank" rel="noopener noreferrer">
+      <props.iconComponent className='icon' style={{ borderRadius:100,margin:10, width: props.width, height: props.height}} color="#000000"/>
+      </a>
+  </button>
+  )
 }

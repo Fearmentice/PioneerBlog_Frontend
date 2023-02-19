@@ -112,19 +112,58 @@ header.active {
 #light {
   background: #0f0f0f;
 }
+.loginSignup{
+  display: flex;
+  flex-direction: row;
+}
+.notLoggedIn{
+  display: flex;
+  flex-direction: row;
+}
+
 @media screen and (max-width: 768px) {
   .header{
     padding: 10px;
+  }
+
+  .loginSignup{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+  }
+  .dropdown{
+    align-self: flex-end;
+    justify-self: flex-end;
+  }
+  .darkModeToggleButton{
+    align-self: center;
+    justify-self: center;
+  }
+  .categoriesTitle{
+    margin-bottom: 3px;
+  }
+  .account{
+    flex-direction: row;
+  }
+  .notLoggedIn{
+    display: flex;
+    flex-direction: row;
+    margin-left: 0;
+  }
+  .logo{
+    display: none;
   }
   header .search {
     display: none;
   }
   nav a {
-    margin-top: 5px;
     margin-right: 15px;
+
   }
   .header a {
-    font-size: 15px;
+    font-size: 12px;
   }
   .account {
     flex-direction: column;

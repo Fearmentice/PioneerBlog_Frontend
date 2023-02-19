@@ -3,12 +3,16 @@ import "./userPage.css"
 import "../../components/header/header.css"
 import {Card} from '../../components/blog/Card'
 
-import { MetaTags } from "react-meta-tags"
-//import { DownOutlined } from '@ant-design/icons';
+import { Helmet } from "react-helmet"
+import { DownOutlined } from '@ant-design/icons';
+
+//--API--
+import { getDocsByArrayofIds, loadMoreBlogposts } from "../../Api/blogpostController"
+
 //--DATABASE--
 import { db } from "../../firebase-config";
-import {collection, getDoc, getDocs, doc, query,
-   orderBy, limit, startAfter, where, documentId} from "firebase/firestore";
+import {getDoc,  doc} from "firebase/firestore";
+import { getAuth } from "../../helpers/getAuthorizationToken"
 
 export class userPage extends Component {
   constructor(props) {
@@ -18,121 +22,64 @@ export class userPage extends Component {
       id:"",
       currnetUser: {},
       userPosts:[],
-      user: {},
-      comments: [],
-      newCommentBody: '',
       lastPost:{},
-      pageSize: 3
+      pageSize: 6
     }
     this.setBlog = this.setBlog.bind(this);
-    this.setComments = this.setComments.bind(this);
-    this.userInfo = this.userInfo.bind(this);
-    this.setUserPosts =this.setUserPosts.bind(this);
   }
 
-  setUserId = async(_id) => {
-    await this.setState({ id: _id });
-    if(this.state.id){
-      this.setBlog();
-    }
-  }
-
-  setBlog = async() => {
-        //Get blogpsot.
-        const docRef = doc(db, "authors", this.state.id);
+  setBlog = async(_id) => {
+        //Gets the author blogpsot.
+        const docRef = doc(db, "authors", _id);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
           this.setState({currnetUser: docSnap.data()});
 
+          //Gets All the posts.
+          const {posts, lastPost} = await getDocsByArrayofIds(docSnap.data().posts,
+                   this.state.pageSize);
 
-          //Blogpost ref.
-          const blogpostsRef = collection(db, 'blogposts');
-
-          //Query.
-          let _posts = [];
-          const queryRef = query(blogpostsRef,  
-            where("active", "==", true),
-            where(documentId() , "in", docSnap.data().posts));
-          const userPostSnap = await getDocs(queryRef);
-          await userPostSnap.forEach((doc) => {
-            _posts.push({...doc.data(), id:doc.id });
-          })
-          this.setState({userPosts: _posts})
+          //Pass the data to states.
+          this.setState({
+            userPosts: posts, 
+            lastPost: lastPost,
+            currnetUser:docSnap.data()})
         } 
-
-        
   }
 
   loadMore = async() => {
-    //Blogpost ref.
-    const blogpostsRef = collection(db, 'blogposts');
+    //Starts after last loaded post and loads more posts as many as page size.
+    const {posts, lastPost} = await loadMoreBlogposts( 
+      [...this.state.userPosts], 
+      this.state.lastPost, 
+      this.state.currnetUser.posts,
+      this.state.pageSize,
+      null)
 
-    const lastVisible = this.state.lastPost;
-
-    //Query.
-    const queryRef = query(blogpostsRef,  
-      where("active", "==", true) , 
-      where("author", "==", `${this.state.currnetUser.name}`),
-      orderBy("publishDate", "desc"), 
-      startAfter(lastVisible?lastVisible:0),
-      limit(this.state.pageSize));
-    const docSnap = await getDocs(queryRef);
-    let _posts = [...this.state.userPosts];
-    docSnap.forEach((doc) => {
-      _posts.push({...doc.data(), id:doc.id });
-    })
-    //Check if there is next page.
-    if (_posts.length === 0){
-      return;
-    }
-
-    this.setUserPosts(_posts);
-    this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]})
+    this.setState({userPosts: posts, lastPost: lastPost})
 }
 
-  setComments = async(commentsArr) => {
-    this.setState({comments: commentsArr});
-  }
+  componentDidMount = async() => {
+    const id = this.props.match.params.id;
+    this.setBlog(id);
 
-  setUserPosts = async(posts) => {
-    this.setState({userPosts: posts})
+    this.setState({user: await getAuth(), id: id})
   }
-
+  
   handleChange = e => {
     this.setState({
         [e.target.name]: e.target.value
     });
   }
 
-//AT LAST CHECK IF NECESSERY.
-  userInfo = async() => {
-    if(!localStorage.getItem("jwtToken")) return this.setState({user: null});
-    const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
-    const docSnap = await getDoc(docRef);
-    const _user = {...docSnap.data(),id: docSnap.id};
-    this.setState({user: _user}) ;
-  }
-
-  loginPage = async() => {
-    window.location.replace('/login');
-  }
-
-
-
-  componentDidMount(){
-    const id = this.props.match.params.id;
-    this.setUserId(id);
-    this.userInfo();
-  }
-
   render(){
   return (
     <>
-    <MetaTags>
+    <Helmet>
       <meta name="description" content="Who we are ? We are a group of students who try to write about right and useful informations to our dear readers. Also we are just students who want to improve himself and try to be good at writing with a excellent English language."/>
       
-      <meta property="og:title" content={`${this.state.blog.title}`} />
+      <meta property="og:title" content={`${this.state.currnetUser.name}`} />
       <meta property="og:url" content={`https://www.vocham.com/author/${this.state.currnetUser.id}`} />
       <meta property="og:image" content={`${this.state.currnetUser.profilePhoto}`} />
 
@@ -140,7 +87,7 @@ export class userPage extends Component {
       <meta name="twitter:title" content={`${this.state.currnetUser.description}`} />
       <meta name="twitter:description" content={`Learn about ${this.state.currnetUser.name}`} />
       <meta name="twitter:image" content={`${this.state.currnetUser.profilePhoto}`} />
-    </MetaTags>
+    </Helmet>
     <div className="page">
         <div className="desc">
             <img className="profilePhoto" src={`${this.state.currnetUser.profilePhoto}`} alt='Profile' />    
@@ -155,8 +102,8 @@ export class userPage extends Component {
       <div className="Pagination">
               {/* <a onClick={() => this.onPrevious()} class="previous round paginate">{'<'}</a>
               <a onClick={() => this.loadMore()} class="nextButton round paginate">{'>'}</a> */}
-              {/* <button onClick={() => this.loadMore()}>Load More</button>
-              <DownOutlined/> */}
+               <button onClick={() => this.loadMore()}>Load More</button>
+              <DownOutlined/>
       </div>
     </>
   )}
