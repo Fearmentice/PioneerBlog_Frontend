@@ -29,9 +29,10 @@
   display: flex;
   flex-direction: row;
   padding-left: 0;
-  margin: 2% 0;
+  margin: 0% 0;
   width: 450px;
-  transition: 0.5s;
+  transition: transform 0.5s;
+  border-width: 0;
 }
 
 
@@ -51,16 +52,17 @@
 
 .singlePage .cardItems {
   margin-top: 3%;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   padding: 0px 10px;
   flex-wrap: nowrap; 
 }
 #dark .singlePage .cardItems{
   background-color: #fff;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 #light .singlePage .cardItems{
   background-color: #0f0f0f;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
 }
 
 .singlePage .card{

@@ -6,12 +6,10 @@ import { RiImageAddLine } from "react-icons/ri"
 import {  AiFillEdit } from "react-icons/ai"
 import { Link } from "react-router-dom"
 import { useEffect } from "react"
-import { db } from "../../firebase-config";
-import {getDoc, doc, } from "firebase/firestore";
 import {BsPersonPlus, BsBookmark} from "react-icons/bs"
+import { getAuth } from "../../helpers/getAuthorizationToken"
 
 export const User = () => {
-  const user = true
   const [profileOpen, setProfileOpen] = useState(false)
   const [loggedinUser, setloggedinUser] = useState({});
 
@@ -28,17 +26,14 @@ export const User = () => {
     window.location.replace('/');
   }
   const isAdmin = async() => {
-    if(!localStorage.getItem("jwtToken")) return setloggedinUser(null);
-    const docRef = doc(db, "users", localStorage.getItem("jwtToken"));
-    const docSnap = await getDoc(docRef);
-    const _user = docSnap.data();
+    const _user = await getAuth();
     setloggedinUser(_user);
   }
 
   return (
     <>
       <div className='profile'>
-        {user ? (
+        {loggedinUser ? (
           <>
             <button className='img' onClick={() => setProfileOpen(!profileOpen)}>
               <img src={`${loggedinUser.profilePhoto}`} alt='Profile of the logged in user.' />

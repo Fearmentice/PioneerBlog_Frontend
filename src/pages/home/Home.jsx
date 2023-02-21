@@ -7,7 +7,8 @@ import { DownOutlined } from '@ant-design/icons';
 import { db } from "../../firebase-config";
 import {collection, getDocs, query, where, orderBy, limit} from "firebase/firestore";
 import { MetaTags } from "react-meta-tags"
-import { loadMoreBlogposts } from "../../Api/blogpostController"
+import { loadMoreBlogposts, fetchPosts } from "../../Api/blogpostController"
+import { categories } from '../../assets/data/data.js'
 
 
 
@@ -20,7 +21,7 @@ class Home extends Component{
       category: "",
       posts: [],
       lastPost: {},
-      pageSize: 9,
+      pageSize: 12,
       popularWritings: []
     }
     this.setCategory = this.setCategory.bind(this);
@@ -38,47 +39,21 @@ class Home extends Component{
     }
   }
 
+  //On render fetches the blogposts.
   fetchposts = async() => {
-    //Blogpost ref.
-    const blogpostsRef = collection(db, 'blogposts');
-
-    let _posts = [];
-    //Query.
-    const queryRef = query(blogpostsRef,  
-      where("active", "==", true) , 
-      orderBy("publishDate", "desc"),
-      limit(this.state.pageSize));
-    const docSnap = await getDocs(queryRef);
-
-    
-
-    docSnap.forEach(async(blogDoc) => {
-      _posts.push({...blogDoc.data(), id: blogDoc.id});
-    })
-    this.setState({posts: _posts});
-    this.setState({lastPost: docSnap.docs[docSnap.docs.length - 1]});
+    const {posts, lastPost} = await fetchPosts('publishDate', 'desc',
+     this.state.pageSize, null);
+    this.setState({posts: posts, lastPost: lastPost});
     
   }
 
+  //On render fetches the blogposts by category.
   fetchPostsByCategory = async() => {
-    //Blogpost reference.
-    const blogpostsRef = collection(db, "blogposts");
-       // Query.
-       console.log(this.state.pageSize)
-      const q = query(blogpostsRef,
-        where("active", '==', true),
-        orderBy("publishDate", "desc"),
-        where("category", "==", `${this.state.category}`),
-        limit(this.state.pageSize));
-
-      const docSnap = await getDocs(q);
-      let postArray = [];
-      docSnap.forEach((doc) => {
-        postArray.push({...doc.data(), id:doc.id });
-      })
-      this.setState({
-        posts: postArray, 
-        lastPost: docSnap.docs[docSnap.docs.length - 1]});
+    const {posts, lastPost} = await fetchPosts(
+      'publishDate', 'desc',
+      this.state.pageSize, 
+      this.state.category);
+    this.setState({posts: posts, lastPost: lastPost});
   }
 
   //Loads more posts by publish order.
@@ -126,57 +101,35 @@ class Home extends Component{
 
     this.setState({popularWritings: _popularPosts})
 }
+
+//Gets category's most popular writings for the slider.
   getCategoryBasedBlogposts = async(_Category) => {
-    const blogpostsRef = collection(db, 'blogposts');
-    const queryRef = query(blogpostsRef, where("active", "==", true), where("category", "==", `${_Category}`) ,orderBy('view', 'asc') , limit(5));
-    const docSnap = await getDocs(queryRef);
-    let _popularPosts = [];
-    docSnap.forEach((doc) => {
-      _popularPosts.push({...doc.data(), id:doc.id });
-    })
-    this.setState({popularWritings: _popularPosts})
+    const {posts} = await fetchPosts('view', 'asc',
+    5, _Category);
+    this.setState({popularWritings: posts})
 }
 
   updateCategory = async() => {
     const category = this.props.match.params.category;
-    switch(category) {
-      case "Technology":
-        this.setCategory("Technology");
+
+    let catFound = false;
+    //Checks if the category param is in the url.
+    categories.forEach(_category => {
+      if(category === _category){
+        this.setCategory(category);
         this.getCategoryBasedBlogposts(category);
-        break;
-      case "World":
-        this.setCategory("World");
-        this.getCategoryBasedBlogposts(category);
-        break;
-      case "Sport":
-        this.setCategory("Sport");
-        this.getCategoryBasedBlogposts(category);
-        break;
-      case "History":
-        this.setCategory("History");
-        this.getCategoryBasedBlogposts(category);
-        break;
-      case "News":
-        this.setCategory("News");
-        this.getCategoryBasedBlogposts(category);
-        break;
-      case "Health":
-        this.setCategory("Health");
-        this.getCategoryBasedBlogposts(category);
-        break;
-      case "Home":
-          this.setCategory("");
-          this.getCategory();
-          break;
-          default:
-            this.setCategory("");
-            this.getCategory();
-            this.props.history.push('/')
-          }
+        catFound = true;
+      }
+    });
+    //If category is not match with current categories.
+    if(!catFound){
+      this.setCategory("");
+      this.getCategory();
+      this.props.history.push('/')
+    }
   }
 
   componentDidMount () {
-    //this.fetchposts();
     this.updateCategory();
   }
 
@@ -193,15 +146,11 @@ class Home extends Component{
           </h1>
         <Card posts={this.state.posts} />
           <div className="Pagination">
-              {/* <a onClick={() => this.onPrevious()} class="previous round paginate">{'<'}</a>
-              <a onClick={() => this.loadMore()} class="nextButton round paginate">{'>'}</a> */}
-              <button onClick={() => this.state.category ?this.loadMoreCategoryBased() : this.loadMore()}>Load More</button>
+              <button onClick={() => this.state.category ? this.loadMoreCategoryBased() : this.loadMore()}>Load More</button>
               <DownOutlined className="icon"/>
           </div>
       </>
     )
   }
 }
-
-
 export default Home;

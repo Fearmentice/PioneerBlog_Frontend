@@ -65,3 +65,31 @@ export const loadMoreBlogposts = async (loadedPosts, lastPost, idArray, pageSize
         firstPost: docSnap.docs[0]
     }
 }
+
+export const fetchPosts = async (sortBy, sortMethod, pageSize, category) => {
+    //Blogpost ref.
+    const blogpostsRef = collection(db, 'blogposts');
+
+    let _posts = [];
+    //Query.
+    let queryRef = query(blogpostsRef,
+        where("active", "==", true),
+        orderBy(sortBy, `${sortMethod}`),
+        limit(pageSize));
+
+    if (category) {
+        queryRef = query(blogpostsRef,
+            where("active", "==", true),
+            orderBy(sortBy, sortMethod),
+            where("category", "==", `${category}`),
+            limit(pageSize))
+    }
+
+    const docSnap = await getDocs(queryRef);
+
+    docSnap.forEach(async (blogDoc) => {
+        _posts.push({ ...blogDoc.data(), id: blogDoc.id });
+    })
+
+    return { posts: _posts, lastPost: docSnap.docs[docSnap.docs.length - 1] }
+}

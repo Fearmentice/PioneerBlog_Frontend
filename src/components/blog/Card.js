@@ -136,7 +136,7 @@ export const Card = (props) => {
                     <FaRegUser className='icon' /> <label htmlFor=''>{item.author}</label>
                   </Link>
                   <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.date}</label>
-                  <GrView style={{ color: "white" }} className='icon' /> <label htmlFor=''>{item.view}</label>
+                  {/* <GrView style={{ color: "white" }} className='icon' /> <label htmlFor=''>{item.view}</label> */}
 
                 </div>
               </div>

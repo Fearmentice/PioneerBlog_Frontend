@@ -144,6 +144,14 @@
   font-size: 25px;
   color: #000;
 }
+
+#light .slick-dots li button:before {
+  color:White !important;
+ }
+#dark .slick-dots li button:before {
+  color:black !important;
+ }
+
 /*---------------control-btn-------------*/
 
 @media (max-width: 1366px) {
