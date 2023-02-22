@@ -10,6 +10,9 @@ import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"
 import { db } from "../../firebase-config";
 import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
 
+//--API--
+import { bookmarkPost, removeBookmarkPost } from "../../Api/bookmarkController"
+
 //--HELPERS--
 import { getAuth } from '../../helpers/getAuthorizationToken'
 
@@ -32,72 +35,18 @@ export const Card = (props) => {
   }, [props.posts])
 
 
-  const bookmarkPost = async (_id) => {
-    if (user == null) window.location.replace('/login')
-
-    //Get blogpsot.
-    const userRef = doc(db, "users", user.id);
-    const userSnap = await getDoc(userRef);
-    const oldBookmarkedPosts = [...userSnap.data().bookmarkedPosts]
-    if (oldBookmarkedPosts.includes(_id)) return;
-    const newBookmarkedPosts = [...oldBookmarkedPosts, _id];
-
-    const userUpdateData = {
-      bookmarkedPosts: newBookmarkedPosts
-    }
-    await updateDoc(userRef, userUpdateData).then(() => {
-      const _user = { ...user };
-      _user.bookmarkedPosts.push(_id);
-    });
-
-    //Get blogpsot.
-    const docRef = doc(db, "blogposts", _id);
-    const docSnap = await getDoc(docRef);
-
-    const data = {
-      favCount: docSnap.data().favCount + 1
-    }
-
-    await updateDoc(docRef, data).then(() => {
-      const _posts = [...posts];
-      _posts.find(x => x.id === _id).favCount++;
-      setPosts([..._posts]);
-    });
-
+  const callBookmarkPost = async (_id) => {
+    await bookmarkPost(_id, user);
+    const _posts = [...posts];
+    _posts.find(x => x.id === _id).favCount++;
+    setPosts(_posts)
   }
 
-  const removeBookmarkPost = async (_id) => {
-    if (user == null) window.location.replace('/login')
-
-    //Get blogpsot.
-    const userRef = doc(db, "users", user.id);
-    const userSnap = await getDoc(userRef);
-    const oldBookmarkedPosts = [...userSnap.data().bookmarkedPosts]
-    if (!oldBookmarkedPosts.includes(_id)) return;
-
-    const userUpdateData = {
-      bookmarkedPosts: arrayRemove(_id)
-    }
-    await updateDoc(userRef, userUpdateData).then(() => {
-      const _user = { ...user };
-      const index = _user.bookmarkedPosts.indexOf(_id);
-      _user.bookmarkedPosts.splice(index, 1);
-    });
-
-    //Get blogpsot.
-    const docRef = doc(db, "blogposts", _id);
-    const docSnap = await getDoc(docRef);
-
-    const data = {
-      favCount: docSnap.data().favCount - 1
-    }
-
-    await updateDoc(docRef, data).then(() => {
-      const _posts = [...posts];
-      _posts.find(x => x.id === _id).favCount--;
-      setPosts([..._posts]);
-    });
-
+  const callRemoveBookmarkPost = async (_id) => {
+    await removeBookmarkPost(_id, user);
+    const _posts = [...posts];
+    _posts.find(x => x.id === _id).favCount--;
+    setPosts(_posts)
   }
 
   return (
@@ -108,11 +57,10 @@ export const Card = (props) => {
             <div className="bookmark">
               <div className="bookmarkContent">
                 {user !== null && user.bookmarkedPosts !== undefined && user.bookmarkedPosts.includes(item.id) ?
-                  <BsFillBookmarkFill onClick={() => removeBookmarkPost(item.id)} className="icon" />
+                  <BsFillBookmarkFill onClick={() => callRemoveBookmarkPost(item.id)} className="icon" />
                   :
-                  <BsBookmark onClick={() => bookmarkPost(item.id)} className="icon" />
+                  <BsBookmark onClick={() => callBookmarkPost(item.id)} className="icon" />
                 }
-                <p>{item.favCount}</p>
               </div>
             </div>
             <Link to={`/details/${item.id}`} className='link'>

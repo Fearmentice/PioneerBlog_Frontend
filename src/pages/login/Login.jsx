@@ -67,7 +67,7 @@ handleChange = e => {
     verify_code: verifyCode,
     to_email: this.state.email
   }
-  emailjs.send('service_4yjjimo', 'template_qdi58fo', templateParams, 'Omls_WJx1Lqdajbcu')
+  //emailjs.send('service_4yjjimo', 'template_qdi58fo', templateParams, 'Omls_WJx1Lqdajbcu')
     this.setVerifyCode(verifyData.verifyInfo.code);
     this.setUserId(userId);
     this.setVerifyPage();
@@ -143,6 +143,8 @@ render(){
           :
           <form onSubmit={this.verifyAccount}>
             <span>Verify *</span>
+            <p>* Please provide the code that we have sent your email.</p>
+            <br/>
             <input type='text' value={this.state.verifyInput}  onChange={this.handleChange} name={"verifyInput"} required />
             <button style={{color:"white"}} className='button' >Verify</button>
           </form>

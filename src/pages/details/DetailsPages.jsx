@@ -20,8 +20,11 @@ import {collection, getDoc, getDocs, doc, query,
    orderBy, limit, addDoc, Timestamp, updateDoc, where} from "firebase/firestore";
 import { Helmet } from "react-helmet"
 
+import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"
+
 //--HELPERS--
 import { getAuth } from '../../helpers/getAuthorizationToken'
+import { bookmarkPost, removeBookmarkPost } from "../../Api/bookmarkController"
 
 export class DetailsPages extends Component {
   //Defines all states and callback functions.
@@ -165,6 +168,15 @@ export class DetailsPages extends Component {
 
   }
 
+  callbookmarkPost = async(_id) => {
+    await bookmarkPost(_id, this.state.user)
+    this.setState({user: await getAuth()})
+  }
+  callRemoveBookmarkPost = async(_id ) => {
+    await removeBookmarkPost(_id, this.state.user)
+    this.setState({user: await getAuth()})
+  }
+
   //Handles the state changes by input fields.
   handleChange = e => {
     this.setState({
@@ -180,7 +192,7 @@ export class DetailsPages extends Component {
   //Gets the description of the post and returns slices description.
   getSummaryDesc () {
     const desc = `${this.state.author.description}`;
-    return desc.slice(3,50);
+    return desc.slice(3,60);
   }
 
   render(){
@@ -228,17 +240,38 @@ export class DetailsPages extends Component {
                 </Link>
               :null}
               <div className="body" dangerouslySetInnerHTML={{__html: this.state.blog.body}}></div>
-              <Link to={`/authors/${this.state.blog.authorId}`}>
-                <div className="card">
+                <div className="descInfo">
+                  <Link to={`/authors/${this.state.blog.authorId}`}>
                     <div className="authorCard">
                       <img src={this.state.author.profilePhoto ? this.state.author.profilePhoto : defaultUserImage} alt='Profile.'/>
                       <div className="commentContent">
                         <b >{this.state.author.name}</b>
-                         <p style={{fontSize:12}}>{this.getSummaryDesc()}</p>
+                         <p style={{fontSize:12, width: 250}}>{this.getSummaryDesc()}</p>
                       </div>
                     </div>
+                  </Link>
+                      <div className="card">
+                      <button className="shareButtons">
+                          {this.state.user !== null && this.state.user.bookmarkedPosts !== undefined && this.state.user.bookmarkedPosts.includes(this.state.id) ?
+                            <BsFillBookmarkFill  className='icon' style={{ margin:10, width: 40, height: 40}} onClick={() => this.callRemoveBookmarkPost(this.state.id) } />
+                            :
+                            <BsBookmark  className='icon' style={{ margin:10, width: 40, height: 40}} onClick={() => this.callbookmarkPost(this.state.id)} />
+                          }
+                      </button>
+                        <ShareButton 
+                          url={`https://www.facebook.com/sharer/sharer.php?u=${window.location}`} 
+                          iconComponent={BsFacebook} width={45} height={45}/>
+                        <ShareButton 
+                          url={`https://twitter.com/intent/tweet?url=${window.location}`} 
+                          iconComponent={AiFillTwitterCircle} width={50} height={50}/>
+                        <ShareButton 
+                          url={`mailto:?&subject=You have to See this!&cc=&bcc=&body=Check out this site: ${window.location}`} 
+                          iconComponent={MdEmail} width={50} height={50}/>
+                        <ShareButton 
+                          url={`http://www.linkedin.com/shareArticle?url=${window.location}`} 
+                          iconComponent={AiFillLinkedin} width={50} height={50}/>
+                      </div>
                   </div>
-              </Link>
               {/* --COMMENTS-- */}
               <div className="commentsBox">
               <div className="commentTitleBox">
@@ -276,7 +309,7 @@ export class DetailsPages extends Component {
             </div>
 
           <div className="rightContainer">
-            <div className="cardItems">
+            {/* <div className="cardItems">
               <div className="card">
                 <h2 >Share This Post</h2>
               </div>
@@ -294,7 +327,7 @@ export class DetailsPages extends Component {
                   url={`http://www.linkedin.com/shareArticle?url=${window.location}`} 
                   iconComponent={AiFillLinkedin} width={50} height={50}/>
               </div>
-            </div>
+            </div> */}
             {/* --POPULAR-POSTS-- */}
             <div className="cardItems">
               <div className="card">
@@ -321,7 +354,7 @@ export class DetailsPages extends Component {
               <div className="card">
                 <h2>Categories</h2>
               </div>
-              <div >
+              <div style={{marginBottom: 10}}>
                   {categories.map((category) =>( 
                     <a href={`${url.split('details/')[0]}${category}`}>
                       <button className="categoriesButtons">{category}</button>
@@ -342,7 +375,7 @@ export const ShareButton = (props) => {
   return(
     <button className="shareButtons">
       <a href={props.url} target="_blank" rel="noopener noreferrer">
-      <props.iconComponent className='icon' style={{ borderRadius:100,margin:10, width: props.width, height: props.height}} color="#000000"/>
+      <props.iconComponent className='icon' style={{ borderRadius:100, margin:10, width: props.width, height: props.height}} color="#000000"/>
       </a>
   </button>
   )

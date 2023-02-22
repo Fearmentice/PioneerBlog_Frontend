@@ -58,7 +58,7 @@ export const Category = (props) => {
     <>
       <section className='category'>
         <div className='content'>
-          <h2 >Popular Writings</h2>
+          <h2 >{props.title}</h2>
           <Slider {...settings}>
             {props.popularWritings.map((item) => (
               <div className='boxs'>

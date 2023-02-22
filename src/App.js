@@ -20,6 +20,7 @@ import { bookmarks } from "./components/bookmarks/bookmarks"
 import PageNotFound from "./pages/pageNotFound/pageNotFound"
 import { useEffect } from "react"
 import { HelmetProvider } from "react-helmet-async"
+import Boarding from "./pages/boarding/Boarding"
 
 
 
@@ -58,8 +59,8 @@ const App = () => {
           <Router>
             <Header />
             <Switch>
-              <Route exact path='/' component={Home} />
-              <Route exact path='/Home' component={Home} />
+              <Route exact path='/' component={Boarding} />
+              <Route exact path='/Home' component={Boarding} />
               <Route exact path='/about' component={About} />
               <Route exact path='/login' component={Login} />
               <Route exact path='/signup' component={SignUp} />

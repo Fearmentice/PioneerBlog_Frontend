@@ -21,7 +21,7 @@ class Home extends Component{
       category: "",
       posts: [],
       lastPost: {},
-      pageSize: 12,
+      pageSize: 9,
       popularWritings: []
     }
     this.setCategory = this.setCategory.bind(this);
@@ -123,9 +123,15 @@ class Home extends Component{
     });
     //If category is not match with current categories.
     if(!catFound){
-      this.setCategory("");
-      this.getCategory();
-      this.props.history.push('/')
+      console.log(category)
+      if(category == "Latest"){
+        this.setCategory("");
+        this.getCategory();
+      }else{
+        this.setCategory("");
+        this.getCategory();
+        this.props.history.push('/')
+      }
     }
   }
 
@@ -140,10 +146,10 @@ class Home extends Component{
       <MetaTags>
         <meta name="description" content="We are a group of students who try to write about right and useful informations to our dear readers. Also we are just students who want to improve himself and try to be good at writing with a excellent English language." />
       </MetaTags>
-        <Category setChanged={this.setCategory} category={this.state.category} popularWritings={this.state.popularWritings}/>
-          <h1 className="categoryTitle">
-            {this.state.category === "" ? "Home": this.state.category}
-          </h1>
+        <Category title="Popular Writings" setChanged={this.setCategory} category={this.state.category} popularWritings={this.state.popularWritings}/>
+          <h2 className="categoryTitle">
+            {this.state.category === "" ? "Latest Posts": this.state.category}
+          </h2>
         <Card posts={this.state.posts} />
           <div className="Pagination">
               <button onClick={() => this.state.category ? this.loadMoreCategoryBased() : this.loadMore()}>Load More</button>

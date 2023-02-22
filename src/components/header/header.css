@@ -37,7 +37,7 @@ nav ul {
 }
 nav a {
   text-transform: capitalize;
-  margin-right: 30px;
+  margin-right: 25px;
 }
 #light nav a {
   color: #fff;
@@ -115,6 +115,8 @@ header.active {
 .loginSignup{
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 .notLoggedIn{
   display: flex;
@@ -123,7 +125,7 @@ header.active {
 
 @media screen and (max-width: 768px) {
   .header{
-    padding: 10px;
+    padding: 5px;
   }
 
   .loginSignup{
@@ -133,6 +135,9 @@ header.active {
     justify-content: center;
     width: max-content;
   }
+  .loginSignup li{
+    height: 10px;
+  }
   .dropdown{
     align-self: flex-end;
     justify-self: flex-end;
@@ -140,6 +145,7 @@ header.active {
   .darkModeToggleButton{
     align-self: center;
     justify-self: center;
+    width: 30px;
   }
   .categoriesTitle{
     margin-bottom: 3px;
@@ -159,11 +165,10 @@ header.active {
     display: none;
   }
   nav a {
-    margin-right: 15px;
-
+    margin:0 2px;
   }
   .header a {
-    font-size: 12px;
+    font-size: 8px;
   }
   .account {
     flex-direction: column;

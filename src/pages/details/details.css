@@ -17,6 +17,7 @@
 }
 .singlePage .body p {
   font-size: 18px;
+  text-transform: none
 }
 
 .singlePage .rightContainer {
@@ -44,7 +45,7 @@
 }
 
 .singlePage .boxImage {
-  width: 150px;
+  width: 120px;
   height: 80px;
   border-radius: 10px;
   margin: 3%;
@@ -70,6 +71,14 @@
   flex-direction: row;
   align-items: flex-end;
   justify-content: flex-start;
+  margin: 10px;
+}
+
+.singlePage .descInfo{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
   margin: 10px;
 }
 
@@ -367,6 +376,12 @@
   }
   .singlePage .left {
     width: 340px;
+  }
+  .singlePage .descInfo{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
   }
   .singlePage .rightContainer {
     margin: 0 20px;

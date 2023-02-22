@@ -88,7 +88,7 @@ export const Header = () => {
               <img src={localStorage.getItem("theme") === "true" ? darkLogo : lightLogo} alt={'Logo of the website.'} width='175px' />
               </button>
           </div>
-          <nav>
+          {/* <nav>
             <ul>
               <li style={{fontSize:20,  paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[0].id}>
                   <a href={nav[0].url}>
@@ -106,6 +106,15 @@ export const Header = () => {
                     {nav[1].text}
                   </Link>
               </li>
+            </ul>
+          </nav> */}
+          <nav>
+            <ul>
+              {nav.map((link) => (
+                <li key={link.id}>
+                  <a href={`${link.url}`}>{link.text}</a>
+                </li>
+              ))}
             </ul>
           </nav>
           <div className='account flexCenter'>

@@ -187,6 +187,7 @@ render(){
             {this.state.verify === true ?
             <div className='right'>
               <label htmlFor=''>Verify Account</label>
+              <p>* Please provide the code that we have sent your email.</p>
               <input value={this.state.verifyInput} type='text' onChange={this.handleChange} name="verifyInput"/>
               <button style={{color:"white"}} onClick={() => this.verifyAccount()} className='button'>Verify</button>
             </div>

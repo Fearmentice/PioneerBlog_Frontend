@@ -1,10 +1,10 @@
 .blog {
   margin-bottom: 50px;
-  padding: 0 175px;
+  padding: 0 250px;
 }
 .blog .boxItems {
   transition: transform 0.5s;
-  height: 575px;
+  height: 600px;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -57,7 +57,7 @@
 .blog .details {
   display: flex;
   flex-direction: column;
-  height: 240px;
+  height: 270px;
   justify-content: flex-start;
 }
 .blog .postInfo {
@@ -199,13 +199,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 60px;
+    margin-top: 10px;
 }
   .blog p {
     font-size: medium;
     max-width: 300px;
     height: 75px;
     overflow: hidden;
+    line-height: 20px;
   }
   .blog .date label {
     display: block;
