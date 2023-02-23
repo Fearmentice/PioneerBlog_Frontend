@@ -43,6 +43,11 @@ export const nav = [
     text: "About",
     url: "/About",
   },
+  {
+    id: 9,
+    text: "Impressum",
+    url: "/Impressum",
+  },
 ]
 export const categories = ['Technology', 'History', 'World', 'Health', 'Sport', 'News']
 

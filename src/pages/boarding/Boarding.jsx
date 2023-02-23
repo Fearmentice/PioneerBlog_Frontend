@@ -9,8 +9,7 @@ import {collection, getDocs, query, where, orderBy, limit} from "firebase/firest
 import { MetaTags } from "react-meta-tags"
 import { loadMoreBlogposts, fetchPosts } from "../../Api/blogpostController"
 import { categories } from '../../assets/data/data.js'
-import image1 from '../../assets/images/immortalFenysxRsııng.png'
-import image2 from '../../assets/images/Screenshot_2.png'
+import { Link } from "react-router-dom"
 
 
 
@@ -156,67 +155,75 @@ class Boarding extends Component{
       <div className="popularPosts">
         <h2>Popular Writings</h2>
             <div className="content">
-            <div className='leftBox'  >
-                <div className="imgContainer">
-                    {console.log()}
-                    <img src={{...this.state.mostPopular[0]}.imageCover} alt={``} />
-                </div>
-                <div className='overlay'>
-                    <div className="titleBox" >
-                        <h4 style={{ color: '#fdf77e', fontSize: 50}}>{this.getSummary({...this.state.mostPopular[0]}.title, 50)}</h4>
-                    </div>
-                    <div className="descBox">
-                        <p style={{ color:"white", fontSize: 20}}>{this.getSummary({...this.state.mostPopular[0]}.desc, 150)}</p>
-                        <p style={{color: "grey"}}>Continue Reading...</p>
-                    </div>
-                </div>
-            </div>
+            <Link to ={`/details/${{...this.state.mostPopular[0]}.id}`}>
+              <div className='leftBox'  >
+                  <div className="imgContainer">
+                      {console.log()}
+                      <img src={{...this.state.mostPopular[0]}.imageCover} alt={``} />
+                  </div>
+                  <div className='overlay'>
+                      <div className="titleBox" >
+                          <h4 style={{ color: '#fdf77e'}}>{this.getSummary({...this.state.mostPopular[0]}.title, 50)}</h4>
+                      </div>
+                      <div className="descBox">
+                          <p style={{ color:"white"}}>{this.getSummary({...this.state.mostPopular[0]}.desc, 150)}...</p>
+                          <p style={{color: "grey"}}>Continue Reading...</p>
+                      </div>
+                  </div>
+              </div>
+            </Link>
             <div className="rightImages">
+            <Link to ={`/details/${{...this.state.mostPopular[1]}.id}`}>
                 <div className='rightBox'  >
                     <div className="imgContainer">
                         <img src={{...this.state.mostPopular[1]}.imageCover} alt={``} />
                     </div>
                     <div className='overlay'>
                         <div className="titleBox" >
-                            <h4 style={{ color: '#fdf77e', fontSize: 35}}>{this.getSummary({...this.state.mostPopular[1]}.title, 50)}</h4>
+                            <h4 style={{ color: '#fdf77e'}}>{this.getSummary({...this.state.mostPopular[1]}.title, 50)}</h4>
                         </div>
                         <div className="descBox">
-                            <p style={{color:"white", fontSize: 17,}}>{this.getSummary({...this.state.mostPopular[1]}.desc, 100)}</p>
-                            <p style={{color: "grey", fontSize: 17, padding: 0}}>Continue Reading...</p>
+                            <p style={{color:"white",}}>{this.getSummary({...this.state.mostPopular[1]}.desc, 100)}...</p>
+                            <p style={{color: "grey", padding: 0}}>Continue Reading...</p>
                         </div>
                     </div>
                 </div>
+              </Link>
                 <div className="miniImages">
+                <Link to ={`/details/${{...this.state.mostPopular[2]}.id}`}>
                     <div className='miniBox'  >
                         <div className="imgContainer">
                             <img src={{...this.state.mostPopular[2]}.imageCover} alt={``} />
                         </div>
                         <div className='overlay'>
                             <div className="titleBox" >
-                                <h4 style={{ color: '#fdf77e', fontSize:15}}>{this.getSummary({...this.state.mostPopular[2]}.title, 20)}</h4>
+                                <h4 style={{ color: '#fdf77e'}}>{this.getSummary({...this.state.mostPopular[2]}.title, 50)}</h4>
                             </div>
                             <div className="descBox">
-                                <p style={{color:"white", padding: 0, fontSize: 10}}>{this.getSummary({...this.state.mostPopular[2]}.desc, 50)}</p>
-                                <p style={{color: "grey", fontSize: 10, padding:0}}>Continue Reading...</p>
+                                <p style={{color:"white", padding: 0}}>{this.getSummary({...this.state.mostPopular[2]}.desc, 70)}...</p>
+                                <p style={{color: "grey", padding:0}}>Continue Reading...</p>
                             </div>
                         </div>
                     </div>
+                  </Link>
+                  <Link to ={`/details/${{...this.state.mostPopular[3]}.id}`}>
                     <div className='miniBox'  >
                         <div className="imgContainer">
                             <img src={{...this.state.mostPopular[3]}.imageCover} alt={``} />
                         </div>
                         <div className='overlay'>
                             <div className="titleBox" >
-                                <h4 style={{ color: '#fdf77e', fontSize:15}}>{this.getSummary({...this.state.mostPopular[3]}.title, 20)}</h4>
+                                <h4 style={{ color: '#fdf77e'}}>{this.getSummary({...this.state.mostPopular[3]}.title, 50)}</h4>
                             </div>
                             <div className="descBox">
-                                <p style={{color:"white",fontSize:10, padding:0,}}>{this.getSummary({...this.state.mostPopular[3]}.desc, 50)}</p>
-                                <p style={{color: "grey", fontSize: 10, padding:0}}>Continue Reading...</p>
+                                <p style={{color:"white", padding:0,}}>{this.getSummary({...this.state.mostPopular[3]}.desc, 70)}...</p>
+                                <p style={{color: "grey", padding:0}}>Continue Reading...</p>
                             </div>
                         </div>
                     </div>
+                  </Link>
                 </div>
-            </div>
+            </div> 
         </div>
       </div>
         <Category title="News From Our School" setChanged={this.setCategory} category={this.state.category} popularWritings={this.state.popularWritings}/>

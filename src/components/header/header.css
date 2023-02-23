@@ -28,6 +28,7 @@ header {
 /* nav */
 nav ul {
   display: flex;
+  justify-content: flex-end;
 }
 .ant-dropdown{
   z-index: 99999;
@@ -124,9 +125,14 @@ header.active {
 }
 
 @media screen and (max-width: 768px) {
+  .flex {
+    justify-content: flex-end;
+  }
+
   .header{
     padding: 5px;
   }
+
 
   .loginSignup{
     display: flex;
@@ -164,6 +170,10 @@ header.active {
   header .search {
     display: none;
   }
+  ul {
+    align-items: center;
+    justify-content: center;
+  }
   nav a {
     margin:0 2px;
   }
@@ -176,5 +186,8 @@ header.active {
   }
    li {
     padding: 0;
+  }
+  .header a{
+    font-size: 12px;
   }
 }

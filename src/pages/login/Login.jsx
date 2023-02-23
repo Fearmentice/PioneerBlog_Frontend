@@ -139,6 +139,7 @@ render(){
             <span>Password *</span>
             <input placeholder="Password" type='password' onChange={this.handleChange} name={"password"} required />
             <button style={{color:"white"}} className='button' >Log in</button>
+            <a style={{color: "#459cf5", marginTop: 20}} href="/signup">Dont have an account ?</a>
           </form>
           :
           <form onSubmit={this.verifyAccount}>

@@ -179,7 +179,7 @@ render(){
               <input type='text' value={this.state.name} onChange={this.handleChange} name="name"/>
               <label htmlFor=''>Description</label>
               <Editor editorState={this.state.editorState} onEditorStateChange={this.onEditorStatChange}/>
-              <button onClick={() => this.handleSubmit()} className='button'>Create Author</button>
+              <button onClick={() => this.handleSubmit()} className='button'>Update Author</button>
             </div>
           </div>
           :

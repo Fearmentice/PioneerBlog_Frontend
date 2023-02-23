@@ -77,7 +77,10 @@ export const Header = () => {
     setUser(await getAuth())
   }
 
-  
+  const detectMob = () => {
+    console.log(window.innerHeight <= 768)
+    return window.innerHeight <= 768
+  }
 
   return (
     <>
@@ -88,9 +91,10 @@ export const Header = () => {
               <img src={localStorage.getItem("theme") === "true" ? darkLogo : lightLogo} alt={'Logo of the website.'} width='175px' />
               </button>
           </div>
-          {/* <nav>
+          {detectMob() ?
+          <nav>
             <ul>
-              <li style={{fontSize:20,  paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[0].id}>
+              <li style={{paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[0].id}>
                   <a href={nav[0].url}>
                     {nav[0].text}
                   </a>
@@ -101,13 +105,14 @@ export const Header = () => {
                         <DownOutlined style={{marginLeft:5}} />
                     </a>
                 </Dropdown>
-              <li style={{fontSize:20,  paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[1].id}>
+              <li style={{paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[1].id}>
                   <Link to={nav[1].url}>
                     {nav[1].text}
                   </Link>
               </li>
             </ul>
-          </nav> */}
+          </nav>
+          :
           <nav>
             <ul>
               {nav.map((link) => (
@@ -117,6 +122,7 @@ export const Header = () => {
               ))}
             </ul>
           </nav>
+}
           <div className='account flexCenter'>
 
             {user == null ?

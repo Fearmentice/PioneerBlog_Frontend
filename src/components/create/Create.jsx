@@ -69,6 +69,12 @@ export const Create = () => {
     // Add a new document in collection "blogposts"
     const newBlogpostRef = collection(db, "blogposts");
     const today = new Date();
+    const publishDate = today.toLocaleDateString({
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+    console.log(publishDate) 
 
     const contentState = editorState.getCurrentContent();
     const rawContentState = convertToRaw(contentState);
@@ -85,7 +91,7 @@ export const Create = () => {
       desc: rawContentState.blocks[0].text,
       commentsId: [],
       publishDate: Timestamp.now(),
-      date: `${('0' + today.getDate()).slice(-2)}/${('0' + today.getMonth() + 1).slice(-2)}/${today.getFullYear()}`,
+      date: `${publishDate}`,
       active: true
     });
 

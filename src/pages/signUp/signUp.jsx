@@ -104,6 +104,7 @@ handleChange = e => {
             email: email,
             username: username,
             commentsId: [],
+            bookmarkedPosts: [],
             role: 'user',
             isVerified: false,
             verifyInfo: {
