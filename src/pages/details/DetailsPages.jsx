@@ -5,26 +5,31 @@ import { Link } from "react-router-dom"
 import "./details.css"
 import {categories} from '../../assets/data/data'
 import "../../components/header/header.css"
-import defaultUserImage from "../../assets/images/defaultUser.jpg"
 
 //--ICONS--
 import {MdEmail} from "react-icons/md"
-import {  AiFillEdit } from "react-icons/ai"
-import { AiFillTwitterCircle, AiFillLinkedin, } from "react-icons/ai"
-import { BsFacebook } from "react-icons/bs"
+
+//--Icons--
+import { AiFillTwitterCircle, AiFillLinkedin, AiFillEdit } from "react-icons/ai"
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { BsBookmark, BsFillBookmarkFill, BsFacebook } from "react-icons/bs"
 
 //--DATABASE--
 import { db } from "../../firebase-config";
-import {collection, getDoc, getDocs, doc, query,
-   orderBy, limit, addDoc, Timestamp, updateDoc, where} from "firebase/firestore";
-import { Helmet } from "react-helmet"
+import {getDoc, doc, updateDoc} from "firebase/firestore";
 
-import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"
+//--Components--
+import { PopularPosts } from "../../components/popularPosts/PopularPosts"
+import { SeoSocialMedia } from "../../components/SEO_socialMedia/SeoSocialMedia.jsx"
+import { AuthorCard } from "../../components/authorCard/AuthorCard"
+import { Comments } from "../../components/comments/Comments"
 
 //--HELPERS--
 import { getAuth } from '../../helpers/getAuthorizationToken'
 import { bookmarkPost, removeBookmarkPost } from "../../Api/bookmarkController"
+
+//--API--
+import { fetchPosts } from "../../Api/blogpostController";
 
 export class DetailsPages extends Component {
   //Defines all states and callback functions.
@@ -34,25 +39,23 @@ export class DetailsPages extends Component {
     this.state = {
       id:"",
       blog: {},
-      popularPosts:[],
       user: {},
+      popularPosts: [],
       comments: [],
       newCommentBody: '',
       author:{}
     }
     this.setBlog = this.setBlog.bind(this);
     this.setComments = this.setComments.bind(this);
-    this.setPopularPosts = this.setPopularPosts.bind(this);
     this.deletePost = this.deletePost.bind(this);
-    this.loginPage = this.loginPage.bind(this);
   }
 
   //Runs one time in render ands triggers setId, setPopularPosts and userInfo.
   componentDidMount = async() => {
       const id = this.props.match.params.id;
       this.setId(id);
-      this.setPopularPosts();
       this.setState({user: await getAuth()})
+      this.getPopularPosts();
   }
 
   //Sets the id state and runs setBlog function.
@@ -102,15 +105,9 @@ export class DetailsPages extends Component {
   }
 
   //Gets 5 the most viewed posts.
-  setPopularPosts = async() => {
-    const blogpostsRef = collection(db, 'blogposts');
-    const queryRef = query(blogpostsRef,where("active", "==", true), orderBy('view', 'asc') , limit(5));
-    const docSnap = await getDocs(queryRef);
-    let postArray = [];
-    docSnap.forEach((doc) => {
-      postArray.push({...doc.data(), id:doc.id });
-    })
-    this.setState({popularPosts: postArray});
+  getPopularPosts = async() => {
+    const { posts } = await fetchPosts('publishDate', 'desc', 5, null);
+    this.setState({popularPosts: posts});
   }
 
   //Sets the blogs active to false.
@@ -130,44 +127,6 @@ export class DetailsPages extends Component {
     this.setState({comments: commentsArr});
   }
 
-  //Creates comment in the name of logged in user.
-  createComment = async() => {
-        // Add a new document in collection "comments"
-        const newCommentsRef = collection(db, "comments");
-        const newCommentData = {
-            blogpostId: this.state.id,
-            body: this.state.newCommentBody,
-            created_At: Timestamp.now(),
-            userId: {
-              userId: this.state.user.id,
-              name:  this.state.user.username,
-            }
-        }
-        const {id} = await addDoc(newCommentsRef, newCommentData);
-
-        let comments = this.state.comments;
-        comments.push({...newCommentData,user: this.state.user});
-        this.setComments(comments);
-
-        const docRef = doc(db, "blogposts", this.state.id);
-        const docSnap = await getDoc(docRef);
-
-
-         const data = {
-          commentsId: [...docSnap.data().commentsId, id]
-         }
-         await updateDoc(docRef, data);
-         const userRef = doc(db, "users", this.state.user.id);
-         const userSnap = await getDoc(userRef);
- 
- 
-          const userData = {
-           commentsId: [...userSnap.data().commentsId, id]
-          }
-          await updateDoc(userRef, userData);
-
-  }
-
   callbookmarkPost = async(_id) => {
     await bookmarkPost(_id, this.state.user)
     this.setState({user: await getAuth()})
@@ -179,45 +138,26 @@ export class DetailsPages extends Component {
 
   //Handles the state changes by input fields.
   handleChange = e => {
+    e.preventDefault();
     this.setState({
         [e.target.name]: e.target.value
     });
   }
 
-  //Redirects to login page.
-  loginPage = async() => {
-    window.location.replace('/login');
-  }
-
-  //Gets the description of the post and returns slices description.
-  getSummaryDesc () {
-    const desc = `${this.state.author.description}`;
-    return desc.slice(3,60);
-  }
 
   render(){
     const url = window.location.toString();
   return (
     <>
-    <article itemScope itemType="http://scheme.org/Article">
-      <Helmet>
-        <meta name="description" content={`Get more information about ${this.state.blog.title}`}/>
+      <SeoSocialMedia 
+          description={`Get more information about ${this.state.blog.title}`}
+          canonical={window.location.toString()}
+          url={`https://vocham.com/details/${this.state.id}`}
+          title={this.state.blog.title}
+          image={this.state.blog.image}
+          />
 
-        <link rel="canonical" href={window.location.toString()} />
 
-        <meta itemProp="author" content={`${this.state.blog.author}`} />
-        <meta itemProp="publishDate" content={`${this.state.blog.publishDate}`} />
-        <meta itemProp="publisher" content="vocham.com" />
-
-        <meta property="og:title" content={`${this.state.blog.title}`} />
-        <meta property="og:url" content={`https://www.vocham.com/details/${this.state.id}`} />
-        <meta property="og:image" content={`${this.state.blog.imageCover}`} />
-
-        <meta name="twitter:card" content="summary"/>
-        <meta name="twitter:title" content={`${this.state.blog.title}`} />
-        <meta name="twitter:description" content={`Learn about ${this.state.blog.title}`} />
-        <meta name="twitter:image" content={`${this.state.blog.imageCover}`} />
-      </Helmet>
       <section className='singlePage'>
         <div className="container">
           <div className='left'>
@@ -227,29 +167,15 @@ export class DetailsPages extends Component {
               <img src={this.state.blog.imageCover} alt={`Explains the article that is about ${this.state.blog.title}`} />
             </div>
             <div className='desc'>
-              {this.state.user !== null && this.state.user.role ===  "admin" ?
-                <button onClick={() => this.deletePost()} className="adminDeleteButton">
-                  <RiDeleteBin6Line style={{color:"white", width:20, height:20}}/>
-                </button>
-              :null}
-               {this.state.user !== null && this.state.user.role ===  "admin" ?
-                <Link to={`/admin/blogpost/edit/${this.state.id}`}>
-                  <button className="adminEditButton">
-                    <AiFillEdit style={{color:"white", width:20, height:20}}/>
-                  </button>
-                </Link>
-              :null}
+              <AdminButtons user={this.state.user} id={this.state.id}/>
               <div className="body" dangerouslySetInnerHTML={{__html: this.state.blog.body}}></div>
                 <div className="descInfo">
-                  <Link to={`/authors/${this.state.blog.authorId}`}>
-                    <div className="authorCard">
-                      <img src={this.state.author.profilePhoto ? this.state.author.profilePhoto : defaultUserImage} alt='Profile.'/>
-                      <div className="commentContent">
-                        <b >{this.state.author.name}</b>
-                         <p style={{fontSize:12, width: 250}}>{this.getSummaryDesc()}</p>
-                      </div>
-                    </div>
-                  </Link>
+                      <AuthorCard 
+                        authorId={this.state.blog.authorId}
+                        profilePhoto={this.state.author.profilePhoto}
+                        name={this.state.author.name}
+                        description={this.state.author.description}
+                        />
                       <div className="card">
                       <button className="shareButtons">
                           {this.state.user !== null && this.state.user.bookmarkedPosts !== undefined && this.state.user.bookmarkedPosts.includes(this.state.id) ?
@@ -272,82 +198,37 @@ export class DetailsPages extends Component {
                           iconComponent={AiFillLinkedin} width={50} height={50}/>
                       </div>
                   </div>
-              {/* --COMMENTS-- */}
-              <div className="commentsBox">
-              <div className="commentTitleBox">
-                <h2 >Comments</h2>
-              </div>
-              <div className="commentCardBox">
-                {this.state.comments.map((comment) => (
-                  <div className="commentCard">
-                    <div className="commentCardHeader">
-                      <img src={comment.user.profilePhoto ? `${comment.user.profilePhoto}`: defaultUserImage} alt='Profile of the writer of the comment.'/>
-                      <div className="commentContent">
-                        <b>{comment.userId.name}</b>
-                        <p >{comment.body}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                  <div className="commentCard">
-                    <div className="commentCardHeader">
-                      <img src={this.state.user != null ? this.state.user.profilePhoto : defaultUserImage} alt='Comment profile.'/>
-                      <div className="commentContent">
-                        <b>Make a Comment</b>
-                        <input placeholder="Share us what you think" type='text' onChange={this.handleChange} name={"newCommentBody"} required />
-                        {this.state.user != null ?
-                          <button onClick={() => this.createComment()} className='button' >Share</button>
-                          :
-                          <button onClick={() => window.location.replace('/login')} className='button' >Login</button>
-                          }
-                      </div>
-                    </div>
-                  </div>
-              </div>
-            </div>
+                  <Comments 
+                    comments={this.state.comments}
+                    user={this.state.user}
+                    id={this.state.id}
+                    setComments={this.setComments}
+                    newCommentBody={this.state.newCommentBody}
+                    handleChange={this.handleChange}
+                  />
           </div>
             </div>
 
           <div className="rightContainer">
-            {/* <div className="cardItems">
-              <div className="card">
-                <h2 >Share This Post</h2>
-              </div>
-              <div className="card">
-                <ShareButton 
-                  url={`https://www.facebook.com/sharer/sharer.php?u=${window.location}`} 
-                  iconComponent={BsFacebook} width={45} height={45}/>
-                <ShareButton 
-                  url={`https://twitter.com/intent/tweet?url=${window.location}`} 
-                  iconComponent={AiFillTwitterCircle} width={50} height={50}/>
-                <ShareButton 
-                  url={`mailto:pioneersgenerations@gmail.com?&subject=You have to See this!&cc=&bcc=&body=Check out this site:${window.location}`} 
-                  iconComponent={MdEmail} width={50} height={50}/>
-                <ShareButton 
-                  url={`http://www.linkedin.com/shareArticle?url=${window.location}`} 
-                  iconComponent={AiFillLinkedin} width={50} height={50}/>
-              </div>
-            </div> */}
-            {/* --POPULAR-POSTS-- */}
-            <div className="cardItems">
-              <div className="card">
-                <h2 >Latest Releases</h2>
-              </div>
-              {this.state.popularPosts.map((item) => (
-                <Link to={`/details/${item.id}`} className="link">
-                  <div className="box boxItems" onClick={() => this.setId(item.id)} >
-                    <img style={{objectFit:"cover"}} alt="Thumbnails of the writings." className="boxImage" src={item.imageCover}/>
-                    <div className="postInfo">
-                      <div >
-                        <b>{item.title}</b>
-                      </div>
-                      <div >
-                        <p >{item.desc.slice(0, 70).replace('&nbsp;', " ")}</p>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+          <div className="cardItems">
+            <div className="card">
+              <h2 >Latest Releases</h2>
+            </div>
+            {this.state.popularPosts.map((item) => (
+               <Link to={`/details/${item.id}`} className="link">
+                 <div className="box boxItems" onClick={() => this.setId(item.id)} >
+                   <img style={{objectFit:"cover"}} alt="Thumbnails of the writings." className="boxImage" src={item.imageCover}/>
+                   <div className="postInfo">
+                     <div >
+                       <b>{item.title}</b>
+                     </div>
+                     <div >
+                       <p >{item.desc.slice(0, 70).replace('&nbsp;', " ")}</p>
+                     </div>
+                   </div>
+                 </div>
+               </Link>
+             ))}
             </div>
             {/* --Categories-- */}
             <div className="cardItems">
@@ -365,7 +246,6 @@ export class DetailsPages extends Component {
           </div>
         </div>
       </section>
-      </article>
     </>
   )
       }
@@ -379,4 +259,24 @@ export const ShareButton = (props) => {
       </a>
   </button>
   )
+}
+
+export const AdminButtons = (props) => {
+  const {user, id} = props;
+  if(user !== null && user.role ===  "admin")
+  {
+    return (
+      <>
+        <button onClick={() => this.deletePost()} className="adminDeleteButton">
+          <RiDeleteBin6Line style={{color:"white", width:20, height:20}}/>
+        </button>
+        <Link to={`/admin/blogpost/edit/${id}`}>
+          <button className="adminEditButton">
+            <AiFillEdit style={{color:"white", width:20, height:20}}/>
+          </button>
+        </Link>
+      </>
+    )
+  }
+  return (null)
 }

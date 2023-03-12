@@ -73,6 +73,7 @@ handleChange = e => {
     await addDoc(newUserRef, {
         name: name,
         description: stateToHTML(editorState.getCurrentContent()),
+        posts:[],
         profilePhoto: imageUrl,
     });
     setTimeout(() => {

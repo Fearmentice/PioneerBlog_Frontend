@@ -205,6 +205,65 @@
     h1 {
       padding: 0 80px;   
     }
+    .popularPosts h2 {
+      padding: 0 20px;
+    }
+
+
+    .miniBox:hover img {
+      transform: scale(1); 
+    }
+    .miniBox img {
+      width: 200px;
+      height: 140px;
+    }
+    .miniBox::after {
+      width: 200px;
+      height: 141px;
+    }
+    .miniBox  h4 {
+      font-size:10px;
+      padding: 0  ;
+    }
+    .miniBox p {
+      font-size: 6px;
+    }
+
+    .rightBox:hover img {
+      transform: scale(1); 
+    }
+    .rightBox img {
+      width: 400px;
+      height: 250px;
+    }
+  .rightBox::after {
+      width: 400px;
+      height: 250px;
+    }
+    .rightBox  h4 {
+      font-size:22px;
+    }
+    .rightBox p {
+      font-size: 8px;
+    }
+
+    .leftBox:hover img {
+      transform: scale(1); 
+    }
+    .leftBox::after {
+        width: 500px;
+        height: 400px;
+      }
+    .leftBox img {
+      width: 500px;
+      height: 400px;
+    }
+    .leftBox .overlay h4 {
+      font-size:22px;
+    }
+    .leftBox p {
+      font-size: 9px;
+    }
   }
   @media (max-width: 768px) {
     h1 {

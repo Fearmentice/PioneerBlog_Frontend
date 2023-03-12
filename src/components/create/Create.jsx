@@ -69,12 +69,11 @@ export const Create = () => {
     // Add a new document in collection "blogposts"
     const newBlogpostRef = collection(db, "blogposts");
     const today = new Date();
-    const publishDate = today.toLocaleDateString({
+    const publishDate = today.toLocaleDateString('tr-TR', {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-    })
-    console.log(publishDate) 
+    }).replace(/\./g,'/')
 
     const contentState = editorState.getCurrentContent();
     const rawContentState = convertToRaw(contentState);
@@ -88,6 +87,7 @@ export const Create = () => {
       body: stateToHTML(editorState.getCurrentContent()),
       view: 0,
       favCount: 0,
+      newsFromSchool: category!="News From School",
       desc: rawContentState.blocks[0].text,
       commentsId: [],
       publishDate: Timestamp.now(),
@@ -140,7 +140,7 @@ export const Create = () => {
               <DropDownListComponent 
               onChange={(event) => setCategory(event.target.value)} 
               placeholder="Categories"
-              dataSource={categories} 
+              dataSource={[...categories, "News From School"]} 
               fields={{value:"EmployeeID", text:"FirstName"}}></DropDownListComponent>
             </div>
             <Editor placeholder="Content" editorState={editorState} onEditorStateChange={onEditorStatChange}/>

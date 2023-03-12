@@ -51,6 +51,12 @@
     h1 {
       padding: 0 80px;   
     }
+    .categoryTitle{
+      padding: 0 125spx;
+      padding-top: 20px;
+      width: max-content;
+      font-size: xx-large;
+    }
   }
   @media (max-width: 768px) {
     h1 {

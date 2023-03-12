@@ -23,7 +23,7 @@ export class userPage extends Component {
       currnetUser: {},
       userPosts:[],
       lastPost:{},
-      pageSize: 6
+      pageSize: 3
     }
     this.setBlog = this.setBlog.bind(this);
   }
@@ -42,7 +42,7 @@ export class userPage extends Component {
 
           //Pass the data to states.
           this.setState({
-            userPosts: posts, 
+            userPosts: posts.reverse(), 
             lastPost: lastPost,
             currnetUser:docSnap.data()})
         } 
@@ -56,6 +56,8 @@ export class userPage extends Component {
       this.state.currnetUser.posts,
       this.state.pageSize,
       null)
+
+
 
     this.setState({userPosts: posts, lastPost: lastPost})
 }

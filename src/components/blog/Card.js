@@ -6,10 +6,6 @@ import { GrView } from "react-icons/gr"
 import { Link } from "react-router-dom"
 import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"
 
-//--DATABASE--
-import { db } from "../../firebase-config";
-import { getDoc, doc, updateDoc, arrayRemove } from "firebase/firestore";
-
 //--API--
 import { bookmarkPost, removeBookmarkPost } from "../../Api/bookmarkController"
 
@@ -63,7 +59,7 @@ export const Card = (props) => {
                 }
               </div>
             </div>
-            <Link to={`/details/${item.id}`} className='link'>
+            <a href={`/details/${item.id}`} className='link'>
               <div className='img'>
                 <img src={item.imageCover} alt={`${item.title}.`} />
               </div>
@@ -84,11 +80,14 @@ export const Card = (props) => {
                     <FaRegUser className='icon' /> <label htmlFor=''>{item.author}</label>
                   </Link>
                   <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.date}</label>
-                  {/* <GrView style={{ color: "white" }} className='icon' /> <label htmlFor=''>{item.view}</label> */}
+                  {user != null && user.role === "admin" ?
+                    <>
+                      <GrView style={{ color: "white" }} className='icon' /> <label htmlFor=''>{item.view}</label>
+                    </> : null}
 
                 </div>
               </div>
-            </Link>
+            </a>
           </div>
         ))
         }

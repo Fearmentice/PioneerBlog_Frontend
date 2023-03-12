@@ -3,7 +3,6 @@ import { Component } from "react"
 import './boarding.css'
 import { Card } from "../../components/blog/Card"
 import { Category } from "../../components/category/Category"
-import { DownOutlined } from '@ant-design/icons';
 import { db } from "../../firebase-config";
 import {collection, getDocs, query, where, orderBy, limit} from "firebase/firestore";
 import { MetaTags } from "react-meta-tags"
@@ -98,13 +97,13 @@ class Boarding extends Component{
     const categories = ['Technology', 'Culture', 'History', 'World', 'Health', 'Sport', 'News'];
     let _popularPosts = [...this.state.popularWritings];
 
-    categories.forEach( async(category) => {
-    const queryRef = query(blogpostsRef, where("active", "==", true), where("category", "==", `${category}`) ,orderBy('view', 'asc') , limit(1));
+    
+    const queryRef = query(blogpostsRef, where("active", "==", true), where("category", "==", `News From School`) ,orderBy('view', 'asc') , limit(3));
     const docSnap = await getDocs(queryRef);
     docSnap.forEach((doc) => {
       _popularPosts.push({...doc.data(), id:doc.id });
     })
-  })
+  
 
     this.setState({popularWritings: _popularPosts})
 }

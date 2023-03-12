@@ -78,8 +78,7 @@ export const Header = () => {
   }
 
   const detectMob = () => {
-    console.log(window.innerHeight <= 768)
-    return window.innerHeight <= 768
+    return window.innerWidth <= 768
   }
 
   return (
@@ -105,10 +104,10 @@ export const Header = () => {
                         <DownOutlined style={{marginLeft:5}} />
                     </a>
                 </Dropdown>
-              <li style={{paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[1].id}>
-                  <Link to={nav[1].url}>
-                    {nav[1].text}
-                  </Link>
+                <li style={{paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[0].id}>
+                  <a href={nav[6].url}>
+                    {nav[6].text}
+                  </a>
               </li>
             </ul>
           </nav>

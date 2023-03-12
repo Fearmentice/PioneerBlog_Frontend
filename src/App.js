@@ -22,6 +22,7 @@ import { useEffect } from "react"
 import { HelmetProvider } from "react-helmet-async"
 import Boarding from "./pages/boarding/Boarding"
 import { TagPage } from "./pages/tag/TagPage"
+import forgotPassword from './pages/forgotPasswordPage/forgotPassword'
 
 
 
@@ -65,6 +66,7 @@ const App = () => {
               <Route exact path='/about' component={About} />
               <Route exact path='/Impressum' component={TagPage} />
               <Route exact path='/login' component={Login} />
+              <Route exact path='/resetpassword' component={forgotPassword} />
               <Route exact path='/signup' component={SignUp} />
               <PrivateRoute exact path='/admin/blogpost/create' component={Create} />
               <PrivateRoute exact path='/admin/blogpost/edit/:id' component={Edit} />

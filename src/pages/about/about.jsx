@@ -5,6 +5,7 @@ import defaultUserImage from "../../assets/images/defaultUser.jpg"
 import {collection, query, getDocs} from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { MetaTags } from "react-meta-tags";
+import { TagPage } from "../tag/TagPage";
 
 export const About = () => {
   const [allAuthors, setAllAuthors] = useState([]);
@@ -62,6 +63,9 @@ Also, you can support us with your comments to encourage us to do our best.</p>
             <p >Laptop, mobile phone, tablet, briefly everywhere you have access to the internet, is also
 access to our website. You can get adequate information about us and you can also find our
 social media accounts</p>
+          <TagPage/>
+        </div>
+        <div style={{display: "flex", justifyContent: "center"}}>
           <h1>Our Author Team</h1>
         </div>
         <div className="authorCardBox">

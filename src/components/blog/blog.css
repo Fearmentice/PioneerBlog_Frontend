@@ -57,7 +57,7 @@
 .blog .details {
   display: flex;
   flex-direction: column;
-  height: 270px;
+  height: 260px;
   justify-content: flex-start;
 }
 .blog .postInfo {
@@ -119,7 +119,7 @@
   margin-right: 20px;
 }
 
-
+/* Laptop Screen */
 @media (max-width: 1366px) {
   .blog{
     margin: 25px 0;
@@ -128,7 +128,7 @@
   }
   .blog .boxItems {
     transition: 0.5s;
-    height: 475px;
+    height: 525px;
   }
   .blog p {
     font-size: medium;
@@ -148,6 +148,8 @@
     align-self: center;
   }
 }
+
+/* Tablet Screen */
 @media (max-width: 1280px) {
   .blog{
     margin: 0px 0;
@@ -181,6 +183,7 @@
     align-self: center;
   }
 }
+/* Phone Screen */
 @media (max-width: 768px) {
   .blog{
     margin: 0;

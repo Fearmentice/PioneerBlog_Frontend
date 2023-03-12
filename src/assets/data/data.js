@@ -19,11 +19,6 @@ export const nav = [
     url: "/History",
   },
   {
-    id: 4,
-    text: "World",
-    url: "/World",
-  },
-  {
     id: 5,
     text: "Health",
     url: "/Health",
@@ -42,11 +37,6 @@ export const nav = [
     id: 8,
     text: "About",
     url: "/About",
-  },
-  {
-    id: 9,
-    text: "Impressum",
-    url: "/Impressum",
   },
 ]
 export const categories = ['Technology', 'History', 'World', 'Health', 'Sport', 'News']

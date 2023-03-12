@@ -2,6 +2,10 @@ import React, {Component} from "react"
 import "./signUp.css"
 import { connect } from "react-redux";
 import { login } from "../../actions/authAction";
+
+//--Component--
+import { Verify } from "../../components/verify/Verify";
+
 //--DATABASE--
 import { db } from "../../firebase-config";
 import {collection, query, getDocs, addDoc, doc, Timestamp, where, updateDoc} from "firebase/firestore";
@@ -171,6 +175,7 @@ render(){
   const { isAuthenticated } = this.props;
   if (isAuthenticated) 
       window.location.replace('/');
+  if(localStorage.getItem("jwtToken")) return window.location.replace('/');
   return (  
    <>
    <meta name="description" content="You can sign up pur page from here!!! Through sign up you can share us what you think."/>
@@ -186,12 +191,8 @@ render(){
               <b >Upload Image</b>
             </div>
             {this.state.verify === true ?
-            <div className='right'>
-              <label htmlFor=''>Verify Account</label>
-              <p>* Please provide the code that we have sent your email.</p>
-              <input value={this.state.verifyInput} type='text' onChange={this.handleChange} name="verifyInput"/>
-              <button style={{color:"white"}} onClick={() => this.verifyAccount()} className='button'>Verify</button>
-            </div>
+            <Verify 
+            handleChange={this.handleChange} verifyInput={this.state.verifyInput} verifyAccount={this.verifyAccount}/>
             :
             <div className='right'>
               <label htmlFor=''>Username</label>

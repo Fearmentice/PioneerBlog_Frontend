@@ -138,11 +138,12 @@ header.active {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     width: max-content;
+    
   }
   .loginSignup li{
-    height: 10px;
+    height: 20px;
+    
   }
   .dropdown{
     align-self: flex-end;
@@ -154,7 +155,7 @@ header.active {
     width: 30px;
   }
   .categoriesTitle{
-    margin-bottom: 3px;
+    margin-bottom: 2px;
   }
   .account{
     flex-direction: row;

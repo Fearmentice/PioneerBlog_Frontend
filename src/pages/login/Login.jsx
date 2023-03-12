@@ -3,10 +3,14 @@ import { connect } from "react-redux";
 import { login } from "../../actions/authAction";
 import "./login.css"
 import back from "../../assets/images/my-account.jpg"
+import bcrypt from 'bcryptjs'
+
+//--Components--
+import { Verify } from "../../components/verify/Verify";
 
 //--DATABASE--
 import { db } from "../../firebase-config";
-import {collection, query, getDocs, doc, Timestamp, where, updateDoc} from "firebase/firestore";
+import {collection, query, getDocs, doc, Timestamp, where, updateDoc, getDoc} from "firebase/firestore";
 //--Email--
 import emailjs from '@emailjs/browser';
 
@@ -21,6 +25,7 @@ class Login extends Component {
       verifyInput: '',
       userID: '',
       verifyCode: '',
+      forgotPasswordPage: true,
       givenSet: 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789',
     }
 
@@ -43,9 +48,14 @@ handleChange = e => {
   const usersRef = collection(db, 'users');
   const docRef = query(usersRef, where("email", "==", email));
   const userDocSnap = await getDocs(docRef);
+  
+  if(!userDocSnap.docs[0]) return window.location.replace('/login');
+
   const userId = userDocSnap.docs[0].id;
 
-  const authorRef = doc(db, "users", userId);
+  const userRef = doc(db, "users", userId);
+  const userData = (await getDoc(userRef)).data();
+
 
   const verifyCode = await this.createVerifyCode();
   const expiresIn = 172800
@@ -59,15 +69,21 @@ handleChange = e => {
     },
   }
 
+  await bcrypt.compare(this.state.password, userData.password, function (err, result) {
+    if(!result){
+      window.location.replace('/login')
+    }
+});
+
   if(expiresAt.toMillis() < Timestamp.now().toMillis()) return;
 
-  await updateDoc(authorRef, verifyData);
+  await updateDoc(userRef, verifyData);
 
   const templateParams = {
     verify_code: verifyCode,
     to_email: this.state.email
   }
-  //emailjs.send('service_4yjjimo', 'template_qdi58fo', templateParams, 'Omls_WJx1Lqdajbcu')
+  emailjs.send('service_4yjjimo', 'template_qdi58fo', templateParams, 'Omls_WJx1Lqdajbcu')
     this.setVerifyCode(verifyData.verifyInfo.code);
     this.setUserId(userId);
     this.setVerifyPage();
@@ -119,7 +135,6 @@ render(){
    const { isAuthenticated } = this.props;
    if (isAuthenticated) 
        window.location.replace('/');
-  if(localStorage.getItem('jwtToken')) return window.location.replace('/');
   return (
     <>
       <section className='login'>
@@ -138,17 +153,12 @@ render(){
             <input placeholder="Email" type='text'  onChange={this.handleChange} name={"email"} required />
             <span>Password *</span>
             <input placeholder="Password" type='password' onChange={this.handleChange} name={"password"} required />
+            <a style={{color: "#459cf5", alignSelf:"flex-start", marginBottom: 20}} href="/resetpassword" >Forgot password ?</a>
             <button style={{color:"white"}} className='button' >Log in</button>
             <a style={{color: "#459cf5", marginTop: 20}} href="/signup">Dont have an account ?</a>
           </form>
           :
-          <form onSubmit={this.verifyAccount}>
-            <span>Verify *</span>
-            <p>* Please provide the code that we have sent your email.</p>
-            <br/>
-            <input type='text' value={this.state.verifyInput}  onChange={this.handleChange} name={"verifyInput"} required />
-            <button style={{color:"white"}} className='button' >Verify</button>
-          </form>
+          <Verify handleChange={this.handleChange} verifyInput={this.state.verifyInput} verifyAccount={this.verifyAccount}/>
           }
 
         </div>

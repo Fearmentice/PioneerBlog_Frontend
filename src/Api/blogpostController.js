@@ -28,6 +28,7 @@ export const loadMoreBlogposts = async (loadedPosts, lastPost, idArray, pageSize
 
     //Gets by publish order.
     let queryRef = query(blogpostsRef,
+        where("newsFromSchool", "==", false),
         where("active", "==", true),
         orderBy("publishDate", "desc"),
         startAfter(lastPost ? lastPost : 0),
@@ -43,6 +44,7 @@ export const loadMoreBlogposts = async (loadedPosts, lastPost, idArray, pageSize
     }
     if (category != null) {
         queryRef = query(blogpostsRef,
+            where("newsFromSchool", "==", false),
             where("active", "==", true),
             orderBy("publishDate", "desc"),
             where("category", "==", `${category}`),
@@ -73,6 +75,7 @@ export const fetchPosts = async (sortBy, sortMethod, pageSize, category) => {
     let _posts = [];
     //Query.
     let queryRef = query(blogpostsRef,
+        where("newsFromSchool", "==", false),
         where("active", "==", true),
         orderBy(sortBy, `${sortMethod}`),
         limit(pageSize));

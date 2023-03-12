@@ -124,7 +124,7 @@ class Home extends Component{
     //If category is not match with current categories.
     if(!catFound){
       console.log(category)
-      if(category == "Latest"){
+      if(category === "Latest"){
         this.setCategory("");
         this.getCategory();
       }else{

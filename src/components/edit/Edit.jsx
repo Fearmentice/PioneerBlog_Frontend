@@ -162,7 +162,7 @@ const getAllAuthors = async() => {
               value={category}
               onChange={(event) => setCategory(event.target.value)} 
               placeholder="Categories"
-              dataSource={categories} 
+              dataSource={[...categories, "News From School"]} 
               fields={{value:"EmployeeID", text:"FirstName"}}></DropDownListComponent>
             </div>
             <Editor placeholder="Content" editorState={editorState} onEditorStateChange={onEditorStatChange}/>
