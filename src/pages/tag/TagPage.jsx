@@ -12,6 +12,7 @@ import healthEditor from '../../assets/images/Tag/OmerLutfiTopaloglu.jpg'
 import sportEditor from '../../assets/images/Tag/MuhammedErenDuran.jpg'
 import designer1 from '../../assets/images/Tag/HuseyinBilal.jpeg'
 import designer2 from '../../assets/images/Tag/SefaOzyurt.jpeg'
+import designer3 from '../../assets/images/Tag/ÖmerFarukMaraşli.jpg'
 
 const authors = [
     {
@@ -81,6 +82,10 @@ export const TagPage = () => {
                 <h2>Graphic Design</h2>
 
                 <div className="Management">
+                    <div className="personCard">
+                        <img src={designer3} alt=''/>
+                        <h3>Ömer Faruk Maraşlı</h3>
+                    </div>
                     <div className="personCard">
                         <img src={designer2} alt=''/>
                         <h3>Sefa Özyurt</h3>

@@ -87,7 +87,7 @@ export const Create = () => {
       body: stateToHTML(editorState.getCurrentContent()),
       view: 0,
       favCount: 0,
-      newsFromSchool: category!="News From School",
+      newsFromSchool: category=="News From School",
       desc: rawContentState.blocks[0].text,
       commentsId: [],
       publishDate: Timestamp.now(),

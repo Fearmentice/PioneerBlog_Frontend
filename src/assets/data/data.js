@@ -30,16 +30,21 @@ export const nav = [
   },
   {
     id: 7,
+    text: "Travel",
+    url: "/Travel",
+  },
+  {
+    id: 8,
     text: "News",
     url: "/News",
   },
   {
-    id: 8,
+    id: 9,
     text: "About",
     url: "/About",
   },
 ]
-export const categories = ['Technology', 'History', 'World', 'Health', 'Sport', 'News']
+export const categories = ['Technology', 'History', 'World', 'Health', 'Sport', 'Travel', 'News']
 
 export const roles = ['editor', '']
 

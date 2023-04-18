@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react"
+import React, { useState, createContext, StrictMode } from "react"
 import './index.css'
 import { Footer } from "./components/footer/Footer"
 import { Header } from "./components/header/Header"
@@ -55,36 +55,38 @@ const App = () => {
   }
   const helmetContext = {};
   return (
-    <HelmetProvider context={helmetContext}>
-      <ThemeContext.Provider value={{ theme, toggleTheme }}>
-        <div className="App" id={theme === true ? 'light' : 'dark'}>
-          <Router>
-            <Header />
-            <Switch>
-              <Route exact path='/' component={Boarding} />
-              <Route exact path='/Home' component={Boarding} />
-              <Route exact path='/about' component={About} />
-              <Route exact path='/Impressum' component={TagPage} />
-              <Route exact path='/login' component={Login} />
-              <Route exact path='/resetpassword' component={forgotPassword} />
-              <Route exact path='/signup' component={SignUp} />
-              <PrivateRoute exact path='/admin/blogpost/create' component={Create} />
-              <PrivateRoute exact path='/admin/blogpost/edit/:id' component={Edit} />
-              <PrivateRoute exact path='/admin/author/create' component={createAuthor} />
-              <PrivateRoute exact path='/admin/author/edit' component={editAuthor} />
-              <Route exact path='/myaccount' component={Account} />
-              <Route exact path='/myBookmarks' component={bookmarks} />
-              <Route exact path='/authors/:id' component={userPage} />
-              <Route exact path='/details/:id' component={DetailsPages} />
-              <Route exact path='/contact' component={Contact} />
-              <Route exact path='/:category' component={Home} />
-              <Route exact path='*' component={PageNotFound} />
-            </Switch>
-            <Footer />
-          </Router>
-        </div>
-      </ThemeContext.Provider >
-    </HelmetProvider>
+    <React.StrictMode>
+      <HelmetProvider context={helmetContext}>
+        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+          <div className="App" id={theme === true ? 'light' : 'dark'}>
+            <Router>
+              <Header />
+              <Switch>
+                <Route exact path='/' component={Boarding} />
+                <Route exact path='/Home' component={Boarding} />
+                <Route exact path='/about' component={About} />
+                <Route exact path='/Impressum' component={TagPage} />
+                <Route exact path='/login' component={Login} />
+                <Route exact path='/resetpassword' component={forgotPassword} />
+                <Route exact path='/signup' component={SignUp} />
+                <PrivateRoute exact path='/admin/blogpost/create' component={Create} />
+                <PrivateRoute exact path='/admin/blogpost/edit/:id' component={Edit} />
+                <PrivateRoute exact path='/admin/author/create' component={createAuthor} />
+                <PrivateRoute exact path='/admin/author/edit' component={editAuthor} />
+                <Route exact path='/myaccount' component={Account} />
+                <Route exact path='/myBookmarks' component={bookmarks} />
+                <Route exact path='/authors/:id' component={userPage} />
+                <Route exact path='/details/:id' component={DetailsPages} />
+                <Route exact path='/contact' component={Contact} />
+                <Route exact path='/:category' component={Home} />
+                <Route exact path='*' component={PageNotFound} />
+              </Switch>
+              <Footer />
+            </Router>
+          </div>
+        </ThemeContext.Provider >
+      </HelmetProvider>
+    </React.StrictMode>
   )
 }
 export default App

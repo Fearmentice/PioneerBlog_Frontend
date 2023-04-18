@@ -39,7 +39,7 @@ color: #fff;
 a {
   font-size: 17px;
 }
-#dark a{
+ #dark a{
   color: #000;
 }
 #light a{
@@ -73,7 +73,7 @@ textarea {
   align-items: center;
 }
 p {
-  color: #5a5a5a;
+  /* color: #5a5a5a; */
   font-size: 15px;
 }
 #dark p{

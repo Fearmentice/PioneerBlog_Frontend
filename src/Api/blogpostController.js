@@ -37,14 +37,14 @@ export const loadMoreBlogposts = async (loadedPosts, lastPost, idArray, pageSize
     //Gets by passing id Array.
     if (idArray != null) {
         queryRef = query(blogpostsRef,
-            where("active", "==", true),
+
             where(documentId(), "in", idArray),
             startAfter(lastPost ? lastPost : 0),
             limit(pageSize));
     }
     if (category != null) {
         queryRef = query(blogpostsRef,
-            where("newsFromSchool", "==", false),
+
             where("active", "==", true),
             orderBy("publishDate", "desc"),
             where("category", "==", `${category}`),
