@@ -1,24 +1,51 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
 * {
   padding: 0;
-  margin: 0;
+  margin: 0; 
   box-sizing: border-box;
 }
 body {
   font-family: "Poppins", sans-serif;
-  background-color: #f9f9f9;
-  color: #000;
 }
-h1,
+#dark  {
+  background-color: #0f0f0f;
+  color: #fff;
+}
+#light {
+  background-color: #fff;
+  color: #000; 
+}
+
+h1
 h2 {
   font-weight: 600;
 }
+#dark h2{
+  color: #000;
+}
+#light h2{
+  color: #fff;
+}
+
 h3 {
   font-weight: 500;
+}
+#dark h4 {
+  color: #000;
+}
+#light h4{
+color: #fff;
 }
 a {
   font-size: 17px;
 }
+#dark a{
+  color: #000;
+}
+#light a{
+  color: #fff;
+}
+
 ul,
 li,
 a,
@@ -48,6 +75,12 @@ textarea {
 p {
   color: #5a5a5a;
   font-size: 15px;
+}
+#dark p{
+  color: #000;
+}
+#light p{
+  color: #fff;
 }
 label {
   color: #999;
@@ -117,10 +150,10 @@ footer .icon {
   font-size: 20px;
   margin-left: 10px;
 }
-@media screen and (max-width: 768px) {
+ @media (max-width: 768px) {
   .grid3,
   .grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
   }
 }
 .link {

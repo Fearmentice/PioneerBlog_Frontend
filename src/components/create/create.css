@@ -1,3 +1,4 @@
+ @import url("https://cdn.syncfusion.com/ej2/material.css");
 .newPost {
   margin: 60px 0;
 }
@@ -39,4 +40,5 @@
   height: 300px;
   z-index: 1;
   border-radius: 5px;
+  margin-bottom: 10px;
 }

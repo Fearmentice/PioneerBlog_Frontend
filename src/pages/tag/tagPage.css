@@ -1,0 +1,55 @@
+.tagPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.tagPage .Management {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tagPage .personCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    margin: 20px;
+}
+
+.tagPage .authorCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    margin: 5px;
+}
+
+
+.tagPage img {
+    width: 300px;
+    height: 300px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .tagPage img {
+        width: 150px;
+        height: 150px;
+    }
+    .tagPage .personCard h3 {
+        font-size: medium;
+    }
+    .tagPage .personCard h4 {
+        font-size: smaller;
+    }
+    .tagPage .container .grid2 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

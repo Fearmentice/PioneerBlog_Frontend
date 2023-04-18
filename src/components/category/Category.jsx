@@ -1,25 +1,18 @@
-import React, {useCallback, useEffect, useState} from "react"
+import React from "react"
 import "./category.css"
-import { category } from "../../assets/data/data"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import Slider from "react-slick"
 import { GrFormPrevious } from "react-icons/gr"
 import { MdNavigateNext } from "react-icons/md"
-import { Card } from "../blog/Card"
-import { currentCategory } from "../../assets/data/data"
-import { RiWindyFill } from "react-icons/ri"
-import { Link, useHistory } from "react-router-dom"
-import axios from "axios"
-import { popperUnstyledClasses } from "@mui/base"
-import { flexbox } from "@mui/system"
+import { Link } from "react-router-dom"
 
 const SampleNextArrow = (props) => {
   const { onClick } = props
   return (
     <div className='control-btn' onClick={onClick}>
       <button className='next'>
-        <MdNavigateNext className='icon' />
+        <MdNavigateNext color="#000" className="" />
       </button>
     </div>
   )
@@ -29,7 +22,7 @@ const SamplePrevArrow = (props) => {
   return (
     <div className='control-btn' onClick={onClick}>
       <button className='prev'>
-        <GrFormPrevious className='icon' />
+        <GrFormPrevious className="icon"/>
       </button>
     </div>
   )
@@ -38,77 +31,48 @@ const SamplePrevArrow = (props) => {
 
 export const Category = (props) => {
 
-  const [popularWritings, setPopularWritings] = useState([]);
-
-  useEffect(() => {
-    getCategory("Culture");
-    getCategory("Technology");
-    getCategory("World");
-    getCategory("Sport");
-    getCategory("History");
-    getCategory("News");
-    getCategory("Health");
-    // console.log(popularWritings.length);
-    //setPopularWritings([...popularWritings, {name:"Talha", surname:"Şahin"}])
-    console.log(popularWritings);
-  }, [popularWritings]);
-
-  const getCategory = async(_Category) => {
-    const query = "limit=1&sort=-views";
-    await axios.get(`https://pioneerblog-api.onrender.com/blogposts/category/${_Category}?${query}`).then(_response =>{
-    console.log(_response)
-    const _Response = _response.data.doc[0];
-    if(_Response){
-      popularWritings.push(_Response);
-    }
-  })
-   .catch(error => {
-     console.log(error)
-   });
-   //setPopularWritings([...popularWritings, _Response]);
-  }
-
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
-    speed: 500,
+    speed: 750,
     slidesToShow: 3,
-    slidesToScroll: 2,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
     responsive: [
       {
-        breakpoint: 800,
+        breakpoint: 768,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToShow: 1,
+          slidesToScroll: 1,
         },
       },
     ],
   }
 
-  const navigateToCategory = (_category) => {
-    useHistory().push(`/${_category}`);
-  }
 
 
   return (
     <>
       <section className='category'>
         <div className='content'>
-          <h1 style={{marginBottom:20}}>Popular Writings</h1>
+          <h2 >{props.title}</h2>
           <Slider {...settings}>
-            {popularWritings.map((item) => (
+            {props.popularWritings.map((item) => (
               <div className='boxs'>
-                <Link to={`/details/${item._id}`}>
+                <Link to={`/details/${item.id}`}>
                   <div className='box' onClick={() => props.setChanged(item.category)} key={item.id} >
-                      <img src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover} alt='' />
+                    <div className="imgContainer">
+                      <img src={item.imageCover} alt={`${item.title}`} />
+                      </div>
                       <div className='overlay'>
                         <div className="titleBox" >
-                          <h4>{item.title}</h4>
+                          <h4 style={{ color: '#fdf77e'}}>{item.title.length >= 40 ? `${item.title.slice(0, 37)}...` : item.title}</h4>
                         </div>
                         <div className="descBox">
-                          <p>{item.desc.slice(0,100)}</p>
+                          <p style={{color:"white"}}>{item.desc.slice(0,100).replace('&nbsp;', ' ')}</p>
                         </div>
                         <Link to={`/${item.category}`}>
                           <div className="categoryButton">

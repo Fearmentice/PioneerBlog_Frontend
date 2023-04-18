@@ -1,76 +1,180 @@
-import React, {useState, useEffect, useCallback} from "react"
-import { useHistory } from "react-router-dom";
+import React, {Component} from "react"
+import { connect } from "react-redux";
+import { login } from "../../actions/authAction";
 import "./login.css"
 import back from "../../assets/images/my-account.jpg"
-import axios from "axios"
-import { Alert } from "@mui/material";
-import AlertTitle from '@mui/material/AlertTitle';
+import bcrypt from 'bcryptjs'
 
-export const Login = (props) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+//--Components--
+import { Verify } from "../../components/verify/Verify";
 
-  const [success, setSuccess] = useState(Boolean);
+//--DATABASE--
+import { db } from "../../firebase-config";
+import {collection, query, getDocs, doc, Timestamp, where, updateDoc, getDoc} from "firebase/firestore";
+//--Email--
+import emailjs from '@emailjs/browser';
 
- const loginRequest = async() => {
-  let _Response;
-  const self = this;
-  await axios.post('https://pioneerblog-api.onrender.com/users/login', {email: email, password: password}).then(_response =>{
-    console.log(_response)
-    _Response = _response.data; 
-  })
-   .catch(error => {
-     console.log(error);
-     _Response = "error";
-   });
-   if(_Response != "error" && _Response.status == "success"){
-    props.setIsLoggedIn(true);
-    alert("Success");
-   }else{
-    alert("Email or Password is not correct!");
-   }
- }
+class Login extends Component {
+  constructor(props){
+    super(props)
 
- const createSuccessAlert = () => {
-  if(success){
-    return (
-      <Alert style={{marginBottom: 25}} severity="success">
-        <AlertTitle>Success</AlertTitle>
-        This is a success alert — <strong>check it out!</strong>
-      </Alert>
-    )
+    this.state = {
+      email: '',
+      password: '',
+      verifyPage: false,
+      verifyInput: '',
+      userID: '',
+      verifyCode: '',
+      forgotPasswordPage: true,
+      givenSet: 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789',
+    }
+
+    this.setVerifyPage = this.setVerifyPage.bind(this);
+    this.setVerifyCode = this.setVerifyCode.bind(this);
+    this.setUserId = this.setUserId.bind(this);
   }
- }
 
- const handleSubmit = event => {
-  // 👇️ prevent page refresh
-  event.preventDefault();
+handleChange = e => {
+  this.setState({
+      [e.target.name]: e.target.value
+  });
+}
 
-  console.log('form submitted ✅');
-};
+ handleSubmit = async(e) => {
+  e.preventDefault();
+  const { email } = this.state;
 
+  //Blogpost ref.
+  const usersRef = collection(db, 'users');
+  const docRef = query(usersRef, where("email", "==", email));
+  const userDocSnap = await getDocs(docRef);
+  
+  if(!userDocSnap.docs[0]) return window.location.replace('/login');
+
+  const userId = userDocSnap.docs[0].id;
+
+  const userRef = doc(db, "users", userId);
+  const userData = (await getDoc(userRef)).data();
+
+
+  const verifyCode = await this.createVerifyCode();
+  const expiresIn = 172800
+  const createdAt = Timestamp.now().toDate()
+  createdAt.setSeconds(createdAt.getSeconds() + expiresIn);
+  const expiresAt = Timestamp.fromDate(createdAt);
+  const verifyData = {
+    verifyInfo: {
+      code: verifyCode,
+      expiresAt: expiresAt,
+    },
+  }
+
+  await bcrypt.compare(this.state.password, userData.password, function (err, result) {
+    if(!result){
+      window.location.replace('/login')
+    }
+});
+
+  if(expiresAt.toMillis() < Timestamp.now().toMillis()) return;
+
+  await updateDoc(userRef, verifyData);
+
+  const templateParams = {
+    verify_code: verifyCode,
+    to_email: this.state.email
+  }
+  emailjs.send('service_4yjjimo', 'template_qdi58fo', templateParams, 'Omls_WJx1Lqdajbcu')
+    this.setVerifyCode(verifyData.verifyInfo.code);
+    this.setUserId(userId);
+    this.setVerifyPage();
+}
+
+createVerifyCode = async() => {
+  let code = "";
+  for(let i=0; i<5; i++) {
+    let pos = Math.floor(Math.random()*this.state.givenSet.length);
+    code += this.state.givenSet[pos];
+  }
+  this.setVerifyCode(code);
+  return code;
+}
+
+setVerifyPage = () => {
+  this.setState({verifyPage: true});
+}
+
+setVerifyCode = (_verifyCode) => {
+  this.setState({verifyCode: _verifyCode});
+}
+
+setUserId = (_id) => {
+  this.setState({userID: _id});
+}
+
+
+verifyAccount = async(e) => {
+  e.preventDefault();
+  const { dispatch } = this.props;
+
+  if(this.state.verifyCode === this.state.verifyInput){
+
+    const updateRef = doc(db, "users", `${this.state.userID}`);
+    const data = {
+      isVerified: true,
+      verifyInfo: null,
+    }
+    await updateDoc(updateRef, data);
+
+    setTimeout(() => {
+      dispatch(login(this.state.email, this.state.password));
+    }, 1000);
+  }
+}
+
+render(){
+   const { isAuthenticated } = this.props;
+   if (isAuthenticated) 
+       window.location.replace('/');
   return (
     <>
       <section className='login'>
         <div className='container'>
           <div className='backImg'>
-            <img src={back} alt='' />
+            <img src={back} alt='Login page background.' />
             <div className='text'>
               <h3>Login</h3>
-              <h1>My account</h1>
+              <h1 style={{color:'white'}}>My account</h1>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <span>Username or email address *</span>
-            <input type='text' onChange={(event) => setEmail(event.target.value)} value={email} required />
+          {this.state.verifyPage === false ?
+            <form onSubmit={this.handleSubmit}>
+            <span>Email address *</span>
+            <input placeholder="Email" type='text'  onChange={this.handleChange} name={"email"} required />
             <span>Password *</span>
-            <input type='password' onChange={(event) => setPassword(event.target.value)} value={password} required />
-            <button className='button' onClick={() => {loginRequest()}}>Log in</button>
+            <input placeholder="Password" type='password' onChange={this.handleChange} name={"password"} required />
+            <a style={{color: "#459cf5", alignSelf:"flex-start", marginBottom: 20}} href="/resetpassword" >Forgot password ?</a>
+            <button style={{color:"white"}} className='button' >Log in</button>
+            <a style={{color: "#459cf5", marginTop: 20}} href="/signup">Dont have an account ?</a>
           </form>
+          :
+          <Verify handleChange={this.handleChange} verifyInput={this.state.verifyInput} verifyAccount={this.verifyAccount}/>
+          }
 
         </div>
       </section>
     </>
   )
 }
+}
+
+const mapStateToProps = state => {
+  const { isAuthenticated, error, errorMessage, user } = state.auth;
+  return {
+      isAuthenticated,
+      error,
+      errorMessage,
+      user
+  }
+}
+export default connect(mapStateToProps)(Login);

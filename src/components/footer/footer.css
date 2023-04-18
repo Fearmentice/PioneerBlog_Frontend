@@ -1,0 +1,14 @@
+#light .boxItems{
+    background-color: #0f0f0f;
+    border-color: #171717;
+  }
+  #dark .boxItems{
+    background-color: #fff;
+    
+  }
+  #light .icon path{
+    color: #fff;
+  }
+  #dark .icon path{
+    color: #000;
+  }

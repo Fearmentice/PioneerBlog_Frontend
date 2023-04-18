@@ -1,0 +1,24 @@
+.accountInfo h1 {
+    margin: 0px;
+    padding: 0px;
+}
+
+#light  label{
+    color: #fff;
+  }
+#dark label{
+    color: #000; 
+  }
+
+#light  b{
+    color: #fff;
+}
+#dark b{
+    color: #000; 
+}
+#light  input{
+    color: #fff;
+}
+#dark input{
+    color: #000; 
+}

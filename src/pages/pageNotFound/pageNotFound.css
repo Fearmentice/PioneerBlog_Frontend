@@ -1,0 +1,15 @@
+.page .notFound {
+    background-color: #0f0f0f;
+    font-size: 40px;    
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#light .notFound{
+    background-color: #0f0f0f;
+}
+#dark .notFound{
+    background-color: #fff;
+}   

@@ -1,51 +1,98 @@
-import React, { Component, useCallback } from "react"
+import React, { useState, useEffect } from "react"
 import "./blog.css"
-import { AiOutlineTags, AiOutlineClockCircle, AiOutlineComment, AiOutlineShareAlt } from "react-icons/ai"
+import { AiOutlineTags, AiOutlineClockCircle } from "react-icons/ai"
 import { FaRegUser } from "react-icons/fa"
 import { GrView } from "react-icons/gr"
-import { Link, useParams } from "react-router-dom"
-import axios from "axios"
-import { Category } from "../category/Category"
-import { category, currentCategory } from "../../assets/data/data"
+import { Link } from "react-router-dom"
+import { BsBookmark, BsFillBookmarkFill } from "react-icons/bs"
+
+//--API--
+import { bookmarkPost, removeBookmarkPost } from "../../Api/bookmarkController"
+
+//--HELPERS--
+import { getAuth } from '../../helpers/getAuthorizationToken'
 
 
-export class Card extends Component {
+export const Card = (props) => {
+  const [user, setUser] = useState({});
+  const [posts, setPosts] = useState(props.posts);
 
-  constructor(props) {
-    super(props)
+  useEffect(() => {
+    //Gets the logged in user data if there is.
+    const userInfo = async () => {
+      const _user = await getAuth();
+      setUser(_user);
+    }
+    userInfo();
+  }, [])
+
+  useEffect(() => {
+    setPosts(props.posts)
+  }, [props.posts])
+
+
+  const callBookmarkPost = async (_id) => {
+    await bookmarkPost(_id, user);
+    const _posts = [...posts];
+    _posts.find(x => x.id === _id).favCount++;
+    setPosts(_posts)
   }
 
+  const callRemoveBookmarkPost = async (_id) => {
+    await removeBookmarkPost(_id, user);
+    const _posts = [...posts];
+    _posts.find(x => x.id === _id).favCount--;
+    setPosts(_posts)
+  }
 
-
-
-  render() {
-    return (
-      <section className='blog' >
-        <div className='container grid3'>
-          {this.props.posts.map((item) => (
-            <Link to={`/details/${item._id}`} className='link'>
-              <div className='box boxItems' key={item._id}>
-                <div className='img'>
-                  <img src={`https://pioneerblog-api.onrender.com/blogposts/image/` + item.imageCover} alt='' />
+  return (
+    <section className='blog' >
+      <div className='container grid3'>
+        {posts.map((item) => (
+          <div className='box boxItems' key={item.id}>
+            <div className="bookmark">
+              <div className="bookmarkContent">
+                {user !== null && user.bookmarkedPosts !== undefined && user.bookmarkedPosts.includes(item.id) ?
+                  <BsFillBookmarkFill onClick={() => callRemoveBookmarkPost(item.id)} className="icon" />
+                  :
+                  <BsBookmark onClick={() => callBookmarkPost(item.id)} className="icon" />
+                }
+              </div>
+            </div>
+            <a href={`/details/${item.id}`} className='link'>
+              <div className='img'>
+                <img src={item.imageCover} alt={`${item.title}.`} />
+              </div>
+              <div className='details'>
+                <div className='tag'>
+                  <AiOutlineTags className='icon' />
+                  <a href='/'>#{item.category}</a>
                 </div>
-                <div className='details'>
-                  <div className='tag'>
-                    <AiOutlineTags className='icon' />
-                    <a href='/'>#{item.category}</a>
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p>{item.desc.slice(0, 120)}...</p>
-                  <div className='date'>
-                    <FaRegUser style={{ marginBottom: 5 }} className='icon' /> <label htmlFor=''>{item.author}</label>
-                    <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.dateString}</label>
-                    <GrView className='icon' /> <label htmlFor=''>{item.views}</label>
-                  </div>
+                <h3>{item.title.length >= 37 ? `${item.title.slice(0, 35)}...` : item.title}</h3>
+                <div style={{ margin: 0 }}>
+                  <p style={{ marginBottom: 0 }}>{item.desc.slice(0, 130)}...</p>
+                  <p style={{ margin: 0, marginTop: 5, color: 'grey', fontSize: "smaller" }}> Continue Reading</p>
                 </div>
               </div>
-            </Link>
-          ))}
-        </div>
-      </section >
-    )
-  }
+              <div className="postInfo">
+                <div className='date'>
+                  <Link to={`/authors/${item.authorId}`} className="postInfoBoxes">
+                    <FaRegUser className='icon' /> <label htmlFor=''>{item.author}</label>
+                  </Link>
+                  <AiOutlineClockCircle className='icon' /> <label htmlFor=''>{item.date}</label>
+                  {user != null && user.role === "admin" ?
+                    <>
+                      <GrView style={{ color: "white" }} className='icon' /> <label htmlFor=''>{item.view}</label>
+                    </> : null}
+
+                </div>
+              </div>
+            </a>
+          </div>
+        ))
+        }
+      </div >
+    </section >
+  )
 }
+

@@ -1,0 +1,345 @@
+
+.Pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.paginate {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+  }
+  .Pagination a{
+    transition: transform 0.5s;
+    text-transform: capitalize;
+    font-size: large;
+    border-radius: 100px;
+    padding: 10px;
+  }
+  #light .Pagination a {
+    color: #000;
+    background-color: #fff;
+  }
+  #dark .Pagination a{
+    color: #fff;
+    background-color: #000;
+  }
+  .Pagination a:hover{
+    box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+    cursor: pointer;
+    transform: translateY(-5px);
+  }
+
+  #dark .icon{
+    color: black;
+  }
+  #light .icon{
+    color: #fff;
+  }
+  
+.paginate:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  h1 {
+    padding: 0 200px;
+    margin-left: 20px;
+    margin-top: 50px;
+    margin-bottom: 0;
+  }
+  #light h1 {
+    color: #fff;
+  }
+  #dark h1{
+    color: #000;
+  }
+  .popularPosts {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 200px;
+    padding-top: 75px;
+    font-size: large;
+  }
+  .popularPosts h2 {
+    padding: 0 100px;
+  }
+  .popularPosts .content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  .popularPosts .rightOverlay{
+    width: 300px;
+  }
+
+    .popularPosts .rightImages{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .popularPosts .miniImages{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+
+
+    .imgContainer {
+        overflow: hidden;
+    }
+    .leftBox:hover img {
+        transform: scale(1.1); 
+      }
+    .leftBox img {
+        transition: transform .5s ease;
+        width: 770px;
+        height: 434px;
+        object-fit: cover; 
+      }
+    .leftBox::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 770px;
+        height: 443px;
+        background:linear-gradient(rgba(0, 0, 0, 0.35),rgba(0, 0, 0, 1));
+        background-color:rgba(0, 0, 0,0) /*this your primary color*/
+      }
+       .leftBox {
+        cursor: pointer;
+        position: relative;
+      }
+
+      .rightBox:hover img {
+        transform: scale(1.1); 
+      }
+      .rightBox img {
+        transition: transform .5s ease;
+        width: 500px;
+        height: 290px;
+        object-fit: cover; 
+      }
+    .rightBox::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 500px;
+        height: 300px;
+        background:linear-gradient(rgba(0, 0, 0, 0.35),rgba(0, 0, 0, 1));
+        background-color:rgba(0, 0, 0,0) /*this your primary color*/
+      }
+       .rightBox {
+        cursor: pointer;
+        position: relative;
+      }
+
+
+      .miniBox:hover img {
+        transform: scale(1.1); 
+      }
+      .miniBox img {
+        transition: transform .5s ease;
+        width: 250px;
+        height: 136px;
+        object-fit: cover; 
+      }
+    .miniBox::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 145px;
+        background:linear-gradient(rgba(0, 0, 0, 0.35),rgba(0, 0, 0, 1));
+        background-color:rgba(0, 0, 0,0) /*this your primary color*/
+      }
+       .miniBox {
+        cursor: pointer;
+        position: relative;
+      }
+      .miniBox  h4 {
+        font-size:13px;
+        padding: 0  ;
+      }
+      .miniBox p {
+        font-size: 11px;
+      }
+  
+      
+       .overlay {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        justify-content: flex-end;
+        justify-self: flex-end;
+        bottom: 10px;
+        padding: 15px;
+        z-index: 2;
+        color: #fff;
+      }
+       .overlay h4 {
+        font-weight: 500;
+        color: rgb(253, 246, 126);
+      }
+      
+       .overlay p {
+        color: #fff;
+        font-weight: 500;
+        padding: 5px;
+      }
+       .overlay .descBox {
+        text-align: left;
+      }
+      .overlay .titleBox {
+        display: flex;
+        flex-direction: row;
+        margin-left: 3px;
+      }
+  @media (max-width: 1366px) {
+    h1 {
+      padding: 0 80px;   
+    }
+    .popularPosts h2 {
+      padding: 0 20px;
+    }
+
+
+    .miniBox:hover img {
+      transform: scale(1); 
+    }
+    .miniBox img {
+      width: 200px;
+      height: 140px;
+    }
+    .miniBox::after {
+      width: 200px;
+      height: 141px;
+    }
+    .miniBox  h4 {
+      font-size:10px;
+      padding: 0  ;
+    }
+    .miniBox p {
+      font-size: 6px;
+    }
+
+    .rightBox:hover img {
+      transform: scale(1); 
+    }
+    .rightBox img {
+      width: 400px;
+      height: 250px;
+    }
+  .rightBox::after {
+      width: 400px;
+      height: 250px;
+    }
+    .rightBox  h4 {
+      font-size:22px;
+    }
+    .rightBox p {
+      font-size: 8px;
+    }
+
+    .leftBox:hover img {
+      transform: scale(1); 
+    }
+    .leftBox::after {
+        width: 500px;
+        height: 400px;
+      }
+    .leftBox img {
+      width: 500px;
+      height: 400px;
+    }
+    .leftBox .overlay h4 {
+      font-size:22px;
+    }
+    .leftBox p {
+      font-size: 9px;
+    }
+  }
+  @media (max-width: 768px) {
+    h1 {
+      padding: 0;
+      width: 100px;
+      padding-left: 80px;
+      margin: 20px -75px;
+    }
+
+    .popularPosts h2 {
+      padding: 0 20px;
+    }
+
+    .popularPosts {
+      padding: 0px 0px;
+    }
+    .popularPosts .content{
+      flex-direction: column;
+      padding: 0;
+    }
+
+
+
+
+    .miniBox:hover img {
+      transform: scale(1); 
+    }
+    .miniBox img {
+      width: 150px;
+      height: 100px;
+    }
+    .miniBox::after {
+      width: 150px;
+      height: 100px;
+    }
+    .miniBox  h4 {
+      font-size:10px;
+      padding: 0  ;
+    }
+    .miniBox p {
+      font-size: 6px;
+    }
+
+    .rightBox:hover img {
+      transform: scale(1); 
+    }
+    .rightBox img {
+      width: 300px;
+      height: 150px;
+    }
+  .rightBox::after {
+      width: 300px;
+      height: 150px;
+    }
+    .rightBox  h4 {
+      font-size:22px;
+    }
+    .rightBox p {
+      font-size: 8px;
+    }
+
+    .leftBox:hover img {
+      transform: scale(1); 
+    }
+    .leftBox::after {
+        width: 300px;
+        height: 200px;
+      }
+    .leftBox img {
+      width: 300px;
+      height: 200px;
+    }
+    .leftBox .overlay h4 {
+      font-size:22px;
+    }
+    .leftBox p {
+      font-size: 9px;
+    }
+  }

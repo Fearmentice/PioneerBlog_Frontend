@@ -1,18 +1,53 @@
+:root{
+  --primary-bg: #242526;
+  --secondary-bg: #fff;
+  --primary-text-color:#555;
+  --secondary-text-color:#cecece;
+  --border-radius:8px;
+  --speed:500ms;
+}
+
 header {
-  background: #fff;
   padding: 20px;
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
   position: relative;
   z-index: 44;
 }
+#light header {
+  background-color: #121212;
+  color: #fff;
+}
+#dark header{
+  background-color: #fff;
+}
+.darkModeToggleButton{
+  margin-bottom: 5;
+  margin-right: 0;
+  margin-left: 10px;
+}
 /* nav */
 nav ul {
   display: flex;
+  justify-content: flex-end;
+}
+.ant-dropdown{
+  z-index: 99999;
+}
+#dark .ant-dropdown li {
+  background-color: #fff;
 }
 nav a {
   text-transform: capitalize;
-  margin-right: 30px;
+  margin-right: 25px;
+}
+#light nav a {
+  color: #fff;
+}
+#dark nav a{
   color: #000;
+}
+.categoriesTitle{
+  margin-top: 3px;
 }
 /* User */
 .profile {
@@ -71,13 +106,89 @@ header.active {
   width: 100%;
   box-shadow: 0 0 4px 0 rgb(115 115 115 / 20%);
   z-index: 9999;
+}
+#dark  {
   background: #fff;
 }
+#light {
+  background: #0f0f0f;
+}
+.loginSignup{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.notLoggedIn{
+  display: flex;
+  flex-direction: row;
+}
+
 @media screen and (max-width: 768px) {
+  .flex {
+    justify-content: flex-end;
+  }
+
+  .header{
+    padding: 5px;
+  }
+
+
+  .loginSignup{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: max-content;
+    
+  }
+  .loginSignup li{
+    height: 20px;
+    
+  }
+  .dropdown{
+    align-self: flex-end;
+    justify-self: flex-end;
+  }
+  .darkModeToggleButton{
+    align-self: center;
+    justify-self: center;
+    width: 30px;
+  }
+  .categoriesTitle{
+    margin-bottom: 2px;
+  }
+  .account{
+    flex-direction: row;
+  }
+  .notLoggedIn{
+    display: flex;
+    flex-direction: row;
+    margin-left: 0;
+  }
+  .logo{
+    display: none;
+  }
   header .search {
     display: none;
   }
-  nav {
-    display: none;
+  ul {
+    align-items: center;
+    justify-content: center;
+  }
+  nav a {
+    margin:0 2px;
+  }
+  .header a {
+    font-size: 8px;
+  }
+  .account {
+    flex-direction: column;
+    margin: 0 10px;
+  }
+   li {
+    padding: 0;
+  }
+  .header a{
+    font-size: 12px;
   }
 }

@@ -1,32 +1,45 @@
 .singlePage {
   padding: 50px 0;
-  background: #fff;
 }
-
+#dark .singlePage{
+  color: #000;
+}
+#light .singlePage{
+  color: #fff;
+}
 .singlePage .container {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  padding-left: 10%;
-  width: max-content;
+  padding: 0 10%;
+}
+.singlePage .left {
+  width: 1000px;
+}
+.singlePage .postInfo p {
+  font-size: 14px;
+}
+.singlePage .body p {
+  font-size: 18px;
+  text-transform: none
 }
 
 .singlePage .rightContainer {
   display: flex;
   flex-direction: column;
-  flex-wrap: nowrap;
-  width: 40%;
-  padding: 5%;
-  
+  padding: 2% 5%;
 }
 
 .singlePage .boxItems {
   display: flex;
   flex-direction: row;
-  margin: 2%;
-  transition: 0.5s;
-  background-color: #fff;
+  padding-left: 0;
+  margin: 0% 0;
+  width: 450px;
+  transition: transform 0.5s;
+  border-width: 0;
 }
+
+
 
 .singlePage .boxItems:hover {
   box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
@@ -35,7 +48,7 @@
 }
 
 .singlePage .boxImage {
-  width: 150px;
+  width: 120px;
   height: 80px;
   border-radius: 10px;
   margin: 3%;
@@ -43,24 +56,33 @@
 
 .singlePage .cardItems {
   margin-top: 3%;
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 10px;
-  padding: 10px;
-  width: max-content;
-  height: max-content;
+  padding: 0px 10px;
   flex-wrap: nowrap; 
 }
-
-
-.singlePage .left {
-  width: 60%;
+#dark .singlePage .cardItems{
+  background-color: #fff;
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+#light .singlePage .cardItems{
+  background-color: #0f0f0f;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
 }
 
 .singlePage .card{
   display: flex;
   flex-direction: row;
-  margin: 3%;
+  align-items: flex-end;
+  justify-content: flex-start;
+  margin: 10px;
+}
+
+.singlePage .descInfo{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin: 10px;
 }
 
 .singlePage .postInfo{
@@ -68,20 +90,55 @@
 }
 
 .singlePage .categoriesButtons{
+  margin: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  transition: 0.5s;
+}
+#light .singlePage .categoriesButtons{
+  background-color: #272727;
+}
+#dark .singlePage .categoriesButtons{
   background-color: rgb(230, 230, 230);
-  margin: 5%;
-  margin-left: 0%;
+}
+
+
+.singlePage .adminDeleteButton{
+  background-color: rgb(189, 18, 18);
+  margin-bottom: 10px;
   width: 80px;
   height: 40px;
-  margin-top: 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   transition: 0.5s;
 }
 
-.singlePage .shareButtons{
-  margin: 10;
+.singlePage .adminDeleteButton:hover{
+  cursor: pointer;
+  transform: translateY(-5px);
+}
+
+.singlePage .adminEditButton{
+  background-color: rgb(35, 82, 236);
+  margin-bottom: 10px;
+  margin-left: 10px;
+  width: 80px;
+  height: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
   transition: 0.5s;
+}
+
+.singlePage .adminEditButton:hover{
+  cursor: pointer;
+  transform: translateY(-5px);
+}
+
+.singlePage .shareButtons{
+  
+  transition: 0.5s;
+
 }
 .singlePage .shareButtons:hover{
   cursor: pointer;
@@ -94,28 +151,136 @@
   transform: translateY(-5px);
 }
 
+.singlePage .commentsBox{
+  width: max-content;
+  margin-top: 20px;
+}
+.singlePage .commentTitleBox{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: max-content;
+}
+.singlePage .commentCardBox{
+  padding: 20 0; 
+}
+.singlePage .commentCard{
+  padding: 5px;
+  margin: 10px;
+  border-style: solid;
+  border-radius: 20px;
+  border-width: 1px;
+  
+}
+#light .singlePage .commentCard{
+  background-color: #0f0f0f;
+  color: #fff;
+  border-color: #3e3e3e;
+}
+#dark .singlePage .commentCard{
+  background-color: #fff;
+  color: #000;
+  border-color: lightgrey;
+}
+.singlePage .commentCardHeader{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.singlePage .authorCard{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+   /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  border-radius: 20px;  */
+}
+.singlePage .authorCard .commentContent{
+  width: 400px;
+   /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  border-radius: 20px;  */
+}
+.singlePage .authorCard img{
+  max-width: 100px;
+  border-style: solid;
+  border-radius: 50%;
+  border-width: 0.5px;
+  border-color: aliceblue;
+  object-fit: cover;
+  width: 90px;
+  height: 90px; 
+}
+
+.singlePage .commentContent{
+  display: flex;
+  width: 750px;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px;
+}
+.singlePage .commentContent p{
+  text-transform: none;
+  font-size: medium;
+  line-height: 20px;
+}
+.singlePage .commentContent input{
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+  width: 750px;
+  height: 50px;
+  padding: 10px;
+  font-size: 20px;
+}
+#light .singlePage .commentContent input{
+  border-color: #3e3e3e;
+}
+#dark .singlePage .commentContent input{
+  border-color: lightgrey;
+}
+.singlePage .commentContent button{
+  align-self: flex-end;
+  margin: 10px;
+  font-size: 20px;
+}
+#light .singlePage .commentContent button{
+  color: #fff;
+}
+#dark .singlePage .commentContent button{
+  color: #fff;
+}
+.singlePage .commentCardHeader img{
+  border-style: solid;
+  border-radius: 50%;
+  border-width: 0.5px;
+  border-color: aliceblue;
+  align-self: flex-start;
+  width: 75px;
+  height: 75px;
+  margin: 10px;
+}
+
+
 .singlePage img {
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  margin-top: 5%;
   margin-bottom: 5%;
 }
 .singlePage h1 {
   font-size: 30px;
   font-weight: 500;
+  padding: 0px;
+  margin: 0;
 }
 .singlePage h2 {
   font-size: 20px;
   font-weight: 500;
 }
-.singlePage hr {
-  color: black;
-  background-color: white;
-  height: 1px;
-  width: 60%;
-  margin-top: 3%;
-  margin-left: 5%;
+#dark h2{
+  color: #000;
+}
+#light h2{
+  color: #fff;
 }
 .singlePage p {
   font-size: 20px;
@@ -132,10 +297,141 @@
 .singlePage .button {
   margin-left: 20px;
   border: none;
-}
-.singlePage .button:nth-child(1) {
+} 
+/* .singlePage .button:nth-child(1) {
   background: #10ac84;
-}
+} */
 .singlePage .button:nth-child(2) {
   background: #ee5253;
+}
+
+@media (max-width: 1366px) {
+  .singlePage .left {
+    width: 700px;
+  }
+  .singlePage .boxItems{
+    width: 375px;
+  }
+  .singlePage .rightContainer {
+    width: 510px;
+  }
+  .singlePage .container {
+    display: flex;
+    flex-direction: row;
+    padding: 0 5%;
+  }
+  .singlePage .commentContent input {
+    width: 500px;
+    font-size: medium;
+  }
+  .singlePage h1 {
+    padding: 0;
+    width: fit-content;
+  }
+  .singlePage h2 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .singlePage p {
+    font-size: small;
+  }
+  .singlePage b {
+    font-size: smaller;
+  }
+  #dark .singlePage b{
+    color: #000;
+  }
+  #light .singlePage b{
+    color: #fff;
+  }
+  .singlePage button {
+    font-size: small;
+  }
+  .singlePage .commentContent{
+    width: 650px;
+  }
+}
+@media (max-width: 960px) {
+  .singlePage{
+    padding: 20px 0;
+  }
+  .singlePage .container {
+    padding: 0 0px;
+  }
+  .singlePage .rightContainer {
+    margin: 0 100px;
+    width: 600px;
+    padding: 0 0;
+  }
+  .singlePage .container {
+    flex-direction: column;
+  }
+  .singlePage .boxItems{
+    width: 570px;
+  }
+  .singlePage .commentsBox{
+    width: max-content;
+    margin: 0 90px;
+    padding: 0;
+  }
+  .singlePage .commentTitleBox{
+    margin: 0 0;
+    padding: 0 -50px;
+  }
+  .singlePage .commentCardHeader{
+    flex-direction: column;
+  }
+  .singlePage .commentContent input {
+    width: 570px;
+    font-size: medium;
+  }
+  .singlePage .commentContent{
+    width: 500px;
+  }
+}
+@media (max-width: 768px) {
+  .singlePage{
+    padding: 20px 0;
+  }
+  .singlePage .container {
+    padding: 0 0px;
+  }
+  .singlePage .left {
+    width: 340px;
+  }
+  .singlePage .descInfo{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .singlePage .rightContainer {
+    margin: 0 20px;
+    width: 320px;
+    padding: 0 0;
+  }
+  .singlePage .container {
+    flex-direction: column;
+  }
+  .singlePage .boxItems{
+    width: 300px;
+  }
+  .singlePage .commentsBox{
+    margin: 0;
+    padding: 0;
+  }
+  .singlePage .commentCardHeader{
+    flex-direction: column;
+  }
+  .singlePage .commentContent input {
+    width: 300px;
+    font-size: medium;
+  }
+  .singlePage .commentContent{
+    width: 300px;
+  }
+  .singlePage .authorCard .commentContent{
+    width: 100px;
+    margin-right: 130px;
+  }
 }

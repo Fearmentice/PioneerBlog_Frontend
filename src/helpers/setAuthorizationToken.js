@@ -1,9 +1,12 @@
-import axios from 'axios';
 
-export const setAuthorizationToken = token => {
-    if (token) {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+export const setAuthorizationToken = (token, role) => {
+    if (token === false) {
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("role");
+        return;
     }
-    else
-        delete axios.defaults.headers.common["Authorization"];
+
+    localStorage.setItem("jwtToken", token);
+
 }
