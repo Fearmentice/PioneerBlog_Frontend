@@ -53,8 +53,24 @@ const items = [
   {
     key: '6',
     label:  (
+        <p onClick={() => window.location.replace('/News')} target="_blank" rel="noopener noreferrer">
+          News
+        </p>
+    ),
+  },
+  {
+    key: '7',
+    label:  (
         <p onClick={() => window.location.replace('/Sport')} target="_blank" rel="noopener noreferrer">
           Sport
+        </p>
+    ),
+  },
+  {
+    key: '8',
+    label:  (
+        <p onClick={() => window.location.replace('/Travel')} target="_blank" rel="noopener noreferrer">
+          Travel
         </p>
     ),
   },
@@ -105,8 +121,8 @@ export const Header = () => {
                     </a>
                 </Dropdown>
                 <li style={{paddingBottom:0, paddingTop:0, textTransform:"capitalize"}} key={nav[0].id}>
-                  <a href={nav[6].url}>
-                    {nav[6].text}
+                  <a href={nav[7].url}>
+                    {nav[7].text}
                   </a>
               </li>
             </ul>

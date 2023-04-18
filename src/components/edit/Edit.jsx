@@ -4,7 +4,7 @@ import {categories} from '../../assets/data/data';
 import { useParams, useHistory } from "react-router-dom";
 //--DATABASE--
 import { db } from "../../firebase-config";
-import { doc, getDoc, collection, query, getDocs, updateDoc } from "firebase/firestore";
+import { doc, where, getDoc, collection, query, getDocs, updateDoc } from "firebase/firestore";
 import {ref, uploadBytes, getStorage, getDownloadURL} from "firebase/storage"
 import { v4 } from "uuid";
 
@@ -81,10 +81,13 @@ export const Edit = () => {
       setPreview(`${blogpost.imageCover}`);
     }
 
-  const updateBlogpost = async() => {
-
+  const updateBlogpost = async(event) => {
+    event.preventDefault();
     const imageUrl = await uploadImage();
 
+    const authorRef = collection(db, "authors")
+    const queryRef = query(authorRef, where("name", "==", author));
+    const authorId = await getDocs(queryRef);
     // Update a document that already exist in database.
     const docRef = doc(db, "blogposts", `${id.id}`);
 
@@ -98,21 +101,20 @@ export const Edit = () => {
       desc: rawContentState.blocks[0].text,
       body: stateToHTML(editorState.getCurrentContent()),
       author: author,
+      authorId: authorId.docs[0].id,
       imageCover: imageUrl
     }
 
     //Update query.
     await updateDoc(docRef, data);
 
-    await getDoc(docRef);
-
-    setTimeout(() => {
-      History.push('/');
-    }, 1000)
+    await getDoc(docRef).then(() => {
+      window.location.reload();
+    });
   }
   const uploadImage = async() => {
     //Check if image is uploaded.
-    if(image == null) return;
+    if(preview == null) return;
 
     //Check if new image has uploaded. if not upload return url of old one.
     if(blogpost.imageCover === preview) return preview;
@@ -148,7 +150,7 @@ const getAllAuthors = async() => {
   return (
     <>
         <div className='container boxItems'>
-          <form>
+          <form onSubmit={updateBlogpost}>
           <div className='img '>
           </div>
             <div style={{flexDirection:"column"}} className='inputfile flexCenter'>
@@ -174,7 +176,7 @@ const getAllAuthors = async() => {
               dataSource={allAuthors} 
               fields={{value:"EmployeeID", text:"FirstName"}}></DropDownListComponent>
             </div>
-              <button className='button' onClick={() => {updateBlogpost()}}>Update Post</button>
+              <button type="submit" className='button'>Update Post</button>
           </form>
         </div>
             

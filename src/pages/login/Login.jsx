@@ -133,8 +133,8 @@ verifyAccount = async(e) => {
 
 render(){
    const { isAuthenticated } = this.props;
-   if (isAuthenticated) 
-       window.location.replace('/');
+   
+       if(localStorage.getItem('jwtToken')) return window.location.replace('/');
   return (
     <>
       <section className='login'>
